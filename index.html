@@ -164,8 +164,14 @@
      
   </div>
 
-    <h2> Top 15 keywords for 2014 </h2>
+
+    <div class="Comments" id="Comments">
+    <h2> Top 5 Comments being Mentioned </h2>
+
+
      <ul class="YearlyList" id="YearlyList"></ul>
+
+     </div>
 
  
 
@@ -189,9 +195,10 @@
 
 
     var YearlyList = d3.select("#YearlyList");
+    var Comments = d3.select("#Comments");
 
 
-    var canvasWidth = 1080;
+    var canvasWidth = 1250;
     var canavasHeight = 30 * topNum;
     var canavasPadding = 100;
     var innerWidth = 100;
@@ -200,63 +207,66 @@
 
     function renderList(data){
 
-     var selection1 = YearlyList.selectAll("li")
+     var selection = YearlyList.selectAll("li")
           .data(data , function(d) {return d.keyword});
 
-     selection1.enter()
+     selection.enter()
           .append("li")
           .attr("class", "listOfItems")
-          .text(function(d) {return d.keyword})
+          .text(function(d) {return d.keyword});
          /* .on("mouseenter", function(d,i){
               highlight(d.keyword);
           })
           .on("mouseleave", function(d,i){
             unHighlight();
           })*/
-     selection1.exit().remove();
+     selection.exit().remove();
 
       
     }
 
 
-    //Highlights
-   function highlight(keyword){
-
-
-
-    list.selectAll("li").style("background-color",  function(d,i){
-
-      return d.name == name? "black": undefined;
-
-
-   })
-
-   list.selectAll("li").style("color",  function(d,i){
-
-      return d.name == name? "white": undefined;
-
-
-   })
-
-
-  }
-
-   function unHighlight(){
-
-    dotGroup.selectAll("circle").style("stroke",   undefined)
-
-
-    list.selectAll("li").style("background-color",  undefined)
-
-    list.selectAll("li").style("color",   undefined)
-
-
-   }
+    function renderCommentText(data, orderIndex, monthIndex){
 
 
 
 
-    function renderChart(data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12){
+      var selection = YearlyList.selectAll("li")
+          .remove()
+          .data(data[orderIndex].mentioned[year][monthIndex] , function(d) {return d});
+          selection.enter()
+          .append("li")
+          .attr("class", "listOfItems")
+          .attr("id", "listOfItems")
+          .text(function(d) {return d});
+     
+
+ 
+
+    }
+  
+
+
+
+    function renderChart(data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13){
+
+
+
+      var data = data1[1].mentioned[year][1];
+      console.log(data);
+
+      
+
+
+
+       var ranking = []
+
+      for (var i = 1, len = topNum+1; i < len; i++) {
+
+    ranking = ranking.concat(i);
+    }
+
+
 
 
       var keywords1 = []
@@ -343,6 +353,15 @@
     keywords12 = keywords12.concat(data12[i].keyword);
     }
   
+
+     var keywords13 = []
+
+      for (var i = 0, len = data13.length; i < len; i++) {
+
+    keywords13 = keywords13.concat(data13[i].keyword);
+    }
+
+
 
   
       var frequencies1 = []
@@ -542,6 +561,13 @@ var month7=month+6;
 
     }
 
+      var frequencies13 = []
+
+      for (var i = 0, len = data13.length; i < len; i++) {
+
+        frequencies13 = frequencies13.concat(d3.sum(data13[i].year[year]));
+
+    }
 
 
 
@@ -563,26 +589,61 @@ var yscale = d3.scale.linear()
 
 
 
+
+
+    
+    var chart0 = column
+          
+              .append('g')
+              .attr("transform", "translate(55,0)")
+              .attr('id','bars0');
+
+
+
+           var transitext0 = d3.select('#bars0')
+              .selectAll('text')
+              .data(ranking)
+              .enter()
+              .append('text')
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
+              .text(function(d){ return d; }).style({'fill':'#000','font-size':'15px', 'font-weight' : 'bold'});
+
+
+
+  var xLabel0 = column          
+                 .append("text")
+                 .style({'float': 'left', 'transform' : 'rotate(90deg)', 'transform-origin ': 'left top 0'})  
+                 .attr("class", "x label")
+                 .attr("text-anchor", "middle")
+                 .attr("transform", "translate(0,500)")  // centre below axis
+                 .text("Ranking");
+  
+
  console.log(frequencies1);
     
     var chart1 = column
+            
+
               .append('g')
               .attr("transform", "translate(80,0)")
               .attr('id','bars1')
+
               .selectAll('rect')
+             
               .data(frequencies1)
               .enter()
+            
+
               .append('rect')
               .attr('id','rect1')
+
               .attr('height',19)
               .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
               .style('fill', '#8ee1ff')
               .attr('width',function(d) {return 0; });
 
                 
-              chart1.on("click",function(d){
-                alert('Interaction');
-              });   
+              
 
 
           var transit1 = chart1
@@ -601,6 +662,10 @@ var yscale = d3.scale.linear()
               .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
 
 
+              transitext1.on("click",function(d,i){
+                  renderCommentText(data1 ,i, 0);
+            
+              });   
 
               transitext1.data(frequencies1)
               .on('mouseover', function(d,i){
@@ -656,11 +721,6 @@ var yscale = d3.scale.linear()
               .style('fill', '#8ee1ff')
               .attr('width',function(d) {return 0; });
 
-                
-              chart1.on("click",function(d){
-                alert('Interaction');
-              });   
-
 
           var transit2 = chart2
                 .data(frequencies2)
@@ -677,7 +737,10 @@ var yscale = d3.scale.linear()
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
 
-
+                transitext2.on("click",function(d,i){
+                  renderCommentText(data2 ,i, 1);
+            
+              });  
 
               transitext2.data(frequencies2)
               .on('mouseover', function(d,i){
@@ -729,11 +792,6 @@ var yscale = d3.scale.linear()
               .style('fill', '#8ee1ff')
               .attr('width',function(d) {return 0; });
 
-                
-              chart1.on("click",function(d){
-                alert('Interaction');
-              });   
-
 
           var transit3 = chart3
                 .data(frequencies3)
@@ -751,6 +809,10 @@ var yscale = d3.scale.linear()
               .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
 
 
+                 transitext3.on("click",function(d,i){
+                  renderCommentText(data3 ,i, 2);
+            
+              });  
 
               transitext3.data(frequencies3)
               .on('mouseover', function(d,i){
@@ -801,11 +863,7 @@ console.log(frequencies4);
               .style('fill', '#8ee1ff')
               .attr('width',function(d) {return 0; });
 
-                
-              chart4.on("click",function(d){
-                alert('Interaction');
-              });   
-
+    
 
           var transit4 = chart4
                 .data(frequencies4)
@@ -822,7 +880,10 @@ console.log(frequencies4);
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
 
-
+              transitext4.on("click",function(d,i){
+                  renderCommentText(data4 ,i, 3);
+            
+              });  
 
               transitext4.data(frequencies4)
               .on('mouseover', function(d,i){
@@ -1436,6 +1497,79 @@ console.log(frequencies10);
 
 
 
+
+   console.log(frequencies13);
+
+   var chart13 = column
+              .append('g')
+              .attr("transform", "translate(1060,0)")
+              .attr('id','bars13')
+              .selectAll('rect')
+              .data(frequencies13)
+              .enter()
+              .append('rect')
+              .attr('id','rect13')
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#8ee1ff')
+              .attr('width',function(d) {return 0; });
+
+                
+              chart13.on("click",function(d){
+                alert('Interaction');
+              });   
+
+
+          var transit13 = chart13
+                .data(frequencies13)
+                .transition()
+                .duration(1000) 
+                .attr("width", function(d) {return xscale(d ); });
+
+
+           var transitext13 = d3.select('#bars13')
+              .selectAll('text')
+              .data(keywords13)
+              .enter()
+              .append('text')
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
+              .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
+
+
+
+              transitext13.data(frequencies13)
+              .on('mouseover', function(d,i){
+
+                d3.select("#tooltip")
+                .style("visibility", "visible" )
+                .style("top", (d3.event.clientY)+10 + "px")
+                .style("left",(d3.event.clientX) + "px")
+                .style("opacity",1)
+                d3.select("#tooltip").text(d);
+                d3.select("#rect13:nth-child("+ (i + 1) + ")")
+                 .style("fill", '#ffac8e')
+               })
+                
+               
+                .on('mouseout', function(d,i){
+                  d3.select("#tooltip").style(
+                    "visibility", "hidden"
+                  )
+                  .style("opacity",0);
+                   d3.select("#rect13:nth-child("+ (i + 1) + ")")
+                  .style("fill", '#8ee1ff')
+              });
+
+
+  var xLabel13 = d3.select('#bars13')                
+                 .append("text")
+                 .attr("class", "x label")
+                 .attr("text-anchor", "middle")
+                 .attr("transform", "translate(25,15)")  // centre below axis
+                 .text(year);
+
+
+
     }
 
 
@@ -1524,15 +1658,17 @@ console.log(frequencies10);
           var filteredData10;
           var filteredData11;
           var filteredData12;
-  
+          var filteredData13;
 
 
-          var  filteredData = filteredDataByYear(data, year);
-
-            console.log(filteredData);
 
 
+
+
+/*
           if (listByMonth){
+
+*/
 
               var month1 = month;
               var month2 = month+1;
@@ -1561,9 +1697,15 @@ console.log(frequencies10);
                filteredData10 = filteredDataByMonth(data,year,month10);
                filteredData11 = filteredDataByMonth(data,year,month11);
                filteredData12 = filteredDataByMonth(data,year,month12);
+               filteredData13 = filteredDataByYear(data, year);
+
+
+
+    
+         /* 
 
           }
-         /* else {
+          else {
 
           var year1  = year - 2;
           var year2  = year - 1;
@@ -1583,9 +1725,9 @@ console.log(frequencies10);
 
         }*/
 
-           renderChart(filteredData1,filteredData2,filteredData3,filteredData4,filteredData5,filteredData6,filteredData7,filteredData8,filteredData9,filteredData10,filteredData11,filteredData12);
+           renderChart(filteredData1,filteredData2,filteredData3,filteredData4,filteredData5,filteredData6,filteredData7,filteredData8,filteredData9,filteredData10,filteredData11,filteredData12,filteredData13);
         
-           renderList(filteredData);
+           //renderList(filteredData13);
 
 
     }
