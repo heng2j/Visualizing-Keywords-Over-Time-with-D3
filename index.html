@@ -23,79 +23,7 @@
 
       }
       
-      #chat1{
-          float:left;
-          width:100px;
-          height: 500px;
-          margin-left: -35px;
-       /*   padding-left:  -50px;*/
-      }
-       #chat2{
-          float:left;
-          width:100px;
-          height: 500px;
-          margin-left: -35px;
-          /*padding-left:  -50px;*/
-      }
-       #chat3{
-          float:left;
-          width:100px;
-          height: 500px;
-          margin-left: -35px;
-         
-      }
-      
-      #chat4{
-          float:left;
-          width:100px;
-          height: 500px;
-          margin-left: -35px;
-      }
-       #chat5{
-          float:left;
-          width:100px;
-          height: 500px;
-          margin-left: -35px;
-      }
-      #chat6{
-          float:left;
-          width:100px;
-          height: 500px;
-          margin-left: -35px;
-      }
-       #chat7{
-          float:left;
-          width:100px;
-          height: 500px;
-          margin-left: -35px;
-      }
-       #chat8{
-          float:left;
-          width:100px;
-          height: 500px;
-          margin-left: -35px;
-      } #chat9{
-          float:left;
-          width:100px;
-          height: 500px;
-          margin-left: -35px;
-      }
-       #chat10{
-          float:left;
-          width:100px;
-          height: 500px;
-          margin-left: -35px;
-      } #chat11{
-          float:left;
-          width:100px;
-          height: 500px;
-          margin-left: -35px;
-      } #chat12{
-          float:left;
-          width:100px;
-          height: 500px;
-          margin-left: -25px;
-      }
+     
       .svg
       {
           margin-left: -50px;
@@ -147,6 +75,16 @@
 
            float:left;
       }
+      #yearSelect{
+
+        margin-left: 30;
+
+      }
+
+      #grid, #pager {
+  position: fixed;
+  width: 100%;
+}
 
   </style>
 </head>
@@ -160,8 +98,21 @@
    <div id="tooltip">Tooltip</div>
 
   <div>
-      <div id="listChat"></div>
+      <div id="listChat">
+      <div id="example" class="parcoords" style="width:960px;height:350px"></div>
+      </div>
+
+    
      
+       <input 
+      id="yearSelect"
+      type="range" 
+      min="2014" 
+      max="2015" 
+      value="2014" 
+      style="width:550"
+      onchange="setYear(this.value)"
+      >
   </div>
 
 
@@ -177,10 +128,25 @@
 
 
 
+
   <script src="d3.v3.min.js" charset="utf-8"></script>
    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>  
-
+   <script src="d3.parcoords.js"></script>
+<link rel="stylesheet" type="text/css" href="d3.parcoords.css">
    
+
+  <div id="grid"></div>
+
+ <div id="pager"></div>
+
+
+
+
+
+
+
+
+
 
   <script>
 
@@ -205,6 +171,18 @@
 
 
 
+      //setYear
+   function setYear(newYear){
+
+    year = newYear;
+    yearLabel.text(year);
+
+    render(data);
+
+
+
+   }
+
     function renderList(data){
 
      var selection = YearlyList.selectAll("li")
@@ -224,6 +202,8 @@
 
       
     }
+
+
 
 
     function renderCommentText(data, orderIndex, monthIndex){
@@ -246,11 +226,49 @@
     }
   
 
+    function serchForOrder(keyword, data ){
+
+
+      console.log(data);
+
+        var order = [];
+
+         for (var i = 0, len = data.length; i < len; i++) {
+
+
+
+            for (var j = 0, len2 = topNum; j < len2; j++) {
+
+                  if (keyword == data[i][j]){
+
+
+                      order = order.concat(j);
+
+                      break;
+
+                  }
+
+ 
+
+
+            }
+ 
+        
+    }
+
+
+          return order;
+  
+
+  }
 
 
     function renderChart(data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13){
 
 
+
+
+   console.log(data1);
 
        var ranking = []
 
@@ -356,6 +374,35 @@
 
 
 
+    var keywordsAll = [[]]
+
+        keywordsAll[0] =  keywords1;
+        keywordsAll[1] =  keywords2;
+        keywordsAll[2] =  keywords3;
+        keywordsAll[3] =  keywords4;
+        keywordsAll[4] =  keywords5;
+        keywordsAll[5] =  keywords6;
+        keywordsAll[6] =  keywords7;
+         keywordsAll[7] =  keywords8;
+          keywordsAll[8] =  keywords9;
+           keywordsAll[9] =  keywords10;
+              keywordsAll[10] =  keywords11;
+               keywordsAll[11] =  keywords12;
+  /*
+            keywordsAll =  keywordsAll.concat(keywords2) ;
+                keywordsAll =  keywordsAll.concat(keywords3) ;
+                    keywordsAll =  keywordsAll.concat(keywords4) ;
+                        keywordsAll =  keywordsAll.concat(keywords5) ;
+                            keywordsAll =  keywordsAll.concat(keywords6) ;
+                                keywordsAll =  keywordsAll.concat(keywords7) ;
+                                    keywordsAll =  keywordsAll.concat(keywords8) ;
+                                        keywordsAll =  keywordsAll.concat(keywords9) ;
+                                            keywordsAll =  keywordsAll.concat(keywords10) ;
+                                                keywordsAll =  keywordsAll.concat(keywords11) ;
+                                                    keywordsAll =  keywordsAll.concat(keywords12) ;
+ */
+
+                                  console.log(keywordsAll);
   
       var frequencies1 = []
 
@@ -655,11 +702,29 @@ var yscale = d3.scale.linear()
               .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
 
 
-              transitext1.on("click",function(d,i){
+                  transitext1.on("click",function(d,i){
+
+
+                 var orders =  serchForOrder(data1[i].keyword,keywordsAll);
+
+                 console.log(orders);
+
+                 console.log(d3.select("#bars2:nth-child("+ orders[1] + ")"));
+
+                 var rect = d3.select("#bars2:nth-child("+ orders[1] + ")");
+                 var offsetLeft = d3.select("#bars2:nth-child("+ orders[1] + ")").offsetLeft;
+
+                   console.log("rect: " + rect);
+                  console.log("offsetLeft: " + offsetLeft);
+
+
+
+
                   renderCommentText(data1 ,i, 0);
             
               });   
-
+  
+            
               transitext1.data(frequencies1)
               .on('mouseover', function(d,i){
 
@@ -733,7 +798,10 @@ var yscale = d3.scale.linear()
                 transitext2.on("click",function(d,i){
                   renderCommentText(data2 ,i, 1);
             
-              });  
+              });   
+
+
+        
 
               transitext2.data(frequencies2)
               .on('mouseover', function(d,i){
@@ -951,6 +1019,12 @@ console.log(frequencies5);
 
 
 
+
+              transitext5.on("click",function(d,i){
+                  renderCommentText(data5 ,i, 4);
+            
+              });   
+
               transitext5.data(frequencies5)
               .on('mouseover', function(d,i){
 
@@ -1000,10 +1074,6 @@ console.log(frequencies6);
               .attr('width',function(d) {return 0; });
 
                 
-              chart6.on("click",function(d){
-                alert('Interaction');
-              });   
-
 
           var transit6 = chart6
                 .data(frequencies6)
@@ -1020,6 +1090,11 @@ console.log(frequencies6);
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
 
+
+              transitext6.on("click",function(d,i){
+                  renderCommentText(data6 ,i, 5);
+            
+              });   
 
 
               transitext6.data(frequencies6)
@@ -1072,11 +1147,6 @@ console.log(frequencies6);
               .style('fill', '#8ee1ff')
               .attr('width',function(d) {return 0; });
 
-                
-              chart7.on("click",function(d){
-                alert('Interaction');
-              });   
-
 
           var transit7 = chart7
                 .data(frequencies7)
@@ -1093,6 +1163,11 @@ console.log(frequencies6);
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
 
+
+              transitext7.on("click",function(d,i){
+                  renderCommentText(data7 ,i, 6);
+            
+              });   
 
 
               transitext7.data(frequencies7)
@@ -1145,10 +1220,7 @@ console.log(frequencies8);
               .style('fill', '#8ee1ff')
               .attr('width',function(d) {return 0; });
 
-                
-              chart8.on("click",function(d){
-                alert('Interaction');
-              });   
+                 
 
 
           var transit8 = chart8
@@ -1167,6 +1239,11 @@ console.log(frequencies8);
               .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
 
 
+
+              transitext8.on("click",function(d,i){
+                  renderCommentText(data8 ,i, 7);
+            
+              });   
 
               transitext8.data(frequencies8)
               .on('mouseover', function(d,i){
@@ -1217,10 +1294,6 @@ console.log(frequencies8);
               .style('fill', '#8ee1ff')
               .attr('width',function(d) {return 0; });
 
-                
-              chart9.on("click",function(d){
-                alert('Interaction');
-              });   
 
 
           var transit9 = chart9
@@ -1238,6 +1311,10 @@ console.log(frequencies8);
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
 
+              transitext9.on("click",function(d,i){
+                  renderCommentText(data9 ,i, 8);
+            
+              });   
 
 
               transitext9.data(frequencies9)
@@ -1289,10 +1366,6 @@ console.log(frequencies10);
               .style('fill', '#8ee1ff')
               .attr('width',function(d) {return 0; });
 
-                
-              chart10.on("click",function(d){
-                alert('Interaction');
-              });   
 
 
           var transit10 = chart10
@@ -1311,6 +1384,11 @@ console.log(frequencies10);
               .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
 
 
+
+               transitext10.on("click",function(d,i){
+                  renderCommentText(data10 ,i, 9);
+            
+              }); 
 
               transitext10.data(frequencies10)
               .on('mouseover', function(d,i){
@@ -1361,10 +1439,6 @@ console.log(frequencies10);
               .style('fill', '#8ee1ff')
               .attr('width',function(d) {return 0; });
 
-                
-              chart11.on("click",function(d){
-                alert('Interaction');
-              });   
 
 
           var transit11 = chart11
@@ -1382,7 +1456,10 @@ console.log(frequencies10);
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
 
-
+              transitext11.on("click",function(d,i){
+                  renderCommentText(data11 ,i, 10);
+            
+              }); 
 
               transitext11.data(frequencies11)
               .on('mouseover', function(d,i){
@@ -1433,10 +1510,7 @@ console.log(frequencies10);
               .style('fill', '#8ee1ff')
               .attr('width',function(d) {return 0; });
 
-                
-              chart12.on("click",function(d){
-                alert('Interaction');
-              });   
+  
 
 
           var transit12 = chart12
@@ -1454,6 +1528,10 @@ console.log(frequencies10);
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
 
+              transitext12.on("click",function(d,i){
+                  renderCommentText(data12 ,i, 11);
+            
+              }); 
 
 
               transitext12.data(frequencies12)
@@ -1507,10 +1585,7 @@ console.log(frequencies10);
               .style('fill', '#8ee1ff')
               .attr('width',function(d) {return 0; });
 
-                
-              chart13.on("click",function(d){
-                alert('Interaction');
-              });   
+ 
 
 
           var transit13 = chart13
@@ -1527,7 +1602,6 @@ console.log(frequencies10);
               .append('text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
-
 
 
               transitext13.data(frequencies13)
@@ -1620,12 +1694,10 @@ console.log(frequencies10);
 
     var filteredDataByMonth = data.filter(function(d) {
 
-
-                 console.log(d.year[theYear][theMonth]);
         return    d.year[theYear][theMonth];
       });
 
-              console.log(filteredDataByMonth);
+
 
       filteredDataByMonth.sort(function(a,b) { return d3.descending(a.year[theYear][theMonth], b.year[theYear][theMonth] )  });
 
