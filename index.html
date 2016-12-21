@@ -99,11 +99,12 @@
 
   <div>
       <div id="listChat">
-      </div>
+   <!--   <div id="example" class="parcoords" style="width:960px;height:350px"></div>
+   -->   </div>
 
     
      
-       <input 
+      <!-- <input 
       id="yearSelect"
       type="range" 
       min="2014" 
@@ -111,7 +112,7 @@
       value="2014" 
       style="width:550"
       onchange="setYear(this.value)"
-      >
+      >-->
   </div>
 
 
@@ -128,7 +129,9 @@
 
 
 
+<!--
   <script src="d3.v3.min.js" charset="utf-8"></script>
+-->
    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>  
  
 
@@ -234,6 +237,7 @@
 
 
 
+
             for (var j = 0, len2 = topNum; j < len2; j++) {
 
                   if (keyword == data[i][j]){
@@ -245,10 +249,14 @@
 
                   }
 
- 
+ if(j == len2-1 && keyword != data[i][j] ){
+     order = order.concat(-1);
+     break;
+ }
 
 
             }
+             
  
         
     }
@@ -266,6 +274,7 @@
 
 
    console.log(data1);
+
 
        var ranking = []
 
@@ -380,11 +389,13 @@
         keywordsAll[4] =  keywords5;
         keywordsAll[5] =  keywords6;
         keywordsAll[6] =  keywords7;
-         keywordsAll[7] =  keywords8;
-          keywordsAll[8] =  keywords9;
-           keywordsAll[9] =  keywords10;
-              keywordsAll[10] =  keywords11;
-               keywordsAll[11] =  keywords12;
+        keywordsAll[7] =  keywords8;
+        keywordsAll[8] =  keywords9;
+        keywordsAll[9] =  keywords10;
+        keywordsAll[10] =  keywords11;
+        keywordsAll[11] =  keywords12;
+        
+       
   /*
             keywordsAll =  keywordsAll.concat(keywords2) ;
                 keywordsAll =  keywordsAll.concat(keywords3) ;
@@ -628,6 +639,7 @@ var yscale = d3.scale.linear()
 
 
 
+        
     
     var chart0 = column
           
@@ -657,6 +669,24 @@ var yscale = d3.scale.linear()
   
 
  console.log(frequencies1);
+
+
+
+      var BackGround3 =  column
+
+              .append('g')
+              .attr("transform", "translate(80,0)")
+              .attr('id','BackGround1')
+              .selectAll('rect')
+              .data(frequencies1)
+              .enter()
+              .append('rect')
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#ddf6ff ')
+              .attr('width',60)
+
+
     
     var chart1 = column
             
@@ -697,12 +727,25 @@ var yscale = d3.scale.linear()
               .append('text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
-
+       
+        /*----RIYA   */
+        d3.select('#bars1')
+              .selectAll('line')
+              .data(frequencies1)
+              .enter() 
+           .append('line')
+           .attr("transform", "translate(15, 28.5)")
+           .attr('stroke', '#c4efff')
+           .attr('stroke-width', '2')
+            .attr('x1',function(d,i){return ;})
+            .attr('y1',function(d,i){return yscale(serchForOrder(data1[i].keyword,keywordsAll)[0]);})
+            .attr('x2',function(d,i){return ( ((serchForOrder(data1[i].keyword,keywordsAll)[1]) == -1)?30:65);})
+            .attr('y2',function(d,i){return ( ((serchForOrder(data1[i].keyword,keywordsAll)[1]) == -1)?yscale(serchForOrder(data1[i].keyword,keywordsAll)[0]): yscale(serchForOrder(data1[i].keyword,keywordsAll)[1]));});
 
                   transitext1.on("click",function(d,i){
 
 
-                 var orders =  serchForOrder(data1[i].keyword,keywordsAll);
+               /*  var orders =  serchForOrder(data1[i].keyword,keywordsAll);
 
                  console.log(orders);
 
@@ -713,8 +756,7 @@ var yscale = d3.scale.linear()
 
                    console.log("rect: " + rect);
                   console.log("offsetLeft: " + offsetLeft);
-
-
+*/
 
 
                   renderCommentText(data1 ,i, 0);
@@ -761,6 +803,22 @@ var yscale = d3.scale.linear()
 
 
  console.log(frequencies2);
+
+
+      var BackGround2 =  column
+
+              .append('g')
+              .attr("transform", "translate(160,0)")
+              .attr('id','BackGround2')
+              .selectAll('rect')
+              .data(frequencies1)
+              .enter()
+              .append('rect')
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#ddf6ff ')
+              .attr('width',60)
+
     
     var chart2 = column
               .append('g')
@@ -792,13 +850,45 @@ var yscale = d3.scale.linear()
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
 
-                transitext2.on("click",function(d,i){
+               /* transitext2.on("click",function(d,i){
                   renderCommentText(data2 ,i, 1);
             
-              });   
+              });  */ 
 
 
-        
+        d3.select('#bars2')
+              .selectAll('line')
+              .data(frequencies2)
+              .enter() 
+           .append('line')
+           .attr("transform", "translate(15, 28.5)")
+           .attr('stroke', 'black')
+            .attr('stroke-width', '2')
+            .attr('x1',function(d,i){return 35;})
+            .attr('y1',function(d,i){return yscale(serchForOrder(data2[i].keyword,keywordsAll)[1]);})
+            .attr('x2',function(d,i){return ( ((serchForOrder(data2[i].keyword,keywordsAll)[2]) == -1)?35:60);})
+            .attr('y2',function(d,i){return ( ((serchForOrder(data2[i].keyword,keywordsAll)[2]) == -1)?yscale(serchForOrder(data2[i].keyword,keywordsAll)[1]): yscale(serchForOrder(data2[i].keyword,keywordsAll)[2]));});
+
+                  transitext2.on("click",function(d,i){
+
+
+               /*  var orders =  serchForOrder(data1[i].keyword,keywordsAll);
+
+                 console.log(orders);
+
+                 console.log(d3.select("#bars2:nth-child("+ orders[1] + ")"));
+
+                 var rect = d3.select("#bars2:nth-child("+ orders[1] + ")");
+                 var offsetLeft = d3.select("#bars2:nth-child("+ orders[1] + ")").offsetLeft;
+
+                   console.log("rect: " + rect);
+                  console.log("offsetLeft: " + offsetLeft);
+*/
+
+
+                  renderCommentText(data2 ,i, 0);
+            
+              });
 
               transitext2.data(frequencies2)
               .on('mouseover', function(d,i){
@@ -836,6 +926,21 @@ var yscale = d3.scale.linear()
 
   console.log(frequencies3);
 
+
+        var BackGround3 =  column
+
+              .append('g')
+              .attr("transform", "translate(240,0)")
+              .attr('id','BackGround3')
+              .selectAll('rect')
+              .data(frequencies1)
+              .enter()
+              .append('rect')
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#ddf6ff ')
+              .attr('width',60)
+
    var chart3 = column
               .append('g')
               .attr("transform", "translate(240,0)")
@@ -867,10 +972,43 @@ var yscale = d3.scale.linear()
               .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
 
 
-                 transitext3.on("click",function(d,i){
+                 /*transitext3.on("click",function(d,i){
                   renderCommentText(data3 ,i, 2);
             
-              });  
+              });  */
+        
+         d3.select('#bars3')
+              .selectAll('line')
+              .data(frequencies3)
+              .enter() 
+           .append('line')
+           .attr("transform", "translate(15, 28.5)")
+           .attr('stroke', 'black')
+            .attr('x1',function(d,i){return 30;})
+            .attr('y1',function(d,i){return yscale(serchForOrder(data3[i].keyword,keywordsAll)[2]);})
+            .attr('x2',function(d,i){return ( ((serchForOrder(data3[i].keyword,keywordsAll)[3]) == -1)?30:60);})
+            .attr('y2',function(d,i){return ( ((serchForOrder(data3[i].keyword,keywordsAll)[3]) == -1)?yscale(serchForOrder(data3[i].keyword,keywordsAll)[2]): yscale(serchForOrder(data3[i].keyword,keywordsAll)[3]));});
+
+                  transitext3.on("click",function(d,i){
+
+
+               /*  var orders =  serchForOrder(data1[i].keyword,keywordsAll);
+
+                 console.log(orders);
+
+                 console.log(d3.select("#bars2:nth-child("+ orders[1] + ")"));
+
+                 var rect = d3.select("#bars2:nth-child("+ orders[1] + ")");
+                 var offsetLeft = d3.select("#bars2:nth-child("+ orders[1] + ")").offsetLeft;
+
+                   console.log("rect: " + rect);
+                  console.log("offsetLeft: " + offsetLeft);
+*/
+
+
+                  renderCommentText(data3 ,i, 0);
+            
+              });   
 
               transitext3.data(frequencies3)
               .on('mouseover', function(d,i){
@@ -907,6 +1045,20 @@ var yscale = d3.scale.linear()
 
 console.log(frequencies4);
 
+  var BackGround4 =  column
+
+              .append('g')
+              .attr("transform", "translate(320,0)")
+              .attr('id','BackGround4')
+              .selectAll('rect')
+              .data(frequencies1)
+              .enter()
+              .append('rect')
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#ddf6ff ')
+              .attr('width',60)
+  
    var chart4 = column
               .append('g')
               .attr("transform", "translate(320,0)")
@@ -938,10 +1090,45 @@ console.log(frequencies4);
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
 
-              transitext4.on("click",function(d,i){
+              /*transitext4.on("click",function(d,i){
                   renderCommentText(data4 ,i, 3);
             
-              });  
+              });*/
+        
+        /*----RIYA   */
+        d3.select('#bars4')
+              .selectAll('line')
+              .data(frequencies4)
+              .enter() 
+           .append('line')
+           .attr("transform", "translate(10, 28.5)")
+           .attr('stroke', 'black')
+            .attr('x1',function(d,i){return 30;})
+            .attr('y1',function(d,i){return yscale(serchForOrder(data4[i].keyword,keywordsAll)[3]);})
+            .attr('x2',function(d,i){return ( ((serchForOrder(data4[i].keyword,keywordsAll)[4]) == -1)?30:65);})
+            .attr('y2',function(d,i){return ( ((serchForOrder(data4[i].keyword,keywordsAll)[4]) == -1)?yscale(serchForOrder(data4[i].keyword,keywordsAll)[0]): yscale(serchForOrder(data4[i].keyword,keywordsAll)[4]));});
+
+                  transitext4.on("click",function(d,i){
+
+
+               /*  var orders =  serchForOrder(data1[i].keyword,keywordsAll);
+
+                 console.log(orders);
+
+                 console.log(d3.select("#bars2:nth-child("+ orders[1] + ")"));
+
+                 var rect = d3.select("#bars2:nth-child("+ orders[1] + ")");
+                 var offsetLeft = d3.select("#bars2:nth-child("+ orders[1] + ")").offsetLeft;
+
+                   console.log("rect: " + rect);
+                  console.log("offsetLeft: " + offsetLeft);
+*/
+
+
+                  renderCommentText(data4 ,i, 0);
+            
+              });   
+  
 
               transitext4.data(frequencies4)
               .on('mouseover', function(d,i){
@@ -978,6 +1165,21 @@ console.log(frequencies4);
 
 
 console.log(frequencies5);
+
+   
+  var BackGround5 =  column
+
+              .append('g')
+              .attr("transform", "translate(400,0)")
+              .attr('id','BackGround5')
+              .selectAll('rect')
+              .data(frequencies1)
+              .enter()
+              .append('rect')
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#ddf6ff ')
+              .attr('width',60)
 
    var chart5 = column
               .append('g')
@@ -1017,10 +1219,45 @@ console.log(frequencies5);
 
 
 
-              transitext5.on("click",function(d,i){
+            /*  transitext5.on("click",function(d,i){
                   renderCommentText(data5 ,i, 4);
             
+              });  */
+        
+         /*----RIYA   */
+        d3.select('#bars5')
+              .selectAll('line')
+              .data(frequencies5)
+              .enter() 
+           .append('line')
+           .attr("transform", "translate(10, 28.5)")
+           .attr('stroke', 'black')
+            .attr('x1',function(d,i){return 30;})
+            .attr('y1',function(d,i){return yscale(serchForOrder(data5[i].keyword,keywordsAll)[4]);})
+            .attr('x2',function(d,i){return ( ((serchForOrder(data5[i].keyword,keywordsAll)[5]) == -1)?30:65);})
+            .attr('y2',function(d,i){return ( ((serchForOrder(data5[i].keyword,keywordsAll)[5]) == -1)?yscale(serchForOrder(data5[i].keyword,keywordsAll)[4]): yscale(serchForOrder(data5[i].keyword,keywordsAll)[5]));});
+
+                  transitext5.on("click",function(d,i){
+
+
+               /*  var orders =  serchForOrder(data1[i].keyword,keywordsAll);
+
+                 console.log(orders);
+
+                 console.log(d3.select("#bars2:nth-child("+ orders[1] + ")"));
+
+                 var rect = d3.select("#bars2:nth-child("+ orders[1] + ")");
+                 var offsetLeft = d3.select("#bars2:nth-child("+ orders[1] + ")").offsetLeft;
+
+                   console.log("rect: " + rect);
+                  console.log("offsetLeft: " + offsetLeft);
+*/
+
+
+                  renderCommentText(data5 ,i, 0);
+            
               });   
+  
 
               transitext5.data(frequencies5)
               .on('mouseover', function(d,i){
@@ -1056,6 +1293,20 @@ console.log(frequencies5);
 
 console.log(frequencies6);
 
+
+  var BackGround6 =  column
+              .append('g')
+              .attr("transform", "translate(480,0)")
+              .attr('id','BackGround6')
+              .selectAll('rect')
+              .data(frequencies1)
+              .enter()
+              .append('rect')
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#ddf6ff ')
+              .attr('width',60)
+
    var chart6 = column
               .append('g')
               .attr("transform", "translate(480,0)")
@@ -1088,11 +1339,45 @@ console.log(frequencies6);
               .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
 
 
-              transitext6.on("click",function(d,i){
+            /*  transitext6.on("click",function(d,i){
                   renderCommentText(data6 ,i, 5);
             
-              });   
+              }); */  
 
+         /*----RIYA   */
+        d3.select('#bars6')
+              .selectAll('line')
+              .data(frequencies6)
+              .enter() 
+           .append('line')
+           .attr("transform", "translate(10, 28.5)")
+           .attr('stroke', 'black')
+            .attr('x1',function(d,i){return 30;})
+            .attr('y1',function(d,i){return yscale(serchForOrder(data6[i].keyword,keywordsAll)[5]);})
+            .attr('x2',function(d,i){return ( ((serchForOrder(data6[i].keyword,keywordsAll)[6]) == -1)?30:65);})
+            .attr('y2',function(d,i){return ( ((serchForOrder(data6[i].keyword,keywordsAll)[6]) == -1)?yscale(serchForOrder(data6[i].keyword,keywordsAll)[5]): yscale(serchForOrder(data6[i].keyword,keywordsAll)[6]));});
+
+                  transitext6.on("click",function(d,i){
+
+
+               /*  var orders =  serchForOrder(data1[i].keyword,keywordsAll);
+
+                 console.log(orders);
+
+                 console.log(d3.select("#bars2:nth-child("+ orders[1] + ")"));
+
+                 var rect = d3.select("#bars2:nth-child("+ orders[1] + ")");
+                 var offsetLeft = d3.select("#bars2:nth-child("+ orders[1] + ")").offsetLeft;
+
+                   console.log("rect: " + rect);
+                  console.log("offsetLeft: " + offsetLeft);
+*/
+
+
+                  renderCommentText(data6 ,i, 0);
+            
+              });   
+  
 
               transitext6.data(frequencies6)
               .on('mouseover', function(d,i){
@@ -1130,6 +1415,20 @@ console.log(frequencies6);
 
   console.log(frequencies7);
 
+
+  var BackGround7 =  column
+              .append('g')
+              .attr("transform", "translate(560,0)")
+              .attr('id','BackGround7')
+              .selectAll('rect')
+              .data(frequencies1)
+              .enter()
+              .append('rect')
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#ddf6ff ')
+              .attr('width',60)
+
    var chart7 = column
               .append('g')
               .attr("transform", "translate(560,0)")
@@ -1161,11 +1460,45 @@ console.log(frequencies6);
               .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
 
 
-              transitext7.on("click",function(d,i){
+             /* transitext7.on("click",function(d,i){
                   renderCommentText(data7 ,i, 6);
             
-              });   
+              }); */  
 
+         /*----RIYA   */
+        d3.select('#bars7')
+              .selectAll('line')
+              .data(frequencies7)
+              .enter() 
+           .append('line')
+           .attr("transform", "translate(10, 28.5)")
+           .attr('stroke', 'black')
+            .attr('x1',function(d,i){return 30;})
+            .attr('y1',function(d,i){return yscale(serchForOrder(data7[i].keyword,keywordsAll)[6]);})
+            .attr('x2',function(d,i){return ( ((serchForOrder(data7[i].keyword,keywordsAll)[7]) == -1)?30:60);})
+            .attr('y2',function(d,i){return ( ((serchForOrder(data7[i].keyword,keywordsAll)[7]) == -1)?yscale(serchForOrder(data7[i].keyword,keywordsAll)[6]): yscale(serchForOrder(data7[i].keyword,keywordsAll)[7]));});
+
+                  transitext7.on("click",function(d,i){
+
+
+               /*  var orders =  serchForOrder(data1[i].keyword,keywordsAll);
+
+                 console.log(orders);
+
+                 console.log(d3.select("#bars2:nth-child("+ orders[1] + ")"));
+
+                 var rect = d3.select("#bars2:nth-child("+ orders[1] + ")");
+                 var offsetLeft = d3.select("#bars2:nth-child("+ orders[1] + ")").offsetLeft;
+
+                   console.log("rect: " + rect);
+                  console.log("offsetLeft: " + offsetLeft);
+*/
+
+
+                  renderCommentText(data7 ,i, 0);
+            
+              });   
+  
 
               transitext7.data(frequencies7)
               .on('mouseover', function(d,i){
@@ -1203,6 +1536,20 @@ console.log(frequencies6);
 
 console.log(frequencies8);
 
+
+  var BackGround8 =  column
+              .append('g')
+              .attr("transform", "translate(640,0)")
+              .attr('id','BackGround8')
+              .selectAll('rect')
+              .data(frequencies1)
+              .enter()
+              .append('rect')
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#ddf6ff ')
+              .attr('width',60)
+
    var chart8 = column
               .append('g')
               .attr("transform", "translate(640,0)")
@@ -1237,10 +1584,45 @@ console.log(frequencies8);
 
 
 
-              transitext8.on("click",function(d,i){
+             /* transitext8.on("click",function(d,i){
                   renderCommentText(data8 ,i, 7);
             
+              }); */
+        
+         /*----RIYA   */
+        d3.select('#bars8')
+              .selectAll('line')
+              .data(frequencies8)
+              .enter() 
+           .append('line')
+           .attr("transform", "translate(10, 28.5)")
+           .attr('stroke', 'black')
+            .attr('x1',function(d,i){return 30;})
+            .attr('y1',function(d,i){return yscale(serchForOrder(data8[i].keyword,keywordsAll)[7]);})
+            .attr('x2',function(d,i){return ( ((serchForOrder(data8[i].keyword,keywordsAll)[8]) == -1)?30:60);})
+            .attr('y2',function(d,i){return ( ((serchForOrder(data8[i].keyword,keywordsAll)[8]) == -1)?yscale(serchForOrder(data8[i].keyword,keywordsAll)[7]): yscale(serchForOrder(data8[i].keyword,keywordsAll)[8]));});
+
+                  transitext8.on("click",function(d,i){
+
+
+               /*  var orders =  serchForOrder(data1[i].keyword,keywordsAll);
+
+                 console.log(orders);
+
+                 console.log(d3.select("#bars2:nth-child("+ orders[1] + ")"));
+
+                 var rect = d3.select("#bars2:nth-child("+ orders[1] + ")");
+                 var offsetLeft = d3.select("#bars2:nth-child("+ orders[1] + ")").offsetLeft;
+
+                   console.log("rect: " + rect);
+                  console.log("offsetLeft: " + offsetLeft);
+*/
+
+
+                  renderCommentText(data8 ,i, 0);
+            
               });   
+  
 
               transitext8.data(frequencies8)
               .on('mouseover', function(d,i){
@@ -1277,6 +1659,20 @@ console.log(frequencies8);
 
    console.log(frequencies9);
 
+
+   var BackGround9 =  column
+              .append('g')
+              .attr("transform", "translate(720,0)")
+              .attr('id','BackGround9')
+              .selectAll('rect')
+              .data(frequencies1)
+              .enter()
+              .append('rect')
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#ddf6ff ')
+              .attr('width',60)
+
    var chart9 = column
               .append('g')
               .attr("transform", "translate(720,0)")
@@ -1308,10 +1704,45 @@ console.log(frequencies8);
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
 
-              transitext9.on("click",function(d,i){
+             /* transitext9.on("click",function(d,i){
                   renderCommentText(data9 ,i, 8);
             
+              });  */ 
+
+         /*----RIYA   */
+        d3.select('#bars9')
+              .selectAll('line')
+              .data(frequencies9)
+              .enter() 
+           .append('line')
+           .attr("transform", "translate(10, 28.5)")
+           .attr('stroke', 'black')
+            .attr('x1',function(d,i){return 30;})
+            .attr('y1',function(d,i){return yscale(serchForOrder(data9[i].keyword,keywordsAll)[8]);})
+            .attr('x2',function(d,i){return ( ((serchForOrder(data9[i].keyword,keywordsAll)[9]) == -1)?30:60);})
+            .attr('y2',function(d,i){return ( ((serchForOrder(data9[i].keyword,keywordsAll)[9]) == -1)?yscale(serchForOrder(data9[i].keyword,keywordsAll)[8]): yscale(serchForOrder(data9[i].keyword,keywordsAll)[9]));});
+
+                  transitext9.on("click",function(d,i){
+
+
+               /*  var orders =  serchForOrder(data1[i].keyword,keywordsAll);
+
+                 console.log(orders);
+
+                 console.log(d3.select("#bars2:nth-child("+ orders[1] + ")"));
+
+                 var rect = d3.select("#bars2:nth-child("+ orders[1] + ")");
+                 var offsetLeft = d3.select("#bars2:nth-child("+ orders[1] + ")").offsetLeft;
+
+                   console.log("rect: " + rect);
+                  console.log("offsetLeft: " + offsetLeft);
+*/
+
+
+                  renderCommentText(data9 ,i, 0);
+            
               });   
+  
 
 
               transitext9.data(frequencies9)
@@ -1349,6 +1780,20 @@ console.log(frequencies8);
 
 console.log(frequencies10);
 
+
+    var BackGround10 =  column
+              .append('g')
+              .attr("transform", "translate(800,0)")
+              .attr('id','BackGround10')
+              .selectAll('rect')
+              .data(frequencies1)
+              .enter()
+              .append('rect')
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#ddf6ff ')
+              .attr('width',60)
+
    var chart10 = column
               .append('g')
               .attr("transform", "translate(800,0)")
@@ -1381,11 +1826,46 @@ console.log(frequencies10);
               .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
 
 
-
+/*
                transitext10.on("click",function(d,i){
                   renderCommentText(data10 ,i, 9);
             
-              }); 
+              }); */
+         /*----RIYA   */
+        d3.select('#bars10')
+              .selectAll('line')
+              .data(frequencies10)
+              .enter() 
+           .append('line')
+           .attr("transform", "translate(10, 28.5)")
+           .attr('stroke', 'black')
+            .attr('x1',function(d,i){return 30;})
+            .attr('y1',function(d,i){return yscale(serchForOrder(data10[i].keyword,keywordsAll)[9]);})
+            .attr('x2',function(d,i){return ( ((serchForOrder(data10[i].keyword,keywordsAll)[10]) == -1)?30:60);})
+            .attr('y2',function(d,i){return ( ((serchForOrder(data10[i].keyword,keywordsAll)[10]) == -1)?yscale(serchForOrder(data10[i].keyword,keywordsAll)[9]): yscale(serchForOrder(data10[i].keyword,keywordsAll)[10]));});
+
+                  transitext10.on("click",function(d,i){
+
+
+               /*  var orders =  serchForOrder(data1[i].keyword,keywordsAll);
+
+                 console.log(orders);
+
+                 console.log(d3.select("#bars2:nth-child("+ orders[1] + ")"));
+
+                 var rect = d3.select("#bars2:nth-child("+ orders[1] + ")");
+                 var offsetLeft = d3.select("#bars2:nth-child("+ orders[1] + ")").offsetLeft;
+
+                   console.log("rect: " + rect);
+                  console.log("offsetLeft: " + offsetLeft);
+*/
+
+
+                  renderCommentText(data10 ,i, 0);
+            
+              });   
+  
+
 
               transitext10.data(frequencies10)
               .on('mouseover', function(d,i){
@@ -1420,7 +1900,22 @@ console.log(frequencies10);
 
 
 
-                 console.log(frequencies11);
+   console.log(frequencies11);
+
+
+
+    var BackGround11 =  column
+              .append('g')
+              .attr("transform", "translate(880,0)")
+              .attr('id','BackGround11')
+              .selectAll('rect')
+              .data(frequencies1)
+              .enter()
+              .append('rect')
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#ddf6ff ')
+              .attr('width',60)
 
    var chart11 = column
               .append('g')
@@ -1453,10 +1948,45 @@ console.log(frequencies10);
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
 
-              transitext11.on("click",function(d,i){
+             /* transitext11.on("click",function(d,i){
                   renderCommentText(data11 ,i, 10);
             
-              }); 
+              }); */
+
+         /*----RIYA   */
+        d3.select('#bars11')
+              .selectAll('line')
+              .data(frequencies11)
+              .enter() 
+           .append('line')
+           .attr("transform", "translate(10, 28.5)")
+           .attr('stroke', 'black')
+            .attr('x1',function(d,i){return 30;})
+            .attr('y1',function(d,i){return yscale(serchForOrder(data11[i].keyword,keywordsAll)[10]);})
+            .attr('x2',function(d,i){return ( ((serchForOrder(data11[i].keyword,keywordsAll)[11]) == -1)?30:60);})
+            .attr('y2',function(d,i){return ( ((serchForOrder(data11[i].keyword,keywordsAll)[11]) == -1)?yscale(serchForOrder(data11[i].keyword,keywordsAll)[10]): yscale(serchForOrder(data11[i].keyword,keywordsAll)[11]));});
+
+                  transitext11.on("click",function(d,i){
+
+
+               /*  var orders =  serchForOrder(data1[i].keyword,keywordsAll);
+
+                 console.log(orders);
+
+                 console.log(d3.select("#bars2:nth-child("+ orders[1] + ")"));
+
+                 var rect = d3.select("#bars2:nth-child("+ orders[1] + ")");
+                 var offsetLeft = d3.select("#bars2:nth-child("+ orders[1] + ")").offsetLeft;
+
+                   console.log("rect: " + rect);
+                  console.log("offsetLeft: " + offsetLeft);
+*/
+
+
+                  renderCommentText(data11 ,i, 0);
+            
+              });   
+  
 
               transitext11.data(frequencies11)
               .on('mouseover', function(d,i){
@@ -1493,6 +2023,20 @@ console.log(frequencies10);
 
    console.log(frequencies12);
 
+
+   var BackGround12 =  column
+              .append('g')
+              .attr("transform", "translate(960,0)")
+              .attr('id','BackGround12')
+              .selectAll('rect')
+              .data(frequencies1)
+              .enter()
+              .append('rect')
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#ddf6ff ')
+              .attr('width',60)
+
    var chart12 = column
               .append('g')
               .attr("transform", "translate(960,0)")
@@ -1525,10 +2069,14 @@ console.log(frequencies10);
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
 
-              transitext12.on("click",function(d,i){
+             /* transitext12.on("click",function(d,i){
                   renderCommentText(data12 ,i, 11);
             
-              }); 
+              }); */
+        
+        
+  
+
 
 
               transitext12.data(frequencies12)
@@ -1568,6 +2116,20 @@ console.log(frequencies10);
 
    console.log(frequencies13);
 
+
+  var BackGround13 =  column
+              .append('g')
+              .attr("transform", "translate(1060,0)")
+              .attr('id','BackGround13')
+              .selectAll('rect')
+              .data(frequencies1)
+              .enter()
+              .append('rect')
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#ddf6ff ')
+              .attr('width',200)
+
    var chart13 = column
               .append('g')
               .attr("transform", "translate(1060,0)")
@@ -1589,7 +2151,7 @@ console.log(frequencies10);
                 .data(frequencies13)
                 .transition()
                 .duration(1000) 
-                .attr("width", function(d) {return xscale(d ); });
+                .attr("width", function(d) {return xscale(d * .4 ); });
 
 
            var transitext13 = d3.select('#bars13')
