@@ -154,18 +154,45 @@
       
    
     var data = [];
-    var keyword = 'amazing';
+    var keyword = 'great';
 
     d3.csv("data.csv", function(error, csv) {
         
-      data = csv;
+     // data = csv;
 
-      dataFilter(data,csv);
+    //  dataFilter(data,csv);
+     
+
+       data = csv.filter(function(row) {
+        return row['keyword'] == keyword;
+        })
+
+
+          csv = csv.filter(function(row) {
+        return row['keyword'] == keyword;
+        })
+
+
+       console.log(data); 
+       console.log(csv); 
+
+
       console.log(data); 
 
-      dataNest(data,csv);
+        var newData = [];
 
-      console.log(data); 
+         data.forEach(function(d,i) { 
+
+        newData[d.date] =  d.frequency ;
+
+
+        });
+
+              console.log(newData); 
+
+         data =  newData;
+
+       
   
 
       rect.filter(function(d) { return d in data; })
@@ -180,19 +207,6 @@
 
 
     });
-
-
-    function dataNest(d,c){
-
-          console.log(data); 
-
-          data = d3.nest()
-        .key(function(d) { 
-          return d.date; })
-        .rollup(function(d) { return  d[0].frequency; })
-        .map(c);
-
-      }
 
 
       function dataFilter(d,c){
