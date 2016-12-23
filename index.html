@@ -127,9 +127,9 @@
 
     <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown" style=" background-color:#F7F3E8 ;float: right; margin-right: 10%; margin-top : 3px;">Change Data Set
     <span class="caret"></span></button>
-    <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
-      <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Yelp Reviews</a></li>
-      <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Yelp Tips</a></li>
+   <ul class="dropdown-menu" role="menu" aria-labelledby="menu1" style ="float: right; position:inherit;">
+      <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOption1" href="#">Yelp Reviews</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOption2" href="#">Yelp Tips</a></li>
 
     </ul>
 
@@ -198,6 +198,8 @@
 
 
    <script>
+
+    var csvDocName = "daily.csv";
     var width = 1700,
         height = 150,
         cellSize = 13; // cell size
@@ -225,6 +227,7 @@
     var svg = d3.select("#HeatMap").selectAll("svg")
         .data(d3.range(2014, 2015))
       .enter().append("svg")
+        .attr("id", "HeatMapSVG")
         .attr("width", width)
         .attr("height", height)
         .attr("class", "RdYlGn")
@@ -302,7 +305,7 @@
 
 
     //d3.csv("data.csv", function(error, csv) {          
-    d3.csv("daily.csv", function(error, csv) {
+      d3.csv(csvDocName, function(error, csv) {
 
 
        data = csv.filter(function(row) {
@@ -459,7 +462,20 @@
      
  
     }
-  
+      
+   function outlierWords(count)
+          {
+
+            var color;
+
+
+            if(count==1){ color = '#ff0000'}
+            else {color = '#000000'};
+
+
+          return color;
+
+        }   
     function serchForOrder(keyword, data ){
       //console.log(data);
         var order = [];
@@ -792,18 +808,20 @@ var yscale = d3.scale.linear()
               .style('fill', '#ddf6ff ')
               .attr('width',60)
     
-      var count1 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+     var count1 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
        
         
         for(var k = 0; k<keywords1.length; k++){
-        var rank = serchForOrder(keywords1[k],keywordsAll);
-            for(var j = 1; j <=rank.length; j++){
-                if(rank[j]!=-1)
+        var rank1 = serchForOrder(keywords1[k],keywordsAll);
+            for(var j = 0; j <rank1.length-1; j++){
+                if(rank1[j]!=-1)
                     count1[k] = count1[k] + 1;
-             //   console.log(keywords1);
-           //     console.log(count1);
+             
             }
-       }
+           
+       } console.log(keywords1);
+                console.log(count1);
+        
     var chart1 = column
             
               .append('g')
@@ -839,10 +857,9 @@ var yscale = d3.scale.linear()
               .text(function(d){ return d; })
         //.style({'fill':'#000','font-size':'14px'});
         .style("fill",function(d,i){
-            if(count1[i]==1){return '#ff0000'}
-            else {return '#000000'};});
+            return outlierWords(count1[i]);});
     
-        console.log(count1);
+       
         
        
         
@@ -934,7 +951,7 @@ var ranking = serchForOrder(data1[i].keyword,keywordsAll);
               .attr("transform", "translate(130,0)")
               .attr('id','BackGround2')
               .selectAll('rect')
-              .data(frequencies1)
+              .data(frequencies2)
               .enter()
               .append('rect')
               .attr('height',19)
@@ -942,18 +959,19 @@ var ranking = serchForOrder(data1[i].keyword,keywordsAll);
               .style('fill', '#ddf6ff ')
               .attr('width',60)
     
-        var count2 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+       var count2 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
        
         
         for(var k = 0; k<keywords2.length; k++){
         var rank2 = serchForOrder(keywords2[k],keywordsAll);
-            
-            for(var j = 1; j <=rank2.length; j++){
+            for(var j = 0; j <rank2.length-1; j++){
                 if(rank2[j]!=-1)
                     count2[k] = count2[k] + 1;
-              
+             
             }
-       }
+           
+       } console.log(keywords2);
+                console.log(count2);
 
 
 
@@ -992,19 +1010,7 @@ var ranking = serchForOrder(data1[i].keyword,keywordsAll);
         });
 
 
-             function outlierWords(count)
-          {
-
-            var color;
-
-
-            if(count==2){ color = '#ff0000'}
-            else {color = '#000000'};
-
-
-          return color;
-
-        }   
+            
 
 
            /* transitext2.on("click",function(d,i){
@@ -1091,16 +1097,17 @@ var ranking = serchForOrder(data2[i].keyword,keywordsAll);
           var count3 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
        
         
-        for(var k = 0; k<keywords1.length; k++){
-        var rank3 = serchForOrder(keywords1[k],keywordsAll);
-            for(var j = 1; j <=rank.length; j++){
+        for(var k = 0; k<keywords3.length; k++){
+        var rank3 = serchForOrder(keywords3[k],keywordsAll);
+            for(var j = 0; j <rank3.length-1; j++){
                 if(rank3[j]!=-1)
                     count3[k] = count3[k] + 1;
              
             }
-       }
-           console.log(keywords3);
-              console.log(count3);
+           
+       } console.log(keywords3);
+                console.log(count3);
+        
    var chart3 = column
               .append('g')
               .attr("transform", "translate(210,0)")
@@ -1127,8 +1134,7 @@ var ranking = serchForOrder(data2[i].keyword,keywordsAll);
               .append('text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style("fill",function(d,i){
-            if(count3[i]==1){return '#ff0000'}
-            else {return '#000000'};});
+            return outlierWords(count3[i]);});
                  /*transitext3.on("click",function(d,i){
                   renderCommentText(data3 ,i, 2);
             
@@ -1215,15 +1221,19 @@ console.log(frequencies4);
     var count4 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
        
         
+    
+       
+        
         for(var k = 0; k<keywords4.length; k++){
         var rank4 = serchForOrder(keywords4[k],keywordsAll);
-            for(var j = 1; j <=rank4.length; j++){
+            for(var j = 0; j <rank4.length-1; j++){
                 if(rank4[j]!=-1)
                     count4[k] = count4[k] + 1;
-             //   console.log(keywords1);
-           //     console.log(count);
+             
             }
-       }
+           
+       } console.log(keywords4);
+                console.log(count4);
         
    var chart4 = column
               .append('g')
@@ -1252,8 +1262,7 @@ console.log(frequencies4);
               .append('text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style("fill",function(d,i){
-            if(count4[i]==1){return '#ff0000'}
-            else {return '#000000'};});
+            return outlierWords(count4[i]);});
               /*transitext4.on("click",function(d,i){
                   renderCommentText(data4 ,i, 3);
             
@@ -1335,19 +1344,19 @@ console.log(frequencies5);
               .style('fill', '#ddf6ff ')
               .attr('width',60)
   
-    var count5 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+   var count5 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
        
         
         for(var k = 0; k<keywords5.length; k++){
         var rank5 = serchForOrder(keywords5[k],keywordsAll);
-            for(var j = 1; j <=rank5.length; j++){
+            for(var j = 0; j <rank5.length-1; j++){
                 if(rank5[j]!=-1)
                     count5[k] = count5[k] + 1;
-           
+             
             }
-       }
-          console.log(keywords5);
-           console.log(count5);
+           
+       } console.log(keywords5);
+                console.log(count5);
         
    var chart5 = column
               .append('g')
@@ -1378,8 +1387,7 @@ console.log(frequencies5);
               .append('text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style("fill",function(d,i){
-            if(count5[i]==2){return '#ff0000'}
-            else {return '#000000'};});
+            return outlierWords(count5[i]);});
             /*  transitext5.on("click",function(d,i){
                   renderCommentText(data5 ,i, 4);
             
@@ -1459,18 +1467,19 @@ console.log(frequencies6);
               .style('fill', '#ddf6ff ')
               .attr('width',60)
   
-    var count6 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+   var count6 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
        
         
         for(var k = 0; k<keywords6.length; k++){
         var rank6 = serchForOrder(keywords6[k],keywordsAll);
-            for(var j = 1; j <=rank6.length; j++){
+            for(var j = 0; j <rank6.length-1; j++){
                 if(rank6[j]!=-1)
                     count6[k] = count6[k] + 1;
-             //   console.log(keywords1);
-           //     console.log(count);
+             
             }
-       }
+           
+       } console.log(keywords6);
+                console.log(count6);
         
         
    var chart6 = column
@@ -1499,8 +1508,7 @@ console.log(frequencies6);
               .append('text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style("fill",function(d,i){
-            if(count6[i]==2){return '#ff0000'}
-            else {return '#000000'};});
+           return outlierWords(count6[i]);});
             /*  transitext6.on("click",function(d,i){
                   renderCommentText(data6 ,i, 5);
             
@@ -1581,14 +1589,14 @@ var ranking = serchForOrder(data6[i].keyword,keywordsAll);
         
         for(var k = 0; k<keywords7.length; k++){
         var rank7 = serchForOrder(keywords7[k],keywordsAll);
-            for(var j = 1; j <=rank7.length; j++){
+            for(var j = 0; j <rank7.length-1; j++){
                 if(rank7[j]!=-1)
                     count7[k] = count7[k] + 1;
-             //   console.log(keywords1);
-           //     console.log(count);
+             
             }
-       }
-        
+           
+       } console.log(keywords7);
+                console.log(count7);
         
    var chart7 = column
               .append('g')
@@ -1615,8 +1623,7 @@ var ranking = serchForOrder(data6[i].keyword,keywordsAll);
               .append('text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style("fill",function(d,i){
-            if(count7[i]==2){return '#ff0000'}
-            else {return '#000000'};});
+            return outlierWords(count7[i]);});
              /* transitext7.on("click",function(d,i){
                   renderCommentText(data7 ,i, 6);
             
@@ -1695,18 +1702,19 @@ console.log(frequencies8);
               .style('fill', '#ddf6ff ')
               .attr('width',60)
   
-    var count8 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+   var count8 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
        
         
         for(var k = 0; k<keywords8.length; k++){
         var rank8 = serchForOrder(keywords8[k],keywordsAll);
-            for(var j = 1; j <=rank8.length; j++){
+            for(var j = 0; j <rank8.length-1; j++){
                 if(rank8[j]!=-1)
                     count8[k] = count8[k] + 1;
-             //   console.log(keywords1);
-           //     console.log(count);
+             
             }
-       }
+           
+       } console.log(keywords8);
+                console.log(count8);
         
    var chart8 = column
               .append('g')
@@ -1734,8 +1742,7 @@ console.log(frequencies8);
               .append('text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style("fill",function(d,i){
-            if(count8[i]==2){return '#ff0000'}
-            else {return '#000000'};});
+           return outlierWords(count8[i]);});
              /* transitext8.on("click",function(d,i){
                   renderCommentText(data8 ,i, 7);
             
@@ -1821,13 +1828,14 @@ var ranking = serchForOrder(data8[i].keyword,keywordsAll);
         
         for(var k = 0; k<keywords9.length; k++){
         var rank9 = serchForOrder(keywords9[k],keywordsAll);
-            for(var j = 1; j <=rank9.length; j++){
+            for(var j = 0; j <rank9.length-1; j++){
                 if(rank9[j]!=-1)
                     count9[k] = count9[k] + 1;
-             //   console.log(keywords1);
-           //     console.log(count);
+             
             }
-       }
+           
+       } console.log(keywords9);
+                console.log(count9);
         
    var chart9 = column
               .append('g')
@@ -1854,8 +1862,7 @@ var ranking = serchForOrder(data8[i].keyword,keywordsAll);
               .append('text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style("fill",function(d,i){
-            if(count9[i]==2){return '#ff0000'}
-            else {return '#000000'};});
+            return outlierWords(count9[i]);});
              /* transitext9.on("click",function(d,i){
                   renderCommentText(data9 ,i, 8);
             
@@ -1941,15 +1948,15 @@ console.log(frequencies10);
         
         for(var k = 0; k<keywords10.length; k++){
         var rank10 = serchForOrder(keywords10[k],keywordsAll);
-            for(var j = 1; j <=rank10.length; j++){
+            for(var j = 0; j <rank10.length-1; j++){
                 if(rank10[j]!=-1)
                     count10[k] = count10[k] + 1;
-             //   console.log(keywords1);
-           //     console.log(count);
+             
             }
            
-       }
-         console.log(count10);
+       } console.log(keywords10);
+                console.log(count10);
+        
    var chart10 = column
               .append('g')
               .attr("transform", "translate(770,0)")
@@ -1975,8 +1982,7 @@ console.log(frequencies10);
               .append('text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style("fill",function(d,i){
-            if(count10[i]==2){return '#ff0000'}
-            else {return '#000000'};});
+           return outlierWords(count10[i]);});
 /*
                transitext10.on("click",function(d,i){
                   renderCommentText(data10 ,i, 9);
@@ -2057,18 +2063,19 @@ var ranking = serchForOrder(data10[i].keyword,keywordsAll);
               .style('fill', '#ddf6ff ')
               .attr('width',60)
     
-      var count11 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+     var count11 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
        
         
         for(var k = 0; k<keywords11.length; k++){
         var rank11 = serchForOrder(keywords11[k],keywordsAll);
-            for(var j = 1; j <=rank11.length; j++){
+            for(var j = 0; j <rank11.length-1; j++){
                 if(rank11[j]!=-1)
                     count11[k] = count11[k] + 1;
-             //   console.log(keywords1);
-           //     console.log(count);
+             
             }
-       }
+           
+       } console.log(keywords11);
+                console.log(count11);
         
    var chart11 = column
               .append('g')
@@ -2095,8 +2102,7 @@ var ranking = serchForOrder(data10[i].keyword,keywordsAll);
               .append('text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style("fill",function(d,i){
-            if(count11[i]==2){return '#ff0000'}
-            else {return '#000000'};});
+            return outlierWords(count11[i]);});
              /* transitext11.on("click",function(d,i){
                   renderCommentText(data11 ,i, 10);
             
@@ -2181,14 +2187,15 @@ var ranking = serchForOrder(data11[i].keyword,keywordsAll);
         
         for(var k = 0; k<keywords12.length; k++){
         var rank12 = serchForOrder(keywords12[k],keywordsAll);
-            for(var j = 1; j <=rank12.length; j++){
+            for(var j = 0; j <rank12.length-1; j++){
                 if(rank12[j]!=-1)
                     count12[k] = count12[k] + 1;
-              
+             
             }
-       }
-         console.log(keywords12);
-        console.log(count12);
+           
+       } console.log(keywords12);
+                console.log(count12);
+        
    var chart12 = column
               .append('g')
               .attr("transform", "translate(930,0)")
@@ -2215,8 +2222,7 @@ var ranking = serchForOrder(data11[i].keyword,keywordsAll);
               .append('text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style("fill",function(d,i){
-            if(count12[i]==2){return '#ff0000'}
-            else {return '#000000'};})
+           return outlierWords(count12[i]);})
           
              /* transitext12.on("click",function(d,i){
                   renderCommentText(data12 ,i, 11);
@@ -2445,14 +2451,65 @@ var ranking = serchForOrder(data12[i].keyword,keywordsAll);
            //renderList(filteredData13);
     }
 
-      d3.json(docName, function(error,result){
-      //d3.json("reviewKey.json", function(error,result){
+      //d3.json(docName, function(error,result){
+      d3.json("reviewKey.json", function(error,result){
       data = result;
       render(data);
     })
    
   </script>
+     <script>
+
+
+              d3.select("#DropDownOption1").on("click",function(d,i){
+
+
+                  csvDocName = "daily.csv";
+
+
+
+
+                  d3.selectAll("#svg").remove();
+
+
+                  JsonDocName = "reviewKey.json";
+
+                   d3.json(JsonDocName, function(error,result){
+
+                    data = result;
+                    render(data);
+                     })
+
+
+                 // renderCommentText(data1 ,i, 0);
+            
+              });   
+
+
+                d3.select("#DropDownOption2").on("click",function(d,i){
+
+
+
+                    csvDocName = "daily.csv";
+
+                     d3.selectAll("#svg").remove();
+
+
+                  JsonDocName = "KeyWordsFrequency_Data.json";
+
+                   d3.json(JsonDocName, function(error,result){
+
+                    data = result;
+                    render(data);
+                     })
+
+
+                 // renderCommentText(data1 ,i, 0);
+            
+              });   
+
+
+    </script>
+
 </body>
 </html>
-Contact GitHub API Training Shop Blog About
-© 2016 GitHub, Inc. Terms Privacy Security Status Help
