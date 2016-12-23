@@ -149,7 +149,7 @@
  </div>
 
 
-   <ul class="nav nav-pills" style="padding: 2px 12px ; margin-left:-10px">
+   <ul class="nav nav-pills" >
     <li class="active"  ><a data-toggle="tab" href="#HeatMap">HeatMap</a></li>
     <li><a data-toggle="tab" href="#Comments">Comments</a></li>
     <li><a data-toggle="tab" href="#menu2">Menu 2</a></li>
@@ -384,7 +384,7 @@
     var topNum = 15;
     var listByMonth = true;
     var data = [];
-    var YearlyList = d3.select("#YearlyList");
+    var CommentsList = d3.select("#CommentsList");
     var Comments = d3.select("#Comments");
     var canvasWidth = 1350;
     var canavasHeight = 25 * topNum + 20;
@@ -397,7 +397,7 @@
     render(data);
    }
     function renderList(data){
-     var selection = YearlyList.selectAll("li")
+     var selection = CommentsList.selectAll("li")
           .data(data , function(d) {return d.keyword});
      selection.enter()
           .append("li")
@@ -413,7 +413,7 @@
       
     }
     function renderCommentText(data, orderIndex, monthIndex){
-      var selection = YearlyList.selectAll("li")
+      var selection = CommentsList.selectAll("li")
           .remove()
           .data(data[orderIndex].mentioned[year][monthIndex] , function(d) {return d});
           selection.enter()
@@ -685,7 +685,7 @@ var month7=month+6;
     }
 var xscale = d3.scale.linear()
             .domain([10,250])
-            .range([0, 200]);
+            .range([0, 5]);
 var yscale = d3.scale.linear()
             .domain([0,10])
             .range([0,250]);
@@ -2385,8 +2385,8 @@ var ranking = serchForOrder(data12[i].keyword,keywordsAll);
            //renderList(filteredData13);
     }
 
-      //d3.json("KeyWordsFrequency_Data.json", function(error,result){
-      d3.json("reviewKey.json", function(error,result){
+      d3.json("KeyWordsFrequency_Data.json", function(error,result){
+      //d3.json("reviewKey.json", function(error,result){
       data = result;
       render(data);
     })
