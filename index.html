@@ -17,11 +17,15 @@
         color: white;
         padding: 10;
       }
-      
+         
+      .xlabel{
+
+          fill: black ;
+      }
      
       .svg
       {
-          margin-left: -50px;
+          margin-left: -30px;
           
       }
       
@@ -36,6 +40,7 @@
         transition: all 0.5s;
        
       }
+
 
        #HeatMap{
         width: 800px;
@@ -69,6 +74,7 @@
       .RdYlGn .q2-11{fill:rgb(255,255,180)}
       .RdYlGn .q1-11{fill:rgb(255,255,210)}
       .RdYlGn .q0-11{fill:rgb(255,255,240)}
+      
       
   #xaxis .domain {
     fill:none;
@@ -104,18 +110,25 @@
   width: 100%;
 }
   </style>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 </head>
 <body>
 
  <div id="title">
-      <h1 style="color: white">Keywords over time - Restaurants from Philadelphia </h1>
+      <h1 style="color: #29324e">Keywords over time - Restaurants from Philadelphia </h1>
     </div>
 
      
    <div id="tooltip">Tooltip</div>
 
-  <div>
-      <div id="listChat">
+
+
+    <button type="button" class="btn btn-info" style="padding: 2px 12px ; margin-left:-10px" data-toggle="collapse" data-target="#listChat">Keywords Annual Analysis</button>
+      <div id="listChat" class="collapse in">
 
    <!--   <div id="example" class="parcoords" style="width:960px;height:350px"></div>
    -->   </div>
@@ -127,26 +140,37 @@
        <input 
       id="yearSelect"
       type="range" 
-      min="1900" 
-      max="2009" 
-      value="2008" 
-      style="width:550"
+      min="2014" 
+      max="2015" 
+      value="2014" 
+      style="width:250"
       onchange="setYear(this.value)"
       >
  </div>
-             <div id="HeatMap" class="clearfix"></div>
 
 
-  </div>
+   <ul class="nav nav-pills" style="padding: 2px 12px ; margin-left:-10px">
+    <li class="active"  ><a data-toggle="tab" href="#HeatMap">HeatMap</a></li>
+    <li><a data-toggle="tab" href="#Comments">Comments</a></li>
+    <li><a data-toggle="tab" href="#menu2">Menu 2</a></li>
+    <li><a data-toggle="tab" href="#menu3">Menu 3</a></li>
+  </ul>
+
+  <div class="tab-content">
+
+      <!-- <div id="HeatMap" class="clearfix"></div> 
+      -->
+
+       <div id="HeatMap" class="tab-pane fade in active"></div>
 
 
-    <div class="Comments" id="Comments">
-    <h2> Top 5 Comments being Mentioned </h2>
-     <ul class="CommentsList" id="CommentsList"></ul>
-     </div>
+         <div id="Comments"  class="tab-pane fade">
+        <h2> Top 5 Comments being Mentioned </h2>
+        <ul class="CommentsList" id="CommentsList"></ul>
+        </div>
 
  
-
+ </div>
 
 
 
@@ -155,6 +179,7 @@
 -->
    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>  
    <script src="https://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+
 
 
    <script>
@@ -351,16 +376,18 @@
 
 
 
+
+
   <script>
     var year = 2014;
     var month = 0;
     var topNum = 15;
     var listByMonth = true;
     var data = [];
-    var CommentsList = d3.select("#CommentsList");
+    var YearlyList = d3.select("#YearlyList");
     var Comments = d3.select("#Comments");
-    var canvasWidth = 1250;
-    var canavasHeight = 30 * topNum;
+    var canvasWidth = 1350;
+    var canavasHeight = 25 * topNum + 20;
     var canavasPadding = 100;
     var innerWidth = 100;
       //setYear
@@ -370,7 +397,7 @@
     render(data);
    }
     function renderList(data){
-     var selection = CommentsList.selectAll("li")
+     var selection = YearlyList.selectAll("li")
           .data(data , function(d) {return d.keyword});
      selection.enter()
           .append("li")
@@ -386,7 +413,7 @@
       
     }
     function renderCommentText(data, orderIndex, monthIndex){
-      var selection = CommentsList.selectAll("li")
+      var selection = YearlyList.selectAll("li")
           .remove()
           .data(data[orderIndex].mentioned[year][monthIndex] , function(d) {return d});
           selection.enter()
@@ -492,6 +519,7 @@
         keywordsAll[9] =  keywords10;
         keywordsAll[10] =  keywords11;
         keywordsAll[11] =  keywords12;
+        keywordsAll[12] =  keywords13;
         
        var ordersAll = [[]]
        for(var i = 0 ; i < data1.length ; i++)    ordersAll[0] =    serchForOrder(data1[i].keyword,keywordsAll);
@@ -657,45 +685,20 @@ var month7=month+6;
     }
 var xscale = d3.scale.linear()
             .domain([10,250])
-            .range([0, 5]);
+            .range([0, 200]);
 var yscale = d3.scale.linear()
             .domain([0,10])
             .range([0,250]);
-
    var column =   d3.select('#listChat')    
                     .append('svg')
                       .attr('id','svg')
                     .attr({'width':canvasWidth,'height':canavasHeight});
         
-   var ControlPanel = d3.select('#ControlPanel')
-                      .append('svg')
-                      .attr('id','ControlPanelSvg')
-                    .attr({'width':canvasWidth,'height':50});
 
-
-    var criticlePathCheckBox =  ControlPanel
-                                .append('rect')
-                                .attr('height',19)
-                                .attr('height',19)
-                                .attr("transform", "translate(50,0)")
-                                .style('fill', '#ddf6ff ')
-                                .attr('width',19)
-
-
-                                criticlePathCheckBox
-                                .append("text")
-                                .attr("class", "x label")
-                                .attr("text-anchor", "middle")
-                                .attr("transform", "translate(25,15)")  // centre below axis
-                                .text("Show Path");
-    
-
-
-    
     var chart0 = column
           
               .append('g')
-              .attr("transform", "translate(50,0)")
+              .attr("transform", "translate(25,0)")
               .attr('id','bars0');
            var transitext0 = d3.select('#bars0')
               .selectAll('text')
@@ -705,20 +708,21 @@ var yscale = d3.scale.linear()
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style({'fill':'#000','font-size':'15px', 'font-weight' : 'bold'});
 
- /*             
+                 /* 
   var xLabel0 = column          
                  .append("text")
                  .style({'float': 'left', 'transform' : 'rotate(90deg)', 'transform-origin ': 'left top 0'})  
-                 .attr("class", "x label")
+                 .attr("class", "xlabel")
                  .attr("text-anchor", "middle")
                  .attr("transform", "translate(0,500)")  // centre below axis
                  .text("Ranking");
- */
 
+                 */
+  
  console.log(frequencies1);
-      var BackGround3 =  column
+      var BackGround1 =  column
               .append('g')
-              .attr("transform", "translate(80,0)")
+              .attr("transform", "translate(50,0)")
               .attr('id','BackGround1')
               .selectAll('rect')
               .data(frequencies1)
@@ -729,10 +733,22 @@ var yscale = d3.scale.linear()
               .style('fill', '#ddf6ff ')
               .attr('width',60)
     
+      var count1 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+       
+        
+        for(var k = 0; k<keywords1.length; k++){
+        var rank = serchForOrder(keywords1[k],keywordsAll);
+            for(var j = 1; j <=rank.length; j++){
+                if(rank[j]!=-1)
+                    count1[k] = count1[k] + 1;
+             //   console.log(keywords1);
+           //     console.log(count1);
+            }
+       }
     var chart1 = column
             
               .append('g')
-              .attr("transform", "translate(80,0)")
+              .attr("transform", "translate(50,0)")
               .attr('id','bars1')
               .selectAll('rect')
              
@@ -753,14 +769,34 @@ var yscale = d3.scale.linear()
                 .transition()
                 .duration(1000) 
                 .attr("width", function(d) {return xscale(d ); });
-           var transitext1 = d3.select('#bars1')
+        
+        var transitext1 = d3.select('#bars1')
               .selectAll('text')
               .data(keywords1)
               .enter()
               .append('text')
+              .attr('class', 'keyword-Text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
-              .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
+              .text(function(d){ return d; })
+        //.style({'fill':'#000','font-size':'14px'});
+        .style("fill",function(d,i){
+            if(count1[i]==1){return '#ff0000'}
+            else {return '#000000'};});
+    
+        console.log(count1);
+        
        
+        
+       /* var outlierWords = d3.select('#bars1')
+        .selectAll('text')
+        .data(keywords1)
+        .enter()
+        .append('text')
+         .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
+              .text(function(d,i){  return d; }).style({'fill':'#ff0000','font-size':'14px'});
+        */
+
+
        /*----RIYA   */
         d3.select('#bars1')
               .selectAll('line')
@@ -768,46 +804,38 @@ var yscale = d3.scale.linear()
               .enter() 
            .append('line')
            .attr("transform", "translate(15, 28.5)")
-           .attr('stroke', '#c4efff')
-           .attr('stroke-width', '2')
+           .attr('stroke', '#8ee1ff')
+           .attr('stroke-width', '1.5')
             .attr('x1',function(d,i){return 45;})
             .attr('y1',function(d,i){return yscale(serchForOrder(data1[i].keyword,keywordsAll)[0]);})
             .attr('x2',function(d,i){return ( ((serchForOrder(data1[i].keyword,keywordsAll)[1]) == -1)?45:65);})
             .attr('y2',function(d,i){return ( ((serchForOrder(data1[i].keyword,keywordsAll)[1]) == -1)?yscale(serchForOrder(data1[i].keyword,keywordsAll)[0]): yscale(serchForOrder(data1[i].keyword,keywordsAll)[1]));});
 
 
-                  transitext1.on("click",function(d,i){
-               /*  var orders =  serchForOrder(data1[i].keyword,keywordsAll);
-                 console.log(orders);
-                 console.log(d3.select("#bars2:nth-child("+ orders[1] + ")"));
-                 var rect = d3.select("#bars2:nth-child("+ orders[1] + ")");
-                 var offsetLeft = d3.select("#bars2:nth-child("+ orders[1] + ")").offsetLeft;
-                   console.log("rect: " + rect);
-                  console.log("offsetLeft: " + offsetLeft);
-
-
-*/
-       
+                transitext1.on("click",function(d,i){
 
                     changeKeyword(data1[i].keyword);
 
 
-
+                  d3.selectAll(".keyword-Text")
+                   .style(
+                    "fill", "black"
+                  );
 
                    d3.selectAll("line")
                    .style(
                     "visibility", "hidden"
                   );
-                  
 
                   renderCommentText(data1 ,i, 0);
             
               });   
   
+  
             
               transitext1.data(frequencies1)
               .on('mouseover', function(d,i){
-          var ranking = serchForOrder(data1[i].keyword,keywordsAll);
+var ranking = serchForOrder(data1[i].keyword,keywordsAll);
                   console.log(ranking);
                 d3.select("#tooltip")
                 .style("visibility", "visible" )
@@ -816,28 +844,27 @@ var yscale = d3.scale.linear()
                 .style("opacity",1)
                 d3.select("#tooltip").text(d);
                   d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
-                  for(var p =1;p<=12;p+=1) {
+                  for(var p =1;p<=13;p+=1) {
                d3.select("#rect"+p+"_"+ ranking[p-1])
-                  .style("fill", '#ffac8e')       
+                  .style("fill", '#ff8fa9')
+               
                   }
                
                })
-                
-               
                 .on('mouseout', function(d,i){
                   d3.select("#tooltip").style(
                     "visibility", "hidden"
                   )
                   .style("opacity",0);
                    d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
-                  for(var p =1;p<=12;p+=1) {
+                  for(var p =1;p<=13;p+=1) {
                d3.select("#rect"+p+"_"+ ranking[p-1])
                   .style("fill", '#8ee1ff')       
                   }
               });
   var xLabel1 = d3.select('#bars1')                
                  .append("text")
-                 .attr("class", "x label")
+                 .attr("class", "xlabel")
                  .attr("text-anchor", "middle")
                  .attr("transform", "translate(25,15)")  // centre below axis
                  .text("Jan");
@@ -845,7 +872,7 @@ var yscale = d3.scale.linear()
  console.log(frequencies2);
       var BackGround2 =  column
               .append('g')
-              .attr("transform", "translate(160,0)")
+              .attr("transform", "translate(130,0)")
               .attr('id','BackGround2')
               .selectAll('rect')
               .data(frequencies1)
@@ -856,9 +883,25 @@ var yscale = d3.scale.linear()
               .style('fill', '#ddf6ff ')
               .attr('width',60)
     
+        var count2 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+       
+        
+        for(var k = 0; k<keywords2.length; k++){
+        var rank2 = serchForOrder(keywords2[k],keywordsAll);
+            
+            for(var j = 1; j <=rank2.length; j++){
+                if(rank2[j]!=-1)
+                    count2[k] = count2[k] + 1;
+              
+            }
+       }
+
+
+
+         
     var chart2 = column
               .append('g')
-              .attr("transform", "translate(160,0)")
+              .attr("transform", "translate(130,0)")
               .attr('id','bars2')
               .selectAll('rect')
               .data(frequencies1)
@@ -881,8 +924,31 @@ var yscale = d3.scale.linear()
               .enter()
               .append('text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
-              .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
-               /* transitext2.on("click",function(d,i){
+              .text(function(d){ return d; }).style("fill",function(d,i){
+
+             
+                return outlierWords(count2[i]);
+
+
+        });
+
+
+             function outlierWords(count)
+          {
+
+            var color;
+
+
+            if(count==2){ color = '#ff0000'}
+            else {color = '#000000'};
+
+
+          return color;
+
+        }   
+
+
+           /* transitext2.on("click",function(d,i){
                   renderCommentText(data2 ,i, 1);
             
               });  */ 
@@ -893,8 +959,8 @@ var yscale = d3.scale.linear()
               .enter() 
            .append('line')
            .attr("transform", "translate(15, 28.5)")
-           .attr('stroke', '#c4efff')
-           .attr('stroke-width', '2')
+           .attr('stroke', '#8ee1ff')
+           .attr('stroke-width', '1.5')
             .attr('x1',function(d,i){return 45;})
             .attr('y1',function(d,i){return yscale(serchForOrder(data2[i].keyword,keywordsAll)[1]);})
             .attr('x2',function(d,i){return ( ((serchForOrder(data2[i].keyword,keywordsAll)[2]) == -1)?45:65);})
@@ -902,22 +968,16 @@ var yscale = d3.scale.linear()
 
 
 
-                  transitext2.on("click",function(d,i){
-               /*  var orders =  serchForOrder(data1[i].keyword,keywordsAll);
-                 console.log(orders);
-                 console.log(d3.select("#bars2:nth-child("+ orders[1] + ")"));
-                 var rect = d3.select("#bars2:nth-child("+ orders[1] + ")");
-                 var offsetLeft = d3.select("#bars2:nth-child("+ orders[1] + ")").offsetLeft;
-                   console.log("rect: " + rect);
-                  console.log("offsetLeft: " + offsetLeft);
-*/
-                  
+             transitext2.on("click",function(d,i){
 
                     changeKeyword(data2[i].keyword);
 
                   renderCommentText(data2 ,i, 0);
             
               });
+
+
+
               transitext2.data(frequencies2)
               .on('mouseover', function(d,i){
 var ranking = serchForOrder(data2[i].keyword,keywordsAll);
@@ -929,9 +989,9 @@ var ranking = serchForOrder(data2[i].keyword,keywordsAll);
                 .style("opacity",1)
                 d3.select("#tooltip").text(d);
                   d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
-                  for(var p =1;p<=12;p+=1) {
+                  for(var p =1;p<=13;p+=1) {
                d3.select("#rect"+p+"_"+ ranking[p-1])
-                  .style("fill", '#ffac8e')       
+                  .style("fill", '#ff8fa9')       
                   }
                
                })
@@ -943,14 +1003,14 @@ var ranking = serchForOrder(data2[i].keyword,keywordsAll);
                   )
                   .style("opacity",0);
                    d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
-                  for(var p =1;p<=12;p+=1) {
+                  for(var p =1;p<=13;p+=1) {
                d3.select("#rect"+p+"_"+ ranking[p-1])
                   .style("fill", '#8ee1ff')       
                   }
               });
   var xLabel2 = d3.select('#bars2')                
                  .append("text")
-                 .attr("class", "x label")
+                 .attr("class", "xlabel")
                  .attr("text-anchor", "middle")
                  .attr("transform", "translate(25,15)")  // centre below axis
                  .text("Feb");
@@ -958,7 +1018,7 @@ var ranking = serchForOrder(data2[i].keyword,keywordsAll);
   console.log(frequencies3);
         var BackGround3 =  column
               .append('g')
-              .attr("transform", "translate(240,0)")
+              .attr("transform", "translate(210,0)")
               .attr('id','BackGround3')
               .selectAll('rect')
               .data(frequencies1)
@@ -968,9 +1028,23 @@ var ranking = serchForOrder(data2[i].keyword,keywordsAll);
               .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
               .style('fill', '#ddf6ff ')
               .attr('width',60)
+        
+          var count3 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+       
+        
+        for(var k = 0; k<keywords1.length; k++){
+        var rank3 = serchForOrder(keywords1[k],keywordsAll);
+            for(var j = 1; j <=rank.length; j++){
+                if(rank3[j]!=-1)
+                    count3[k] = count3[k] + 1;
+             
+            }
+       }
+           console.log(keywords3);
+              console.log(count3);
    var chart3 = column
               .append('g')
-              .attr("transform", "translate(240,0)")
+              .attr("transform", "translate(210,0)")
               .attr('id','bars3')
               .selectAll('rect')
               .data(frequencies1)
@@ -993,7 +1067,9 @@ var ranking = serchForOrder(data2[i].keyword,keywordsAll);
               .enter()
               .append('text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
-              .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
+              .text(function(d){ return d; }).style("fill",function(d,i){
+            if(count3[i]==1){return '#ff0000'}
+            else {return '#000000'};});
                  /*transitext3.on("click",function(d,i){
                   renderCommentText(data3 ,i, 2);
             
@@ -1005,30 +1081,27 @@ var ranking = serchForOrder(data2[i].keyword,keywordsAll);
               .enter() 
            .append('line')
            .attr("transform", "translate(15, 28.5)")
-           .attr('stroke', '#c4efff')
-           .attr('stroke-width', '2')
+           .attr('stroke', '#8ee1ff')
+           .attr('stroke-width', '1.5')
             .attr('x1',function(d,i){return 45;})
             .attr('y1',function(d,i){return yscale(serchForOrder(data3[i].keyword,keywordsAll)[2]);})
             .attr('x2',function(d,i){return ( ((serchForOrder(data3[i].keyword,keywordsAll)[3]) == -1)?45:65);})
             .attr('y2',function(d,i){return ( ((serchForOrder(data3[i].keyword,keywordsAll)[3]) == -1)?yscale(serchForOrder(data3[i].keyword,keywordsAll)[2]): yscale(serchForOrder(data3[i].keyword,keywordsAll)[3]));});
 
 
+  
                   transitext3.on("click",function(d,i){
-               /*  var orders =  serchForOrder(data1[i].keyword,keywordsAll);
-                 console.log(orders);
-                 console.log(d3.select("#bars2:nth-child("+ orders[1] + ")"));
-                 var rect = d3.select("#bars2:nth-child("+ orders[1] + ")");
-                 var offsetLeft = d3.select("#bars2:nth-child("+ orders[1] + ")").offsetLeft;
-                   console.log("rect: " + rect);
-                  console.log("offsetLeft: " + offsetLeft);
-*/
-                  
+
+
+
 
                     changeKeyword(data3[i].keyword);
 
                   renderCommentText(data3 ,i, 0);
             
-              });   
+              });  
+
+
               transitext3.data(frequencies3)
               .on('mouseover', function(d,i){
 var ranking = serchForOrder(data3[i].keyword,keywordsAll);
@@ -1040,9 +1113,9 @@ var ranking = serchForOrder(data3[i].keyword,keywordsAll);
                 .style("opacity",1)
                 d3.select("#tooltip").text(d);
                   d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
-                  for(var p =1;p<=12;p+=1) {
+                  for(var p =1;p<=13;p+=1) {
                d3.select("#rect"+p+"_"+ ranking[p-1])
-                  .style("fill", '#ffac8e')       
+                  .style("fill", '#ff8fa9')       
                   }
                
                })
@@ -1054,14 +1127,14 @@ var ranking = serchForOrder(data3[i].keyword,keywordsAll);
                   )
                   .style("opacity",0);
                    d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
-                  for(var p =1;p<=12;p+=1) {
+                  for(var p =1;p<=13;p+=1) {
                d3.select("#rect"+p+"_"+ ranking[p-1])
                   .style("fill", '#8ee1ff')       
                   }
               });
   var xLabel3 = d3.select('#bars3')                
                  .append("text")
-                 .attr("class", "x label")
+                 .attr("class", "xlabel")
                  .attr("text-anchor", "middle")
                  .attr("transform", "translate(25,15)")  // centre below axis
                  .text("Mar");
@@ -1069,7 +1142,7 @@ var ranking = serchForOrder(data3[i].keyword,keywordsAll);
 console.log(frequencies4);
   var BackGround4 =  column
               .append('g')
-              .attr("transform", "translate(320,0)")
+              .attr("transform", "translate(290,0)")
               .attr('id','BackGround4')
               .selectAll('rect')
               .data(frequencies1)
@@ -1080,9 +1153,22 @@ console.log(frequencies4);
               .style('fill', '#ddf6ff ')
               .attr('width',60)
   
+    var count4 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+       
+        
+        for(var k = 0; k<keywords4.length; k++){
+        var rank4 = serchForOrder(keywords4[k],keywordsAll);
+            for(var j = 1; j <=rank4.length; j++){
+                if(rank4[j]!=-1)
+                    count4[k] = count4[k] + 1;
+             //   console.log(keywords1);
+           //     console.log(count);
+            }
+       }
+        
    var chart4 = column
               .append('g')
-              .attr("transform", "translate(320,0)")
+              .attr("transform", "translate(290,0)")
               .attr('id','bars4')
               .selectAll('rect')
               .data(frequencies4)
@@ -1106,7 +1192,9 @@ console.log(frequencies4);
               .enter()
               .append('text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
-              .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
+              .text(function(d){ return d; }).style("fill",function(d,i){
+            if(count4[i]==1){return '#ff0000'}
+            else {return '#000000'};});
               /*transitext4.on("click",function(d,i){
                   renderCommentText(data4 ,i, 3);
             
@@ -1119,27 +1207,22 @@ console.log(frequencies4);
               .enter() 
            .append('line')
            .attr("transform", "translate(10, 28.5)")
-            .attr('stroke', '#c4efff')
-           .attr('stroke-width', '2')
+            .attr('stroke', '#8ee1ff')
+           .attr('stroke-width', '1.5')
             .attr('x1',function(d,i){return 50;})
             .attr('y1',function(d,i){return yscale(serchForOrder(data4[i].keyword,keywordsAll)[3]);})
             .attr('x2',function(d,i){return ( ((serchForOrder(data4[i].keyword,keywordsAll)[4]) == -1)?50:70);})
-            .attr('y2',function(d,i){return ( ((serchForOrder(data4[i].keyword,keywordsAll)[4]) == -1)?yscale(serchForOrder(data4[i].keyword,keywordsAll)[0]): yscale(serchForOrder(data4[i].keyword,keywordsAll)[4]));});
+            .attr('y2',function(d,i){return ( ((serchForOrder(data4[i].keyword,keywordsAll)[4]) == -1)?yscale(serchForOrder(data4[i].keyword,keywordsAll)[3]): yscale(serchForOrder(data4[i].keyword,keywordsAll)[4]));});
 
 
+ 
                   transitext4.on("click",function(d,i){
-               /*  var orders =  serchForOrder(data1[i].keyword,keywordsAll);
-                 console.log(orders);
-                 console.log(d3.select("#bars2:nth-child("+ orders[1] + ")"));
-                 var rect = d3.select("#bars2:nth-child("+ orders[1] + ")");
-                 var offsetLeft = d3.select("#bars2:nth-child("+ orders[1] + ")").offsetLeft;
-                   console.log("rect: " + rect);
-                  console.log("offsetLeft: " + offsetLeft);
-*/                
+              
                   changeKeyword(data4[i].keyword);
                   renderCommentText(data4 ,i, 0);
             
               });   
+   
   
               transitext4.data(frequencies4)
              .on('mouseover', function(d,i){
@@ -1152,9 +1235,9 @@ var ranking = serchForOrder(data4[i].keyword,keywordsAll);
                 .style("opacity",1)
                 d3.select("#tooltip").text(d);
                   d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
-                  for(var p =1;p<=12;p+=1) {
+                  for(var p =1;p<=13;p+=1) {
                d3.select("#rect"+p+"_"+ ranking[p-1])
-                  .style("fill", '#ffac8e')       
+                  .style("fill", '#ff8fa9')       
                   }
                
                })
@@ -1166,14 +1249,14 @@ var ranking = serchForOrder(data4[i].keyword,keywordsAll);
                   )
                   .style("opacity",0);
                    d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
-                  for(var p =1;p<=12;p+=1) {
+                  for(var p =1;p<=13;p+=1) {
                d3.select("#rect"+p+"_"+ ranking[p-1])
                   .style("fill", '#8ee1ff')       
                   }
               });
   var xLabel4 = d3.select('#bars4')                
                  .append("text")
-                 .attr("class", "x label")
+                 .attr("class", "xlabel")
                  .attr("text-anchor", "middle")
                  .attr("transform", "translate(25,15)")  // centre below axis
                  .text("Apr");
@@ -1182,7 +1265,7 @@ console.log(frequencies5);
    
   var BackGround5 =  column
               .append('g')
-              .attr("transform", "translate(400,0)")
+              .attr("transform", "translate(370,0)")
               .attr('id','BackGround5')
               .selectAll('rect')
               .data(frequencies1)
@@ -1192,9 +1275,24 @@ console.log(frequencies5);
               .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
               .style('fill', '#ddf6ff ')
               .attr('width',60)
+  
+    var count5 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+       
+        
+        for(var k = 0; k<keywords5.length; k++){
+        var rank5 = serchForOrder(keywords5[k],keywordsAll);
+            for(var j = 1; j <=rank5.length; j++){
+                if(rank5[j]!=-1)
+                    count5[k] = count5[k] + 1;
+           
+            }
+       }
+          console.log(keywords5);
+           console.log(count5);
+        
    var chart5 = column
               .append('g')
-              .attr("transform", "translate(400,0)")
+              .attr("transform", "translate(370,0)")
               .attr('id','bars5')
               .selectAll('rect')
               .data(frequencies5)
@@ -1220,7 +1318,9 @@ console.log(frequencies5);
               .enter()
               .append('text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
-              .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
+              .text(function(d){ return d; }).style("fill",function(d,i){
+            if(count5[i]==2){return '#ff0000'}
+            else {return '#000000'};});
             /*  transitext5.on("click",function(d,i){
                   renderCommentText(data5 ,i, 4);
             
@@ -1233,27 +1333,22 @@ console.log(frequencies5);
               .enter() 
            .append('line')
            .attr("transform", "translate(10, 28.5)")
-            .attr('stroke', '#c4efff')
-           .attr('stroke-width', '2')
+            .attr('stroke', '#8ee1ff')
+           .attr('stroke-width', '1.5')
             .attr('x1',function(d,i){return 50;})
             .attr('y1',function(d,i){return yscale(serchForOrder(data5[i].keyword,keywordsAll)[4]);})
             .attr('x2',function(d,i){return ( ((serchForOrder(data5[i].keyword,keywordsAll)[5]) == -1)?50:80);})
             .attr('y2',function(d,i){return ( ((serchForOrder(data5[i].keyword,keywordsAll)[5]) == -1)?yscale(serchForOrder(data5[i].keyword,keywordsAll)[4]): yscale(serchForOrder(data5[i].keyword,keywordsAll)[5]));});
 
 
+      
+
                   transitext5.on("click",function(d,i){
-               /*  var orders =  serchForOrder(data1[i].keyword,keywordsAll);
-                 console.log(orders);
-                 console.log(d3.select("#bars2:nth-child("+ orders[1] + ")"));
-                 var rect = d3.select("#bars2:nth-child("+ orders[1] + ")");
-                 var offsetLeft = d3.select("#bars2:nth-child("+ orders[1] + ")").offsetLeft;
-                   console.log("rect: " + rect);
-                  console.log("offsetLeft: " + offsetLeft);
-*/              
+
                   changeKeyword(data5[i].keyword);
                   renderCommentText(data5 ,i, 0);
             
-              });   
+              });     
   
               transitext5.data(frequencies5)
              .on('mouseover', function(d,i){
@@ -1266,9 +1361,9 @@ var ranking = serchForOrder(data5[i].keyword,keywordsAll);
                 .style("opacity",1)
                 d3.select("#tooltip").text(d);
                   d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
-                  for(var p =1;p<=12;p+=1) {
+                  for(var p =1;p<=13;p+=1) {
                d3.select("#rect"+p+"_"+ ranking[p-1])
-                  .style("fill", '#ffac8e')       
+                  .style("fill", '#ff8fa9')       
                   }
                
                })
@@ -1280,21 +1375,21 @@ var ranking = serchForOrder(data5[i].keyword,keywordsAll);
                   )
                   .style("opacity",0);
                    d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
-                  for(var p =1;p<=12;p+=1) {
+                  for(var p =1;p<=13;p+=1) {
                d3.select("#rect"+p+"_"+ ranking[p-1])
                   .style("fill", '#8ee1ff')       
                   }
               });
   var xLabel5 = d3.select('#bars5')                
                  .append("text")
-                 .attr("class", "x label")
+                 .attr("class", "xlabel")
                  .attr("text-anchor", "middle")
                  .attr("transform", "translate(25,15)")  // centre below axis
                  .text("May");
 console.log(frequencies6);
   var BackGround6 =  column
               .append('g')
-              .attr("transform", "translate(480,0)")
+              .attr("transform", "translate(450,0)")
               .attr('id','BackGround6')
               .selectAll('rect')
               .data(frequencies1)
@@ -1304,9 +1399,24 @@ console.log(frequencies6);
               .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
               .style('fill', '#ddf6ff ')
               .attr('width',60)
+  
+    var count6 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+       
+        
+        for(var k = 0; k<keywords6.length; k++){
+        var rank6 = serchForOrder(keywords6[k],keywordsAll);
+            for(var j = 1; j <=rank6.length; j++){
+                if(rank6[j]!=-1)
+                    count6[k] = count6[k] + 1;
+             //   console.log(keywords1);
+           //     console.log(count);
+            }
+       }
+        
+        
    var chart6 = column
               .append('g')
-              .attr("transform", "translate(480,0)")
+              .attr("transform", "translate(450,0)")
               .attr('id','bars6')
               .selectAll('rect')
               .data(frequencies6)
@@ -1329,7 +1439,9 @@ console.log(frequencies6);
               .enter()
               .append('text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
-              .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
+              .text(function(d){ return d; }).style("fill",function(d,i){
+            if(count6[i]==2){return '#ff0000'}
+            else {return '#000000'};});
             /*  transitext6.on("click",function(d,i){
                   renderCommentText(data6 ,i, 5);
             
@@ -1341,29 +1453,19 @@ console.log(frequencies6);
               .enter() 
            .append('line')
            .attr("transform", "translate(10, 28.5)")
-           .attr('stroke', '#c4efff')
-           .attr('stroke-width', '2')
+           .attr('stroke', '#8ee1ff')
+           .attr('stroke-width', '1.5')
             .attr('x1',function(d,i){return 50;})
             .attr('y1',function(d,i){return yscale(serchForOrder(data6[i].keyword,keywordsAll)[5]);})
             .attr('x2',function(d,i){return ( ((serchForOrder(data6[i].keyword,keywordsAll)[6]) == -1)?50:70);})
             .attr('y2',function(d,i){return ( ((serchForOrder(data6[i].keyword,keywordsAll)[6]) == -1)?yscale(serchForOrder(data6[i].keyword,keywordsAll)[5]): yscale(serchForOrder(data6[i].keyword,keywordsAll)[6]));});
 
 
-
                   transitext6.on("click",function(d,i){
-               /*  var orders =  serchForOrder(data1[i].keyword,keywordsAll);
-                 console.log(orders);
-                 console.log(d3.select("#bars2:nth-child("+ orders[1] + ")"));
-                 var rect = d3.select("#bars2:nth-child("+ orders[1] + ")");
-                 var offsetLeft = d3.select("#bars2:nth-child("+ orders[1] + ")").offsetLeft;
-                   console.log("rect: " + rect);
-                  console.log("offsetLeft: " + offsetLeft);
-*/  
-
                   changeKeyword(data6[i].keyword);
                   renderCommentText(data6 ,i, 0);
             
-              });   
+              });     
   
               transitext6.data(frequencies6)
             .on('mouseover', function(d,i){
@@ -1376,9 +1478,9 @@ var ranking = serchForOrder(data6[i].keyword,keywordsAll);
                 .style("opacity",1)
                 d3.select("#tooltip").text(d);
                   d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
-                  for(var p =1;p<=12;p+=1) {
+                  for(var p =1;p<=13;p+=1) {
                d3.select("#rect"+p+"_"+ ranking[p-1])
-                  .style("fill", '#ffac8e')       
+                  .style("fill", '#ff8fa9')       
                   }
                
                })
@@ -1390,21 +1492,21 @@ var ranking = serchForOrder(data6[i].keyword,keywordsAll);
                   )
                   .style("opacity",0);
                    d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
-                  for(var p =1;p<=12;p+=1) {
+                  for(var p =1;p<=13;p+=1) {
                d3.select("#rect"+p+"_"+ ranking[p-1])
                   .style("fill", '#8ee1ff')       
                   }
               });
   var xLabel6 = d3.select('#bars6')                
                  .append("text")
-                 .attr("class", "x label")
+                 .attr("class", "xlabel")
                  .attr("text-anchor", "middle")
                  .attr("transform", "translate(25,15)")  // centre below axis
                  .text("Jun");
   console.log(frequencies7);
   var BackGround7 =  column
               .append('g')
-              .attr("transform", "translate(560,0)")
+              .attr("transform", "translate(530,0)")
               .attr('id','BackGround7')
               .selectAll('rect')
               .data(frequencies1)
@@ -1414,9 +1516,24 @@ var ranking = serchForOrder(data6[i].keyword,keywordsAll);
               .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
               .style('fill', '#ddf6ff ')
               .attr('width',60)
+  
+    var count7 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+       
+        
+        for(var k = 0; k<keywords7.length; k++){
+        var rank7 = serchForOrder(keywords7[k],keywordsAll);
+            for(var j = 1; j <=rank7.length; j++){
+                if(rank7[j]!=-1)
+                    count7[k] = count7[k] + 1;
+             //   console.log(keywords1);
+           //     console.log(count);
+            }
+       }
+        
+        
    var chart7 = column
               .append('g')
-              .attr("transform", "translate(560,0)")
+              .attr("transform", "translate(530,0)")
               .attr('id','bars7')
               .selectAll('rect')
               .data(frequencies7)
@@ -1438,7 +1555,9 @@ var ranking = serchForOrder(data6[i].keyword,keywordsAll);
               .enter()
               .append('text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
-              .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
+              .text(function(d){ return d; }).style("fill",function(d,i){
+            if(count7[i]==2){return '#ff0000'}
+            else {return '#000000'};});
              /* transitext7.on("click",function(d,i){
                   renderCommentText(data7 ,i, 6);
             
@@ -1450,8 +1569,8 @@ var ranking = serchForOrder(data6[i].keyword,keywordsAll);
               .enter() 
            .append('line')
            .attr("transform", "translate(10, 28.5)")
-           .attr('stroke', '#c4efff')
-           .attr('stroke-width', '2')
+           .attr('stroke', '#8ee1ff')
+           .attr('stroke-width', '1.5')
             .attr('x1',function(d,i){return 50;})
             .attr('y1',function(d,i){return yscale(serchForOrder(data7[i].keyword,keywordsAll)[6]);})
             .attr('x2',function(d,i){return ( ((serchForOrder(data7[i].keyword,keywordsAll)[7]) == -1)?50:70);})
@@ -1459,20 +1578,13 @@ var ranking = serchForOrder(data6[i].keyword,keywordsAll);
 
 
 
+ 
                   transitext7.on("click",function(d,i){
-               /*  var orders =  serchForOrder(data1[i].keyword,keywordsAll);
-                 console.log(orders);
-                 console.log(d3.select("#bars2:nth-child("+ orders[1] + ")"));
-                 var rect = d3.select("#bars2:nth-child("+ orders[1] + ")");
-                 var offsetLeft = d3.select("#bars2:nth-child("+ orders[1] + ")").offsetLeft;
-                   console.log("rect: " + rect);
-                  console.log("offsetLeft: " + offsetLeft);
-*/
 
                   changeKeyword(data7[i].keyword);
                   renderCommentText(data7 ,i, 0);
             
-              });   
+              });    
   
               transitext7.data(frequencies7)
               .on('mouseover', function(d,i){
@@ -1485,9 +1597,9 @@ var ranking = serchForOrder(data7[i].keyword,keywordsAll);
                 .style("opacity",1)
                 d3.select("#tooltip").text(d);
                   d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
-                  for(var p =1;p<=12;p+=1) {
+                  for(var p =1;p<=13;p+=1) {
                d3.select("#rect"+p+"_"+ ranking[p-1])
-                  .style("fill", '#ffac8e')       
+                  .style("fill", '#ff8fa9')       
                   }
                
                })
@@ -1499,21 +1611,21 @@ var ranking = serchForOrder(data7[i].keyword,keywordsAll);
                   )
                   .style("opacity",0);
                    d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
-                  for(var p =1;p<=12;p+=1) {
+                  for(var p =1;p<=13;p+=1) {
                d3.select("#rect"+p+"_"+ ranking[p-1])
                   .style("fill", '#8ee1ff')       
                   }
               });
   var xLabel7 = d3.select('#bars7')                
                  .append("text")
-                 .attr("class", "x label")
+                 .attr("class", "xlabel")
                  .attr("text-anchor", "middle")
                  .attr("transform", "translate(25,15)")  // centre below axis
                  .text("Jul");
 console.log(frequencies8);
   var BackGround8 =  column
               .append('g')
-              .attr("transform", "translate(640,0)")
+              .attr("transform", "translate(610,0)")
               .attr('id','BackGround8')
               .selectAll('rect')
               .data(frequencies1)
@@ -1523,9 +1635,23 @@ console.log(frequencies8);
               .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
               .style('fill', '#ddf6ff ')
               .attr('width',60)
+  
+    var count8 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+       
+        
+        for(var k = 0; k<keywords8.length; k++){
+        var rank8 = serchForOrder(keywords8[k],keywordsAll);
+            for(var j = 1; j <=rank8.length; j++){
+                if(rank8[j]!=-1)
+                    count8[k] = count8[k] + 1;
+             //   console.log(keywords1);
+           //     console.log(count);
+            }
+       }
+        
    var chart8 = column
               .append('g')
-              .attr("transform", "translate(640,0)")
+              .attr("transform", "translate(610,0)")
               .attr('id','bars8')
               .selectAll('rect')
               .data(frequencies8)
@@ -1548,7 +1674,9 @@ console.log(frequencies8);
               .enter()
               .append('text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
-              .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
+              .text(function(d){ return d; }).style("fill",function(d,i){
+            if(count8[i]==2){return '#ff0000'}
+            else {return '#000000'};});
              /* transitext8.on("click",function(d,i){
                   renderCommentText(data8 ,i, 7);
             
@@ -1562,8 +1690,8 @@ console.log(frequencies8);
               .enter() 
            .append('line')
            .attr("transform", "translate(10, 28.5)")
-          .attr('stroke', '#c4efff')
-           .attr('stroke-width', '2')
+          .attr('stroke', '#8ee1ff')
+           .attr('stroke-width', '1.5')
             .attr('x1',function(d,i){return 50;})
             .attr('y1',function(d,i){return yscale(serchForOrder(data8[i].keyword,keywordsAll)[7]);})
             .attr('x2',function(d,i){return ( ((serchForOrder(data8[i].keyword,keywordsAll)[8]) == -1)?50:70);})
@@ -1571,15 +1699,8 @@ console.log(frequencies8);
 
 
 
+
                   transitext8.on("click",function(d,i){
-               /*  var orders =  serchForOrder(data1[i].keyword,keywordsAll);
-                 console.log(orders);
-                 console.log(d3.select("#bars2:nth-child("+ orders[1] + ")"));
-                 var rect = d3.select("#bars2:nth-child("+ orders[1] + ")");
-                 var offsetLeft = d3.select("#bars2:nth-child("+ orders[1] + ")").offsetLeft;
-                   console.log("rect: " + rect);
-                  console.log("offsetLeft: " + offsetLeft);
-*/
 
                   changeKeyword(data8[i].keyword);
                   renderCommentText(data8 ,i, 0);
@@ -1597,9 +1718,9 @@ var ranking = serchForOrder(data8[i].keyword,keywordsAll);
                 .style("opacity",1)
                 d3.select("#tooltip").text(d);
                   d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
-                  for(var p =1;p<=12;p+=1) {
+                  for(var p =1;p<=13;p+=1) {
                d3.select("#rect"+p+"_"+ ranking[p-1])
-                  .style("fill", '#ffac8e')       
+                  .style("fill", '#ff8fa9')       
                   }
                
                })
@@ -1611,21 +1732,21 @@ var ranking = serchForOrder(data8[i].keyword,keywordsAll);
                   )
                   .style("opacity",0);
                    d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
-                  for(var p =1;p<=12;p+=1) {
+                  for(var p =1;p<=13;p+=1) {
                d3.select("#rect"+p+"_"+ ranking[p-1])
                   .style("fill", '#8ee1ff')       
                   }
               });
   var xLabel8 = d3.select('#bars8')                
                  .append("text")
-                 .attr("class", "x label")
+                 .attr("class", "xlabel")
                  .attr("text-anchor", "middle")
                  .attr("transform", "translate(25,15)")  // centre below axis
                  .text("Aug");
    console.log(frequencies9);
    var BackGround9 =  column
               .append('g')
-              .attr("transform", "translate(720,0)")
+              .attr("transform", "translate(690,0)")
               .attr('id','BackGround9')
               .selectAll('rect')
               .data(frequencies1)
@@ -1635,9 +1756,23 @@ var ranking = serchForOrder(data8[i].keyword,keywordsAll);
               .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
               .style('fill', '#ddf6ff ')
               .attr('width',60)
+   
+     var count9 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+       
+        
+        for(var k = 0; k<keywords9.length; k++){
+        var rank9 = serchForOrder(keywords9[k],keywordsAll);
+            for(var j = 1; j <=rank9.length; j++){
+                if(rank9[j]!=-1)
+                    count9[k] = count9[k] + 1;
+             //   console.log(keywords1);
+           //     console.log(count);
+            }
+       }
+        
    var chart9 = column
               .append('g')
-              .attr("transform", "translate(720,0)")
+              .attr("transform", "translate(690,0)")
               .attr('id','bars9')
               .selectAll('rect')
               .data(frequencies9)
@@ -1659,7 +1794,9 @@ var ranking = serchForOrder(data8[i].keyword,keywordsAll);
               .enter()
               .append('text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
-              .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
+              .text(function(d){ return d; }).style("fill",function(d,i){
+            if(count9[i]==2){return '#ff0000'}
+            else {return '#000000'};});
              /* transitext9.on("click",function(d,i){
                   renderCommentText(data9 ,i, 8);
             
@@ -1672,8 +1809,8 @@ var ranking = serchForOrder(data8[i].keyword,keywordsAll);
               .enter() 
            .append('line')
            .attr("transform", "translate(10, 28.5)")
-            .attr('stroke', '#c4efff')
-           .attr('stroke-width', '2')
+            .attr('stroke', '#8ee1ff')
+           .attr('stroke-width', '1.5')
             .attr('x1',function(d,i){return 50;})
             .attr('y1',function(d,i){return yscale(serchForOrder(data9[i].keyword,keywordsAll)[8]);})
             .attr('x2',function(d,i){return ( ((serchForOrder(data9[i].keyword,keywordsAll)[9]) == -1)?50:70);})
@@ -1681,20 +1818,14 @@ var ranking = serchForOrder(data8[i].keyword,keywordsAll);
 
 
 
+
+
                   transitext9.on("click",function(d,i){
-               /*  var orders =  serchForOrder(data1[i].keyword,keywordsAll);
-                 console.log(orders);
-                 console.log(d3.select("#bars2:nth-child("+ orders[1] + ")"));
-                 var rect = d3.select("#bars2:nth-child("+ orders[1] + ")");
-                 var offsetLeft = d3.select("#bars2:nth-child("+ orders[1] + ")").offsetLeft;
-                   console.log("rect: " + rect);
-                  console.log("offsetLeft: " + offsetLeft);
-*/
 
                   changeKeyword(data9[i].keyword);
                   renderCommentText(data9 ,i, 0);
             
-              });   
+              }); 
   
               transitext9.data(frequencies9)
              .on('mouseover', function(d,i){
@@ -1707,9 +1838,9 @@ var ranking = serchForOrder(data9[i].keyword,keywordsAll);
                 .style("opacity",1)
                 d3.select("#tooltip").text(d);
                   d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
-                  for(var p =1;p<=12;p+=1) {
+                  for(var p =1;p<=13;p+=1) {
                d3.select("#rect"+p+"_"+ ranking[p-1])
-                  .style("fill", '#ffac8e')       
+                  .style("fill", '#ff8fa9')       
                   }
                
                })
@@ -1721,21 +1852,21 @@ var ranking = serchForOrder(data9[i].keyword,keywordsAll);
                   )
                   .style("opacity",0);
                    d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
-                  for(var p =1;p<=12;p+=1) {
+                  for(var p =1;p<=13;p+=1) {
                d3.select("#rect"+p+"_"+ ranking[p-1])
                   .style("fill", '#8ee1ff')       
                   }
               });
   var xLabel9 = d3.select('#bars9')                
                  .append("text")
-                 .attr("class", "x label")
+                 .attr("class", "xlabel")
                  .attr("text-anchor", "middle")
                  .attr("transform", "translate(25,15)")  // centre below axis
                  .text("Sep");              
 console.log(frequencies10);
     var BackGround10 =  column
               .append('g')
-              .attr("transform", "translate(800,0)")
+              .attr("transform", "translate(770,0)")
               .attr('id','BackGround10')
               .selectAll('rect')
               .data(frequencies1)
@@ -1745,9 +1876,24 @@ console.log(frequencies10);
               .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
               .style('fill', '#ddf6ff ')
               .attr('width',60)
+    
+      var count10 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+       
+        
+        for(var k = 0; k<keywords10.length; k++){
+        var rank10 = serchForOrder(keywords10[k],keywordsAll);
+            for(var j = 1; j <=rank10.length; j++){
+                if(rank10[j]!=-1)
+                    count10[k] = count10[k] + 1;
+             //   console.log(keywords1);
+           //     console.log(count);
+            }
+           
+       }
+         console.log(count10);
    var chart10 = column
               .append('g')
-              .attr("transform", "translate(800,0)")
+              .attr("transform", "translate(770,0)")
               .attr('id','bars10')
               .selectAll('rect')
               .data(frequencies10)
@@ -1769,7 +1915,9 @@ console.log(frequencies10);
               .enter()
               .append('text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
-              .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
+              .text(function(d){ return d; }).style("fill",function(d,i){
+            if(count10[i]==2){return '#ff0000'}
+            else {return '#000000'};});
 /*
                transitext10.on("click",function(d,i){
                   renderCommentText(data10 ,i, 9);
@@ -1782,8 +1930,8 @@ console.log(frequencies10);
               .enter() 
            .append('line')
            .attr("transform", "translate(10, 28.5)")
-            .attr('stroke', '#c4efff')
-           .attr('stroke-width', '2')
+            .attr('stroke', '#8ee1ff')
+           .attr('stroke-width', '1.5')
             .attr('x1',function(d,i){return 50;})
             .attr('y1',function(d,i){return yscale(serchForOrder(data10[i].keyword,keywordsAll)[9]);})
             .attr('x2',function(d,i){return ( ((serchForOrder(data10[i].keyword,keywordsAll)[10]) == -1)?50:70);})
@@ -1791,20 +1939,13 @@ console.log(frequencies10);
 
 
 
+
                   transitext10.on("click",function(d,i){
-               /*  var orders =  serchForOrder(data1[i].keyword,keywordsAll);
-                 console.log(orders);
-                 console.log(d3.select("#bars2:nth-child("+ orders[1] + ")"));
-                 var rect = d3.select("#bars2:nth-child("+ orders[1] + ")");
-                 var offsetLeft = d3.select("#bars2:nth-child("+ orders[1] + ")").offsetLeft;
-                   console.log("rect: " + rect);
-                  console.log("offsetLeft: " + offsetLeft);
-*/
 
                   changeKeyword(data10[i].keyword);
                   renderCommentText(data10 ,i, 0);
             
-              });   
+              });  
   
               transitext10.data(frequencies10)
               .on('mouseover', function(d,i){
@@ -1817,9 +1958,9 @@ var ranking = serchForOrder(data10[i].keyword,keywordsAll);
                 .style("opacity",1)
                 d3.select("#tooltip").text(d);
                   d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
-                  for(var p =1;p<=12;p+=1) {
+                  for(var p =1;p<=13;p+=1) {
                d3.select("#rect"+p+"_"+ ranking[p-1])
-                  .style("fill", '#ffac8e')       
+                  .style("fill", '#ff8fa9')       
                   }
                
                })
@@ -1831,21 +1972,22 @@ var ranking = serchForOrder(data10[i].keyword,keywordsAll);
                   )
                   .style("opacity",0);
                    d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
-                  for(var p =1;p<=12;p+=1) {
+                  for(var p =1;p<=13;p+=1) {
                d3.select("#rect"+p+"_"+ ranking[p-1])
                   .style("fill", '#8ee1ff')       
                   }
               });
+        
   var xLabel10 = d3.select('#bars10')                
                  .append("text")
-                 .attr("class", "x label")
+                 .attr("class", "xlabel")
                  .attr("text-anchor", "middle")
                  .attr("transform", "translate(25,15)")  // centre below axis
                  .text("Oct");
    console.log(frequencies11);
     var BackGround11 =  column
               .append('g')
-              .attr("transform", "translate(880,0)")
+              .attr("transform", "translate(850,0)")
               .attr('id','BackGround11')
               .selectAll('rect')
               .data(frequencies1)
@@ -1855,9 +1997,23 @@ var ranking = serchForOrder(data10[i].keyword,keywordsAll);
               .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
               .style('fill', '#ddf6ff ')
               .attr('width',60)
+    
+      var count11 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+       
+        
+        for(var k = 0; k<keywords11.length; k++){
+        var rank11 = serchForOrder(keywords11[k],keywordsAll);
+            for(var j = 1; j <=rank11.length; j++){
+                if(rank11[j]!=-1)
+                    count11[k] = count11[k] + 1;
+             //   console.log(keywords1);
+           //     console.log(count);
+            }
+       }
+        
    var chart11 = column
               .append('g')
-              .attr("transform", "translate(880,0)")
+              .attr("transform", "translate(850,0)")
               .attr('id','bars11')
               .selectAll('rect')
               .data(frequencies11)
@@ -1879,7 +2035,9 @@ var ranking = serchForOrder(data10[i].keyword,keywordsAll);
               .enter()
               .append('text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
-              .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
+              .text(function(d){ return d; }).style("fill",function(d,i){
+            if(count11[i]==2){return '#ff0000'}
+            else {return '#000000'};});
              /* transitext11.on("click",function(d,i){
                   renderCommentText(data11 ,i, 10);
             
@@ -1892,8 +2050,8 @@ var ranking = serchForOrder(data10[i].keyword,keywordsAll);
               .enter() 
            .append('line')
            .attr("transform", "translate(10, 28.5)")
-            .attr('stroke', '#c4efff')
-           .attr('stroke-width', '2')
+            .attr('stroke', '#8ee1ff')
+           .attr('stroke-width', '1.5')
             .attr('x1',function(d,i){return 50;})
             .attr('y1',function(d,i){return yscale(serchForOrder(data11[i].keyword,keywordsAll)[10]);})
             .attr('x2',function(d,i){return ( ((serchForOrder(data11[i].keyword,keywordsAll)[11]) == -1)?50:70);})
@@ -1901,22 +2059,13 @@ var ranking = serchForOrder(data10[i].keyword,keywordsAll);
 
 
 
-            
                   transitext11.on("click",function(d,i){
-               /*  var orders =  serchForOrder(data1[i].keyword,keywordsAll);
-                 console.log(orders);
-                 console.log(d3.select("#bars2:nth-child("+ orders[1] + ")"));
-                 var rect = d3.select("#bars2:nth-child("+ orders[1] + ")");
-                 var offsetLeft = d3.select("#bars2:nth-child("+ orders[1] + ")").offsetLeft;
-                   console.log("rect: " + rect);
-                  console.log("offsetLeft: " + offsetLeft);
-*/
-
 
                   changeKeyword(data11[i].keyword);
                   renderCommentText(data11 ,i, 0);
             
               });   
+
   
               transitext11.data(frequencies11)
              .on('mouseover', function(d,i){
@@ -1929,9 +2078,9 @@ var ranking = serchForOrder(data11[i].keyword,keywordsAll);
                 .style("opacity",1)
                 d3.select("#tooltip").text(d);
                   d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
-                  for(var p =1;p<=12;p+=1) {
+                  for(var p =1;p<=13;p+=1) {
                d3.select("#rect"+p+"_"+ ranking[p-1])
-                  .style("fill", '#ffac8e')       
+                  .style("fill", '#ff8fa9')       
                   }
                
                })
@@ -1943,21 +2092,21 @@ var ranking = serchForOrder(data11[i].keyword,keywordsAll);
                   )
                   .style("opacity",0);
                    d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
-                  for(var p =1;p<=12;p+=1) {
+                  for(var p =1;p<=13;p+=1) {
                d3.select("#rect"+p+"_"+ ranking[p-1])
                   .style("fill", '#8ee1ff')       
                   }
               });
   var xLabel11 = d3.select('#bars11')                
                  .append("text")
-                 .attr("class", "x label")
+                 .attr("class", "xlabel")
                  .attr("text-anchor", "middle")
                  .attr("transform", "translate(25,15)")  // centre below axis
                  .text("Nov");
    console.log(frequencies12);
    var BackGround12 =  column
               .append('g')
-              .attr("transform", "translate(960,0)")
+              .attr("transform", "translate(930,0)")
               .attr('id','BackGround12')
               .selectAll('rect')
               .data(frequencies1)
@@ -1967,9 +2116,23 @@ var ranking = serchForOrder(data11[i].keyword,keywordsAll);
               .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
               .style('fill', '#ddf6ff ')
               .attr('width',60)
+   
+     var count12 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+       
+        
+        for(var k = 0; k<keywords12.length; k++){
+        var rank12 = serchForOrder(keywords12[k],keywordsAll);
+            for(var j = 1; j <=rank12.length; j++){
+                if(rank12[j]!=-1)
+                    count12[k] = count12[k] + 1;
+              
+            }
+       }
+         console.log(keywords12);
+        console.log(count12);
    var chart12 = column
               .append('g')
-              .attr("transform", "translate(960,0)")
+              .attr("transform", "translate(930,0)")
               .attr('id','bars12')
               .selectAll('rect')
               .data(frequencies12)
@@ -1992,23 +2155,17 @@ var ranking = serchForOrder(data11[i].keyword,keywordsAll);
               .enter()
               .append('text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
-              .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
+              .text(function(d){ return d; }).style("fill",function(d,i){
+            if(count12[i]==2){return '#ff0000'}
+            else {return '#000000'};})
+          
              /* transitext12.on("click",function(d,i){
                   renderCommentText(data12 ,i, 11);
             
               }); */
         
-
+              
               transitext12.on("click",function(d,i){
-               /*  var orders =  serchForOrder(data1[i].keyword,keywordsAll);
-                 console.log(orders);
-                 console.log(d3.select("#bars2:nth-child("+ orders[1] + ")"));
-                 var rect = d3.select("#bars2:nth-child("+ orders[1] + ")");
-                 var offsetLeft = d3.select("#bars2:nth-child("+ orders[1] + ")").offsetLeft;
-                   console.log("rect: " + rect);
-                  console.log("offsetLeft: " + offsetLeft);
-*/
-
 
                   changeKeyword(data12[i].keyword);
                   renderCommentText(data12 ,i, 0);
@@ -2027,32 +2184,35 @@ var ranking = serchForOrder(data12[i].keyword,keywordsAll);
                 .style("opacity",1)
                 d3.select("#tooltip").text(d);
                   d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
-                  for(var p =1;p<=12;p+=1) {
+                  for(var p =1;p<=13;p+=1) {
                d3.select("#rect"+p+"_"+ ranking[p-1])
-                  .style("fill", '#ffac8e')       
+                  .style("fill", '#ff8fa9')       
                   }
                
-               }).on('mouseout', function(d,i){
+               })
+                
+               
+                .on('mouseout', function(d,i){
                   d3.select("#tooltip").style(
                     "visibility", "hidden"
                   )
                   .style("opacity",0);
                    d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
-                  for(var p =1;p<=12;p+=1) {
+                  for(var p =1;p<=13;p+=1) {
                d3.select("#rect"+p+"_"+ ranking[p-1])
                   .style("fill", '#8ee1ff')       
                   }
               });
   var xLabel12 = d3.select('#bars12')                
                  .append("text")
-                 .attr("class", "x label")
+                 .attr("class", "xlabel")
                  .attr("text-anchor", "middle")
                  .attr("transform", "translate(25,15)")  // centre below axis
                  .text("Dec");
    console.log(frequencies13);
   var BackGround13 =  column
               .append('g')
-              .attr("transform", "translate(1060,0)")
+              .attr("transform", "translate(1040,0)")
               .attr('id','BackGround13')
               .selectAll('rect')
               .data(frequencies1)
@@ -2061,16 +2221,17 @@ var ranking = serchForOrder(data12[i].keyword,keywordsAll);
               .attr('height',19)
               .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
               .style('fill', '#ddf6ff ')
-              .attr('width',200)
+              .attr('width',250)
    var chart13 = column
               .append('g')
-              .attr("transform", "translate(1060,0)")
+              .attr("transform", "translate(1040,0)")
               .attr('id','bars13')
               .selectAll('rect')
               .data(frequencies13)
               .enter()
               .append('rect')
-              .attr('id','rect13')
+               .attr('id',function(d,i) {return 'rect13_' + i})
+                .classed("rect_value", true).attr('height',19)
               .attr('height',19)
               .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
               .style('fill', '#8ee1ff')
@@ -2088,16 +2249,22 @@ var ranking = serchForOrder(data12[i].keyword,keywordsAll);
               .append('text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
-              transitext13.data(frequencies13)
+              
+        transitext13.data(frequencies13)
               .on('mouseover', function(d,i){
+            var ranking = serchForOrder(data13[i].keyword,keywordsAll);
+                  console.log(ranking);
                 d3.select("#tooltip")
                 .style("visibility", "visible" )
                 .style("top", (d3.event.clientY)+10 + "px")
                 .style("left",(d3.event.clientX) + "px")
                 .style("opacity",1)
                 d3.select("#tooltip").text(d);
-                d3.select("#rect13:nth-child("+ (i + 1) + ")")
-                 .style("fill", '#ffac8e')
+                d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
+                  for(var p =1;p<=13;p+=1) {
+               d3.select("#rect"+p+"_"+ ranking[p-1])
+                  .style("fill", '#ff8fa9')       
+                  }
                })
                 
                
@@ -2106,12 +2273,15 @@ var ranking = serchForOrder(data12[i].keyword,keywordsAll);
                     "visibility", "hidden"
                   )
                   .style("opacity",0);
-                   d3.select("#rect13:nth-child("+ (i + 1) + ")")
-                  .style("fill", '#8ee1ff')
+                   d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
+                  for(var p =1;p<=13;p+=1) {
+               d3.select("#rect"+p+"_"+ ranking[p-1])
+                  .style("fill", '#8ee1ff')       
+                  }
               });
   var xLabel13 = d3.select('#bars13')                
                  .append("text")
-                 .attr("class", "x label")
+                 .attr("class", "xlabel")
                  .attr("text-anchor", "middle")
                  .attr("transform", "translate(25,15)")  // centre below axis
                  .text(year);
@@ -2214,7 +2384,9 @@ var ranking = serchForOrder(data12[i].keyword,keywordsAll);
         
            //renderList(filteredData13);
     }
-      d3.json("KeyWordsFrequency_Data.json", function(error,result){
+
+      //d3.json("KeyWordsFrequency_Data.json", function(error,result){
+      d3.json("reviewKey.json", function(error,result){
       data = result;
       render(data);
     })
