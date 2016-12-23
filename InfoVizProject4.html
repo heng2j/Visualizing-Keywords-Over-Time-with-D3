@@ -751,14 +751,15 @@ var yscale = d3.scale.linear()
        
         
         for(var k = 0; k<keywords1.length; k++){
-        var rank = serchForOrder(keywords1[k],keywordsAll);
-            for(var j = 1; j <=rank.length; j++){
-                if(rank[j]!=-1)
+        var rank1 = serchForOrder(keywords1[k],keywordsAll);
+            for(var j = 0; j <rank1.length-1; j++){
+                if(rank1[j]!=-1)
                     count1[k] = count1[k] + 1;
-             //   console.log(keywords1);
-           //     console.log(count1);
+             
             }
-       }
+           
+       } console.log(keywords1);
+                console.log(count1);
     var chart1 = column
             
               .append('g')
@@ -898,17 +899,16 @@ var ranking = serchForOrder(data1[i].keyword,keywordsAll);
         var count2 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
        
         
-        for(var k = 0; k<keywords2.length; k++){
+       for(var k = 0; k<keywords2.length; k++){
         var rank2 = serchForOrder(keywords2[k],keywordsAll);
-            
-            for(var j = 1; j <rank2.length; j++){
+            for(var j = 0; j <rank2.length-1; j++){
                 if(rank2[j]!=-1)
                     count2[k] = count2[k] + 1;
-              
+             
             }
-       }
-        console.log(keywords2);
-console.log(count2);
+           
+       } console.log(keywords2);
+                console.log(count2);
 
 
          
