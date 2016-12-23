@@ -36,6 +36,39 @@
         transition: all 0.5s;
        
       }
+
+       #HeatMap{
+        width: 800px;
+        margin: 10px;
+      }
+
+
+      .day {
+        fill: #fff;
+        stroke: #ccc;
+      }
+
+      .month {
+        fill: none;
+        stroke: #fff;
+        stroke-width: 4px;
+      }
+      .year-title {
+        font-size: 1.5em;
+      }
+
+      /* color ranges */
+      .RdYlGn .q10-11{fill:rgb(165,0,38)}
+      .RdYlGn .q9-11{fill:rgb(200,10,45)}
+      .RdYlGn .q8-11{fill:rgb(220,60,45)}
+      .RdYlGn .q7-11{fill:rgb(244,109,67)}
+      .RdYlGn .q6-11{fill:rgb(250,155,87)}
+      .RdYlGn .q5-11{fill:rgb(253,184,100)}
+      .RdYlGn .q4-11{fill:rgb(254,210,139)}
+      .RdYlGn .q3-11{fill:rgb(255,255,155)}
+      .RdYlGn .q2-11{fill:rgb(255,255,180)}
+      .RdYlGn .q1-11{fill:rgb(255,255,210)}
+      .RdYlGn .q0-11{fill:rgb(255,255,240)}
       
   #xaxis .domain {
     fill:none;
@@ -83,29 +116,33 @@
 
   <div>
       <div id="listChat">
+
    <!--   <div id="example" class="parcoords" style="width:960px;height:350px"></div>
    -->   </div>
 
-    
-     
-      <!-- <input 
+
+
+  <div = id="ControlPanel">
+
+       <input 
       id="yearSelect"
       type="range" 
-      min="2014" 
-      max="2015" 
-      value="2014" 
+      min="1900" 
+      max="2009" 
+      value="2008" 
       style="width:550"
       onchange="setYear(this.value)"
-      >-->
+      >
+ </div>
+             <div id="HeatMap" class="clearfix"></div>
+
+
   </div>
 
 
     <div class="Comments" id="Comments">
     <h2> Top 5 Comments being Mentioned </h2>
-
-
-     <ul class="YearlyList" id="YearlyList"></ul>
-
+     <ul class="CommentsList" id="CommentsList"></ul>
      </div>
 
  
@@ -117,17 +154,199 @@
   <script src="d3.v3.min.js" charset="utf-8"></script>
 -->
    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>  
+   <script src="https://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+
+
+   <script>
+    var width = 1700,
+        height = 150,
+        cellSize = 13; // cell size
+
+
+    var data = [];
+    var keyword = 'amazing';
+
+    var no_months_in_a_row = Math.floor(width / (cellSize * 7 + 50));
+    var shift_up = cellSize * 3;
+
+    var day = d3.time.format("%w"), // day of the week
+        day_of_month = d3.time.format("%e") // day of the month
+        day_of_year = d3.time.format("%j")
+        week = d3.time.format("%U"), // week number of the year
+        month = d3.time.format("%m"), // month number
+        year = d3.time.format("%Y"),
+        percent = d3.format(""),
+        format = d3.time.format("%Y-%m-%d");
+
+    var color = d3.scale.quantize()
+        .domain([1, 10])
+        .range(d3.range(11).map(function(d) { return "q" + d + "-11"; }));
+
+    var svg = d3.select("#HeatMap").selectAll("svg")
+        .data(d3.range(2014, 2015))
+      .enter().append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("class", "RdYlGn")
+      .append("g")
+
+    var rect = svg.selectAll(".day")
+        .data(function(d) { 
+          return d3.time.days(new Date(d, 0, 1), new Date(d + 1, 0, 1));
+        })
+      .enter().append("rect")
+        .attr("class", "day")
+        .attr("width", cellSize)
+        .attr("height", cellSize)
+        .attr("x", function(d) {
+          var month_padding = 1.2 * cellSize*7 * ((month(d)-1) % (no_months_in_a_row));
+          return day(d) * cellSize + month_padding; 
+        })
+        .attr("y", function(d) { 
+          var week_diff = week(d) - week(new Date(year(d), month(d)-1, 1) );
+          var row_level = Math.ceil(month(d) / (no_months_in_a_row));
+          return (week_diff*cellSize) + row_level*cellSize*8 - cellSize/2 - shift_up;
+        })
+        .datum(format);
+
+    var month_titles = svg.selectAll(".month-title")  // Jan, Feb, Mar and the whatnot
+          .data(function(d) { 
+            return d3.time.months(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
+        .enter().append("text")
+          .text(monthTitle)
+          .attr("x", function(d, i) {
+            var month_padding = 1.2 * cellSize*7* ((month(d)-1) % (no_months_in_a_row));
+            return month_padding;
+          })
+          .attr("y", function(d, i) {
+            var week_diff = week(d) - week(new Date(year(d), month(d)-1, 1) );
+            var row_level = Math.ceil(month(d) / (no_months_in_a_row));
+            return (week_diff*cellSize) + row_level*cellSize*8 - cellSize - shift_up;
+          })
+          .attr("class", "month-title")
+          .attr("d", monthTitle);
+
+
+
+    //  Tooltip Object
+    var tooltip = d3.select("body")
+      .append("div").attr("id", "tooltip")
+      .style("position", "absolute")
+      .style("z-index", "10")
+      .style("visibility", "hidden")
+      .text("a simple tooltip");
+
+      
+        var year_titles = svg.selectAll(".year-title");
+        year_titles.data(function(d) { 
+            return d3.time.years(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
+          .enter().append("text")
+          .attr("x", function(d, i) { return width/2 - 100; })
+          .attr("y", function(d, i) { return cellSize*5.5 - shift_up; })
+          .attr("class", "year-title")
+          .attr("d", yearTitle)
+        
+  
+
+    function renderHeatMap(){
+
+
+          d3.select(".year-title").text( keyword );
+
+         // year_titles = svg.selectAll(".year-title");
+               // Jan, Feb, Mar and the whatnot
  
 
-  <div id="grid"></div>
-
- <div id="pager"></div>
 
 
+    d3.csv("data.csv", function(error, csv) {
 
 
+       data = csv.filter(function(row) {
+        return row['keyword'] == keyword;
+        })
 
 
+          csv = csv.filter(function(row) {
+        return row['keyword'] == keyword;
+        })
+
+
+        var newData = [];
+
+         data.forEach(function(d,i) { 
+
+        newData[d.date] =  d.frequency ;
+
+
+        });
+
+         data =  newData;
+  
+
+      rect.filter(function(d) { return d in data; })
+          .attr("class", function(d) { return "day " + color(data[d]); })
+        .select("title")
+          .text(function(d) { return d + ": " + percent(data[d]); });
+
+      //  Tooltip
+      rect.on("mouseover", mouseover);
+      rect.on("mouseout", mouseout);
+
+
+    });
+
+    }
+
+
+      function dataFilter(d,c){
+
+        data = c.filter(function(row) {
+        return row['keyword'] == keyword;
+        })
+
+      }
+
+      function mouseover(d) {
+        tooltip.style("visibility", "visible");
+        var percent_data = (data[d] !== undefined) ? percent(data[d]) : percent(0);
+        var purchase_text = d + ": " + percent_data;
+
+        tooltip.transition()        
+                    .duration(200)      
+                    .style("opacity", .9);      
+        tooltip.html(purchase_text)  
+                    .style("left", (d3.event.pageX)+30 + "px")     
+                    .style("top", (d3.event.pageY) + "px"); 
+      }
+      function mouseout (d) {
+        tooltip.transition()        
+                .duration(500)      
+                .style("opacity", 0); 
+        var $tooltip = $("#tooltip");
+        $tooltip.empty();
+      }
+
+    function dayTitle (t0) {
+      return t0.toString().split(" ")[2];
+    }
+    function monthTitle (t0) {
+      return t0.toLocaleString("en-us", { month: "long" });
+    }
+    function yearTitle (t0) {
+      return t0.toString().split(" ")[3];
+    }
+
+    function changeKeyword(newKeyword){
+
+      keyword = newKeyword;
+
+      renderHeatMap();
+
+
+    }
+
+  </script>
 
 
 
@@ -138,7 +357,7 @@
     var topNum = 15;
     var listByMonth = true;
     var data = [];
-    var YearlyList = d3.select("#YearlyList");
+    var CommentsList = d3.select("#CommentsList");
     var Comments = d3.select("#Comments");
     var canvasWidth = 1250;
     var canavasHeight = 30 * topNum;
@@ -151,7 +370,7 @@
     render(data);
    }
     function renderList(data){
-     var selection = YearlyList.selectAll("li")
+     var selection = CommentsList.selectAll("li")
           .data(data , function(d) {return d.keyword});
      selection.enter()
           .append("li")
@@ -167,7 +386,7 @@
       
     }
     function renderCommentText(data, orderIndex, monthIndex){
-      var selection = YearlyList.selectAll("li")
+      var selection = CommentsList.selectAll("li")
           .remove()
           .data(data[orderIndex].mentioned[year][monthIndex] , function(d) {return d});
           selection.enter()
@@ -442,16 +661,41 @@ var xscale = d3.scale.linear()
 var yscale = d3.scale.linear()
             .domain([0,10])
             .range([0,250]);
+
    var column =   d3.select('#listChat')    
                     .append('svg')
                       .attr('id','svg')
                     .attr({'width':canvasWidth,'height':canavasHeight});
         
+   var ControlPanel = d3.select('#ControlPanel')
+                      .append('svg')
+                      .attr('id','ControlPanelSvg')
+                    .attr({'width':canvasWidth,'height':50});
+
+
+    var criticlePathCheckBox =  ControlPanel
+                                .append('rect')
+                                .attr('height',19)
+                                .attr('height',19)
+                                .attr("transform", "translate(50,0)")
+                                .style('fill', '#ddf6ff ')
+                                .attr('width',19)
+
+
+                                criticlePathCheckBox
+                                .append("text")
+                                .attr("class", "x label")
+                                .attr("text-anchor", "middle")
+                                .attr("transform", "translate(25,15)")  // centre below axis
+                                .text("Show Path");
+    
+
+
     
     var chart0 = column
           
               .append('g')
-              .attr("transform", "translate(55,0)")
+              .attr("transform", "translate(50,0)")
               .attr('id','bars0');
            var transitext0 = d3.select('#bars0')
               .selectAll('text')
@@ -460,6 +704,8 @@ var yscale = d3.scale.linear()
               .append('text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style({'fill':'#000','font-size':'15px', 'font-weight' : 'bold'});
+
+ /*             
   var xLabel0 = column          
                  .append("text")
                  .style({'float': 'left', 'transform' : 'rotate(90deg)', 'transform-origin ': 'left top 0'})  
@@ -467,7 +713,8 @@ var yscale = d3.scale.linear()
                  .attr("text-anchor", "middle")
                  .attr("transform", "translate(0,500)")  // centre below axis
                  .text("Ranking");
-  
+ */
+
  console.log(frequencies1);
       var BackGround3 =  column
               .append('g')
@@ -537,7 +784,22 @@ var yscale = d3.scale.linear()
                  var offsetLeft = d3.select("#bars2:nth-child("+ orders[1] + ")").offsetLeft;
                    console.log("rect: " + rect);
                   console.log("offsetLeft: " + offsetLeft);
+
+
 */
+       
+
+                    changeKeyword(data1[i].keyword);
+
+                    console.log(keyword);
+
+
+                   d3.selectAll("line")
+                   .style(
+                    "visibility", "hidden"
+                  );
+                  
+
                   renderCommentText(data1 ,i, 0);
             
               });   
@@ -545,7 +807,7 @@ var yscale = d3.scale.linear()
             
               transitext1.data(frequencies1)
               .on('mouseover', function(d,i){
-var ranking = serchForOrder(data1[i].keyword,keywordsAll);
+          var ranking = serchForOrder(data1[i].keyword,keywordsAll);
                   console.log(ranking);
                 d3.select("#tooltip")
                 .style("visibility", "visible" )
