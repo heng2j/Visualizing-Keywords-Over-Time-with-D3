@@ -10,12 +10,16 @@
   <style type="text/css">
      body{
         margin: 0px;
+        margin-top: 0px;
+        width: 100%;
         font-family: "arial", sans-serif;
       }
        #title{
-        background-color: black;
-        color: white;
-        padding: 10;
+        background-color: #2B3E42;
+        color: #F0ECEB;
+        width: 100%;
+        padding: 0;
+        margin-top: 0px;
       }
          
       .xlabel{
@@ -119,7 +123,18 @@
 <body>
 
  <div id="title">
-      <h1 style="color: #29324e">Keywords over time - Restaurants from Philadelphia </h1>
+      <h1 style="color: #F0ECEB" class="dropdown">Keywords over time - Restaurants from Philadelphia 
+
+    <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown" style=" background-color:#F7F3E8 ;float: right; margin-right: 10%; margin-top : 3px;">Change Data Set
+    <span class="caret"></span></button>
+    <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Yelp Reviews</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Yelp Tips</a></li>
+
+    </ul>
+
+    </h1>
+
     </div>
 
      
@@ -150,10 +165,10 @@
 
 
    <ul class="nav nav-pills" >
-    <li class="active"  ><a data-toggle="tab" href="#HeatMap">HeatMap</a></li>
-    <li><a data-toggle="tab" href="#Comments">Comments</a></li>
-    <li><a data-toggle="tab" href="#menu2">Menu 2</a></li>
-    <li><a data-toggle="tab" href="#menu3">Menu 3</a></li>
+    <li class="active"  ><a data-toggle="tab" href="#HeatMap" style="padding: 2px 12px ; margin-left:10px" >HeatMap</a></li>
+    <li><a data-toggle="tab" href="#Comments" style="padding: 2px 12px ; margin-left:10px" >Comments</a></li>
+    <li><a data-toggle="tab" href="#menu2" style="padding: 2px 12px ; margin-left:10px" >Menu 2</a></li>
+    <li><a data-toggle="tab" href="#menu3" style="padding: 2px 12px ; margin-left:10px" >Menu 3</a></li>
   </ul>
 
   <div class="tab-content">
@@ -276,6 +291,8 @@
     function renderHeatMap(){
 
 
+
+
           d3.select(".year-title").text( keyword );
 
          // year_titles = svg.selectAll(".year-title");
@@ -284,7 +301,8 @@
 
 
 
-    d3.csv("data.csv", function(error, csv) {
+    //d3.csv("data.csv", function(error, csv) {          
+    d3.csv("daily.csv", function(error, csv) {
 
 
        data = csv.filter(function(row) {
@@ -297,9 +315,14 @@
         })
 
 
+           console.log(data);
+          console.log(csv);
+
         var newData = [];
 
          data.forEach(function(d,i) { 
+
+            console.log(d);
 
         newData[d.date] =  d.frequency ;
 
@@ -308,6 +331,11 @@
 
          data =  newData;
   
+
+           console.log(data);
+          console.log(csv);
+
+
 
       rect.filter(function(d) { return d in data; })
           .attr("class", function(d) { return "day " + color(data[d]); })
@@ -366,6 +394,8 @@
 
       keyword = newKeyword;
 
+
+
       renderHeatMap();
 
 
@@ -390,6 +420,11 @@
     var canavasHeight = 25 * topNum + 20;
     var canavasPadding = 100;
     var innerWidth = 100;
+    var docName = "KeyWordsFrequency_Data.json";
+    //var docName = "reviewKey.json"
+
+
+
       //setYear
    function setYear(newYear){
     year = newYear;
@@ -683,9 +718,33 @@ var month7=month+6;
       for (var i = 0, len = data13.length; i < len; i++) {
         frequencies13 = frequencies13.concat(d3.sum(data13[i].year[year]));
     }
+
+
+
+    
+
+
+  var xscaleMaxRange;
+  var devidedByTenth = 1;
+
+  console.log(frequencies13[0] * ( 0.285  / devidedByTenth));
+
+  if (frequencies13[0] > 10000){
+
+    devidedByTenth = devidedByTenth * 1000;
+    
+  }
+ 
+    console.log(devidedByTenth);
+
+  xscaleMaxRange = frequencies13[0] * ( 0.285  / devidedByTenth);
+
+
+
+
 var xscale = d3.scale.linear()
             .domain([10,250])
-            .range([0, 5]);
+            .range([0, xscaleMaxRange]);
 var yscale = d3.scale.linear()
             .domain([0,10])
             .range([0,250]);
@@ -827,7 +886,7 @@ var yscale = d3.scale.linear()
                     "visibility", "hidden"
                   );
 
-                  renderCommentText(data1 ,i, 0);
+                 // renderCommentText(data1 ,i, 0);
             
               });   
   
@@ -2283,6 +2342,7 @@ var ranking = serchForOrder(data12[i].keyword,keywordsAll);
                  .append("text")
                  .attr("class", "xlabel")
                  .attr("text-anchor", "middle")
+                  .style("font-weight", 'bold') 
                  .attr("transform", "translate(25,15)")  // centre below axis
                  .text(year);
     }
@@ -2385,7 +2445,7 @@ var ranking = serchForOrder(data12[i].keyword,keywordsAll);
            //renderList(filteredData13);
     }
 
-      d3.json("KeyWordsFrequency_Data.json", function(error,result){
+      d3.json(docName, function(error,result){
       //d3.json("reviewKey.json", function(error,result){
       data = result;
       render(data);
