@@ -791,7 +791,7 @@ var yscale = d3.scale.linear()
 
                     changeKeyword(data1[i].keyword);
 
-                    console.log(keyword);
+
 
 
                    d3.selectAll("line")
@@ -911,6 +911,10 @@ var yscale = d3.scale.linear()
                    console.log("rect: " + rect);
                   console.log("offsetLeft: " + offsetLeft);
 */
+                  
+
+                    changeKeyword(data2[i].keyword);
+
                   renderCommentText(data2 ,i, 0);
             
               });
@@ -1018,6 +1022,10 @@ var ranking = serchForOrder(data2[i].keyword,keywordsAll);
                    console.log("rect: " + rect);
                   console.log("offsetLeft: " + offsetLeft);
 */
+                  
+
+                    changeKeyword(data3[i].keyword);
+
                   renderCommentText(data3 ,i, 0);
             
               });   
@@ -1127,7 +1135,8 @@ console.log(frequencies4);
                  var offsetLeft = d3.select("#bars2:nth-child("+ orders[1] + ")").offsetLeft;
                    console.log("rect: " + rect);
                   console.log("offsetLeft: " + offsetLeft);
-*/
+*/                
+                  changeKeyword(data4[i].keyword);
                   renderCommentText(data4 ,i, 0);
             
               });   
@@ -1240,7 +1249,8 @@ console.log(frequencies5);
                  var offsetLeft = d3.select("#bars2:nth-child("+ orders[1] + ")").offsetLeft;
                    console.log("rect: " + rect);
                   console.log("offsetLeft: " + offsetLeft);
-*/
+*/              
+                  changeKeyword(data5[i].keyword);
                   renderCommentText(data5 ,i, 0);
             
               });   
@@ -1348,7 +1358,9 @@ console.log(frequencies6);
                  var offsetLeft = d3.select("#bars2:nth-child("+ orders[1] + ")").offsetLeft;
                    console.log("rect: " + rect);
                   console.log("offsetLeft: " + offsetLeft);
-*/
+*/  
+
+                  changeKeyword(data6[i].keyword);
                   renderCommentText(data6 ,i, 0);
             
               });   
@@ -1456,6 +1468,8 @@ var ranking = serchForOrder(data6[i].keyword,keywordsAll);
                    console.log("rect: " + rect);
                   console.log("offsetLeft: " + offsetLeft);
 */
+
+                  changeKeyword(data7[i].keyword);
                   renderCommentText(data7 ,i, 0);
             
               });   
@@ -1566,6 +1580,8 @@ console.log(frequencies8);
                    console.log("rect: " + rect);
                   console.log("offsetLeft: " + offsetLeft);
 */
+
+                  changeKeyword(data8[i].keyword);
                   renderCommentText(data8 ,i, 0);
             
               });   
@@ -1674,6 +1690,8 @@ var ranking = serchForOrder(data8[i].keyword,keywordsAll);
                    console.log("rect: " + rect);
                   console.log("offsetLeft: " + offsetLeft);
 */
+
+                  changeKeyword(data9[i].keyword);
                   renderCommentText(data9 ,i, 0);
             
               });   
@@ -1782,6 +1800,8 @@ console.log(frequencies10);
                    console.log("rect: " + rect);
                   console.log("offsetLeft: " + offsetLeft);
 */
+
+                  changeKeyword(data10[i].keyword);
                   renderCommentText(data10 ,i, 0);
             
               });   
@@ -1891,6 +1911,9 @@ var ranking = serchForOrder(data10[i].keyword,keywordsAll);
                    console.log("rect: " + rect);
                   console.log("offsetLeft: " + offsetLeft);
 */
+
+
+                  changeKeyword(data11[i].keyword);
                   renderCommentText(data11 ,i, 0);
             
               });   
@@ -1975,7 +1998,23 @@ var ranking = serchForOrder(data11[i].keyword,keywordsAll);
             
               }); */
         
-        
+
+              transitext12.on("click",function(d,i){
+               /*  var orders =  serchForOrder(data1[i].keyword,keywordsAll);
+                 console.log(orders);
+                 console.log(d3.select("#bars2:nth-child("+ orders[1] + ")"));
+                 var rect = d3.select("#bars2:nth-child("+ orders[1] + ")");
+                 var offsetLeft = d3.select("#bars2:nth-child("+ orders[1] + ")").offsetLeft;
+                   console.log("rect: " + rect);
+                  console.log("offsetLeft: " + offsetLeft);
+*/
+
+
+                  changeKeyword(data12[i].keyword);
+                  renderCommentText(data12 ,i, 0);
+            
+              }); 
+              
   
               transitext12.data(frequencies12)
               .on('mouseover', function(d,i){
@@ -1993,10 +2032,7 @@ var ranking = serchForOrder(data12[i].keyword,keywordsAll);
                   .style("fill", '#ffac8e')       
                   }
                
-               })
-                
-               
-                .on('mouseout', function(d,i){
+               }).on('mouseout', function(d,i){
                   d3.select("#tooltip").style(
                     "visibility", "hidden"
                   )
