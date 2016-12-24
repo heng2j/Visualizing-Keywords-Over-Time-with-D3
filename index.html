@@ -239,6 +239,7 @@ input:checked + .slider:before {
 
       </ul>
     </div>
+    <label id="dataSetName" style="padding: 2px 12px ;" >Yelp Reviews</label>
   
     
 
@@ -246,7 +247,7 @@ input:checked + .slider:before {
 
 
 
-    <button type="button" class="btn btn-info" style="padding: 2px 12px ; margin-top: 35px; margin-left:-880px ; margin-bottom: 30px" data-toggle="collapse" data-target="#listChat">Keywords Annual Analysis</button>
+    <button type="button" class="btn btn-info" style="padding: 2px 12px ; margin-top: 35px; margin-left:-990px ; margin-bottom: 30px" data-toggle="collapse" data-target="#listChat">Keywords Annual Analysis</button>
       <div id="listChat" class="collapse in" >   
    <!--   <div id="example" class="parcoords" style="width:960px;height:350px"></div>
    -->  
@@ -2696,6 +2697,7 @@ var ranking = serchForOrder(data12[i].keyword,keywordsAll);
 
 
 
+                  d3.select("#dataSetName").text("Yelp Reviews");
 
                   d3.selectAll("#svg").remove();
 
@@ -2715,6 +2717,8 @@ var ranking = serchForOrder(data12[i].keyword,keywordsAll);
 
                 d3.select("#DropDownOption2").on("click",function(d,i){
 
+
+                      d3.select("#dataSetName").text("Yelp Tips");
 
 
                      csvDocName = "daily.csv";
@@ -2786,7 +2790,17 @@ var ranking = serchForOrder(data12[i].keyword,keywordsAll);
 
                  d3.selectAll("#svg").remove();
 
-                  render(data);      
+                  render(data);     
+
+                   d3.selectAll("line")
+                   .style(
+                    "visibility", 
+
+                    "hidden"
+
+               ) 
+
+
             
               }); 
 
