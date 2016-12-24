@@ -8,7 +8,7 @@ Riya Patni                 rsp378@nyu.edu
 
 Screenshot of our Project:
 <br>
- <img src="https://github.com/heng2j/Visualizing-Keywords-Over-Time-with-D3/blob/master/two.jpg"/>
+ <img src="https://github.com/heng2j/Visualizing-Keywords-Over-Time-with-D3/blob/master/demo.JPG"/>
 </br>
  
  
