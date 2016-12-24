@@ -9,7 +9,8 @@ Riya Patni                 rsp378@nyu.edu
 Screenshot of our Project:
  
  
-
+ 
+ 
 Description:
 The problem at hand is to develop a generic technique to visualize the change in keywords extracted from any given dataset over a period of time. The given dataset is Yelp’s (reviews) dataset and the aim is to find the frequently occurring keywords, their changing trends over time, along with their appearance and disappearance over a period of time; augmenting better business decision based on the frequency. Analysis of these trends would help the business owners understand what people talk about their businesses and how these topics change over time.
   There are few important questions identified, for which the visualization is developed. In other words, the developed visualization should answer the following questions:
