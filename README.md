@@ -7,7 +7,7 @@ Priyanshi Shah          ps3296@nyu.edu
 Riya Patni                 rsp378@nyu.edu
 
 Screenshot of our Project:
- 
+ ![alt tag](https://github.com/heng2j/Visualizing-Keywords-Over-Time-with-D3/issues/1)
 
  
 Description:
