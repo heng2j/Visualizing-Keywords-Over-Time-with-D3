@@ -1,0 +1,2518 @@
+
+<!DOCTYPE html>
+
+<html>
+
+
+
+<head>
+  <title>Keywords over Time- List Chart</title>
+  <style type="text/css">
+     body{
+        margin: 0px;
+        margin-top: 0px;
+        width: 100%;
+        font-family: "arial", sans-serif;
+      }
+       #title{
+        background-color: #2B3E42;
+        color: #F0ECEB;
+        width: 100%;
+        padding: 0;
+        margin-top: 0px;
+      }
+         
+      .xlabel{
+
+          fill: black ;
+      }
+     
+      .svg
+      {
+     
+          margin-left: -30px;
+          
+      }
+      
+         #tooltip{
+        position: absolute;
+        background-color: rgba(255,255,255,0.8);
+        color: black;
+        padding: 5;
+        border: solid 1px black;
+        visibility: hidden; 
+        opacity: 0;
+        transition: all 0.5s;
+       
+      }
+
+
+       #HeatMap{
+        width: 800px;
+        margin: 0px;
+      }
+
+
+      .day {
+        fill: #fff;
+        stroke: #ccc;
+      }
+
+      .month {
+        fill: none;
+        stroke: #fff;
+        stroke-width: 4px;
+      }
+      .year-title {
+        font-size: 1.5em;
+          margin-left: -550px;
+          
+      }
+
+      /* color ranges */
+      .RdYlGn .q10-11{fill:rgb(165,0,38)}
+      .RdYlGn .q9-11{fill:rgb(200,10,45)}
+      .RdYlGn .q8-11{fill:rgb(220,60,45)}
+      .RdYlGn .q7-11{fill:rgb(244,109,67)}
+      .RdYlGn .q6-11{fill:rgb(250,155,87)}
+      .RdYlGn .q5-11{fill:rgb(253,184,100)}
+      .RdYlGn .q4-11{fill:rgb(254,210,139)}
+      .RdYlGn .q3-11{fill:rgb(255,255,155)}
+      .RdYlGn .q2-11{fill:rgb(255,255,180)}
+      .RdYlGn .q1-11{fill:rgb(255,255,210)}
+      .RdYlGn .q0-11{fill:rgb(255,255,240)}
+      
+      
+  #xaxis .domain {
+    fill:none;
+    stroke:#000;
+  }
+  #xaxis text, #yaxis text {
+    font-size: 12px;
+  }
+  .g-ListCell_3{
+           float:left;
+      }
+ .g-ListCell_4{
+           float:left;
+      }
+  .g-ListCell_5{
+           float:left;
+      }
+       .g-ListCell_6{
+           float:left;
+      }
+      
+ .g-ListCell_5{
+           float:left;
+      }
+  .g-ListCell.g-quantitative{
+           float:left;
+      }
+      #yearSelect{
+        margin-left: 30;
+      }
+      #grid, #pager {
+  position: fixed;
+  width: 100%;
+}
+  </style>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+ <div id="title">
+      <h1 style="color: #F0ECEB" class="dropdown">Keywords analysis over time - Restaurants from Philadelphia 
+
+    <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown" style=" background-color:#F7F3E8 ;float: right; margin-right: 10%; margin-top : 3px;">Change Data Set
+    <span class="caret"></span></button>
+   <ul class="dropdown-menu" role="menu" aria-labelledby="menu1" style ="float: right; position:inherit;">
+      <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOption1" href="#">Yelp Reviews</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOption2" href="#">Yelp Tips</a></li>
+
+    </ul>
+
+    </h1>
+
+    </div>
+
+     
+   <div id="tooltip">Tooltip</div>
+
+
+
+    <button type="button" class="btn btn-info" style="padding: 2px 12px ; margin-left:-10px" data-toggle="collapse" data-target="#listChat">Keywords Annual Analysis</button>
+      <div id="listChat" class="collapse in">
+
+   <!--   <div id="example" class="parcoords" style="width:960px;height:350px"></div>
+   -->   </div>
+
+
+
+  <div = id="ControlPanel">
+
+       <input 
+      id="yearSelect"
+      type="range" 
+      min="2014" 
+      max="2015" 
+      value="2014" 
+      style="width:250"
+      onchange="setYear(this.value)"
+      >
+ </div>
+
+
+   <ul class="nav nav-pills" >
+    <li class="active"  ><a data-toggle="tab" href="#HeatMap" style="padding: 2px 12px ; margin-left:10px" >HeatMap</a></li>
+    <li><a data-toggle="tab" href="#Comments" style="padding: 2px 12px ; margin-left:10px" >Comments</a></li>
+    <li><a data-toggle="tab" href="#menu2" style="padding: 2px 12px ; margin-left:10px" >Menu 2</a></li>
+    <li><a data-toggle="tab" href="#menu3" style="padding: 2px 12px ; margin-left:10px" >Menu 3</a></li>
+  </ul>
+
+  <div class="tab-content">
+
+      <!-- <div id="HeatMap" class="clearfix"></div> 
+      -->
+
+       <div id="HeatMap" class="tab-pane fade in active"></div>
+
+
+         <div id="Comments"  class="tab-pane fade">
+        <h2> Top 5 Comments being Mentioned </h2>
+        <ul class="CommentsList" id="CommentsList"></ul>
+        </div>
+
+ 
+ </div>
+
+
+
+<!--
+  <script src="d3.v3.min.js" charset="utf-8"></script>
+-->
+   <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>  
+   <script src="https://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+
+
+
+   <script>
+
+    var csvDocName = "daily.csv";
+    var width = 1700,
+        height = 150,
+        cellSize = 12; //cell size
+
+
+    var data = [];
+    var keyword = 'amazing';
+
+    var no_months_in_a_row = Math.floor(width / (cellSize * 7 + 50));
+    var shift_up = cellSize * 3;
+
+    var day = d3.time.format("%w"), // day of the week
+        day_of_month = d3.time.format("%e") // day of the month
+        day_of_year = d3.time.format("%j")
+        week = d3.time.format("%U"), // week number of the year
+        month = d3.time.format("%m"), // month number
+        year = d3.time.format("%Y"),
+        percent = d3.format(""),
+        format = d3.time.format("%Y-%m-%d");
+
+    var color = d3.scale.quantize()
+        .domain([1, 5])
+        .range(d3.range(11).map(function(d) { return "q" + d + "-11"; }));
+
+    var svg = d3.select("#HeatMap").selectAll("svg")
+        .data(d3.range(2014, 2015))
+      .enter().append("svg")
+        .attr("id", "HeatMapSVG")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("class", "RdYlGn")
+      .append("g")
+
+    var rect = svg.selectAll(".day")
+        .data(function(d) { 
+          return d3.time.days(new Date(d, 0, 1), new Date(d + 1, 0, 1));
+        })
+      .enter().append("rect")
+        .attr("class", "day")
+        .attr("width", cellSize)
+        .attr("height", cellSize)
+        .attr("x", function(d) {
+          var month_padding = 1.2 * cellSize*7 * ((month(d)-1) % (no_months_in_a_row));
+          return day(d) * cellSize + month_padding; 
+        })
+        .attr("y", function(d) { 
+          var week_diff = week(d) - week(new Date(year(d), month(d)-1, 1) );
+          var row_level = Math.ceil(month(d) / (no_months_in_a_row));
+          return (week_diff*cellSize) + row_level*cellSize*8 - cellSize/2 - shift_up;
+        })
+        .datum(format);
+
+    var month_titles = svg.selectAll(".month-title")  // Jan, Feb, Mar and the whatnot
+          .data(function(d) { 
+            return d3.time.months(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
+        .enter().append("text")
+          .text(monthTitle)
+          .attr("x", function(d, i) {
+            var month_padding = 1.2 * cellSize*7* ((month(d)-1) % (no_months_in_a_row));
+            return month_padding;
+          })
+          .attr("y", function(d, i) {
+            var week_diff = week(d) - week(new Date(year(d), month(d)-1, 1) );
+            var row_level = Math.ceil(month(d) / (no_months_in_a_row));
+            return (week_diff*cellSize) + row_level*cellSize*8 - cellSize - shift_up;
+          })
+          .attr("class", "month-title")
+          .attr("d", monthTitle);
+
+
+
+    //  Tooltip Object
+    var tooltip = d3.select("body")
+      .append("div").attr("id", "tooltip")
+      .style("position", "absolute")
+      .style("z-index", "10")
+      .style("visibility", "hidden")
+      .text("a simple tooltip");
+
+      
+        var year_titles = svg.selectAll(".year-title");
+        year_titles.data(function(d) { 
+            return d3.time.years(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
+          .enter().append("text")
+          .attr("x", function(d, i) { return width/2 - 100; })
+          .attr("y", function(d, i) { return cellSize*5.5 - shift_up; })
+          .attr("class", "year-title")
+          .attr("d", yearTitle)
+        
+  
+
+    function renderHeatMap(){
+
+
+
+
+          d3.select(".year-title").text( "keyword selected is : "+keyword );
+
+         // year_titles = svg.selectAll(".year-title");
+               // Jan, Feb, Mar and the whatnot
+ 
+
+
+
+    //d3.csv("data.csv", function(error, csv) {          
+      d3.csv(csvDocName, function(error, csv) {
+
+
+       data = csv.filter(function(row) {
+        return row['keyword'] == keyword;
+        })
+
+
+          csv = csv.filter(function(row) {
+        return row['keyword'] == keyword;
+        })
+
+
+           console.log(data);
+          console.log(csv);
+
+        var newData = [];
+
+         data.forEach(function(d,i) { 
+
+            console.log(d);
+
+        newData[d.date] =  d.frequency ;
+
+
+        });
+
+         data =  newData;
+  
+
+           console.log(data);
+          console.log(csv);
+
+
+
+      rect.filter(function(d) { return d in data; })
+          .attr("class", function(d) { return "day " + color(data[d]); })
+        .select("title")
+          .text(function(d) { return d + ": " + percent(data[d]); });
+
+      //  Tooltip
+      rect.on("mouseover", mouseover);
+      rect.on("mouseout", mouseout);
+
+
+    });
+
+    }
+
+
+      function dataFilter(d,c){
+
+        data = c.filter(function(row) {
+        return row['keyword'] == keyword;
+        })
+
+      }
+
+      function mouseover(d) {
+        tooltip.style("visibility", "visible");
+        var percent_data = (data[d] !== undefined) ? percent(data[d]) : percent(0);
+        var purchase_text = d + ": " + percent_data;
+
+        tooltip.transition()        
+                    .duration(200)      
+                    .style("opacity", .9);      
+        tooltip.html(purchase_text)  
+                    .style("left", (d3.event.pageX)+30 + "px")     
+                    .style("top", (d3.event.pageY) + "px"); 
+      }
+      function mouseout (d) {
+        tooltip.transition()        
+                .duration(500)      
+                .style("opacity", 0); 
+        var $tooltip = $("#tooltip");
+        $tooltip.empty();
+      }
+
+    function dayTitle (t0) {
+      return t0.toString().split(" ")[2];
+    }
+    function monthTitle (t0) {
+      return t0.toLocaleString("en-us", { month: "long" });
+    }
+    function yearTitle (t0) {
+      return t0.toString().split(" ")[3];
+    }
+
+    function changeKeyword(newKeyword){
+
+      keyword = newKeyword;
+
+
+
+      renderHeatMap();
+
+
+    }
+
+  </script>
+
+
+
+
+
+
+  <script>
+    var year = 2014;
+    var month = 0;
+    var topNum = 15;
+    var listByMonth = true;
+    var data = [];
+    var CommentsList = d3.select("#CommentsList");
+    var Comments = d3.select("#Comments");
+    var canvasWidth = 1400;
+    var canavasHeight = 25 * topNum + 20;
+    var canavasPadding = 100;
+    var innerWidth = 100;
+    var docName = "KeyWordsFrequency_Data.json";
+    //var docName = "reviewKey.json"
+
+
+
+      //setYear
+   function setYear(newYear){
+    year = newYear;
+    yearLabel.text(year);
+    render(data);
+   }
+    function renderList(data){
+     var selection = CommentsList.selectAll("li")
+          .data(data , function(d) {return d.keyword});
+     selection.enter()
+          .append("li")
+          .attr("class", "listOfItems")
+          .text(function(d) {return d.keyword});
+         /* .on("mouseenter", function(d,i){
+              highlight(d.keyword);
+          })
+          .on("mouseleave", function(d,i){
+            unHighlight();
+          })*/
+     selection.exit().remove();
+      
+    }
+    function renderCommentText(data, orderIndex, monthIndex){
+      var selection = CommentsList.selectAll("li")
+          .remove()
+          .data(data[orderIndex].mentioned[year][monthIndex] , function(d) {return d});
+          selection.enter()
+          .append("li")
+          .attr("class", "listOfItems")
+          .attr("id", "listOfItems")
+          .text(function(d) {return d});
+     
+ 
+    }
+      
+   function outlierWords(count)
+          {
+
+            var color;
+
+
+            if(count==1){ color = '#ff0000'}
+            else {color = '#000000'};
+
+
+          return color;
+
+        }   
+    function serchForOrder(keyword, data ){
+      //console.log(data);
+        var order = [];
+         for (var i = 0, len = data.length; i < len; i++) {
+            for (var j = 0, len2 = topNum; j < len2; j++) {
+                  if (keyword == data[i][j]){
+                      order = order.concat(j);
+                      break;
+                  }
+ if(j == len2-1 && keyword != data[i][j] ){
+     order = order.concat(-1);
+     break;
+ }
+            }
+             
+ 
+        
+    }
+          return order;
+  
+  }
+    function renderChart(data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13){
+   console.log(data1);
+       var ranking = []
+      for (var i = 1, len = topNum+1; i < len; i++) {
+    ranking = ranking.concat(i);
+    }
+      var keywords1 = []
+      for (var i = 0, len = data1.length; i < len; i++) {
+    keywords1 = keywords1.concat(data1[i].keyword);
+    }
+      var keywords2 = []
+      for (var i = 0, len = data2.length; i < len; i++) {
+    keywords2 = keywords2.concat(data2[i].keyword);
+    }
+    var keywords3 = []
+      for (var i = 0, len = data3.length; i < len; i++) {
+    keywords3 = keywords3.concat(data3[i].keyword);
+    }
+      var keywords4 = []
+      for (var i = 0, len = data4.length; i < len; i++) {
+    keywords4 = keywords4.concat(data4[i].keyword);
+    }
+      var keywords5 = []
+      for (var i = 0, len = data5.length; i < len; i++) {
+    keywords5 = keywords5.concat(data5[i].keyword);
+    }
+        
+      var keywords6 = []
+      for (var i = 0, len = data6.length; i < len; i++) {
+    keywords6 = keywords6.concat(data6[i].keyword);
+    }
+      var keywords7 = []
+      for (var i = 0, len = data7.length; i < len; i++) {
+    keywords7 = keywords7.concat(data7[i].keyword);
+    }
+    var keywords8 = []
+      for (var i = 0, len = data8.length; i < len; i++) {
+    keywords8 = keywords8.concat(data8[i].keyword);
+    }
+      var keywords9 = []
+      for (var i = 0, len = data9.length; i < len; i++) {
+    keywords9 = keywords9.concat(data9[i].keyword);
+    }
+      var keywords10 = []
+      for (var i = 0, len = data10.length; i < len; i++) {
+    keywords10 = keywords10.concat(data10[i].keyword);
+    }
+   var keywords11 = []
+      for (var i = 0, len = data11.length; i < len; i++) {
+    keywords11 = keywords11.concat(data11[i].keyword);
+    }
+      var keywords12 = []
+      for (var i = 0, len = data12.length; i < len; i++) {
+    keywords12 = keywords12.concat(data12[i].keyword);
+    }
+  
+     var keywords13 = []
+      for (var i = 0, len = data13.length; i < len; i++) {
+    keywords13 = keywords13.concat(data13[i].keyword);
+    }
+    var keywordsAll = [[]]
+        keywordsAll[0] =  keywords1;
+        keywordsAll[1] =  keywords2;
+        keywordsAll[2] =  keywords3;
+        keywordsAll[3] =  keywords4;
+        keywordsAll[4] =  keywords5;
+        keywordsAll[5] =  keywords6;
+        keywordsAll[6] =  keywords7;
+        keywordsAll[7] =  keywords8;
+        keywordsAll[8] =  keywords9;
+        keywordsAll[9] =  keywords10;
+        keywordsAll[10] =  keywords11;
+        keywordsAll[11] =  keywords12;
+        keywordsAll[12] =  keywords13;
+        
+       var ordersAll = [[]]
+       for(var i = 0 ; i < data1.length ; i++)    ordersAll[0] =    serchForOrder(data1[i].keyword,keywordsAll);
+                
+       for(var i = 0 ; i < data2.length ; i++)  ordersAll[1] =    serchForOrder(data2[i].keyword,keywordsAll);
+       
+       for(var i = 0 ; i < data3.length ; i++)     ordersAll[2] =    serchForOrder(data3[i].keyword,keywordsAll);
+        
+       for(var i = 0 ; i < data4.length ; i++)     ordersAll[3] =    serchForOrder(data4[i].keyword,keywordsAll);
+        
+       for(var i = 0 ; i < data5.length ; i++)     ordersAll[4] =    serchForOrder(data5[i].keyword,keywordsAll);
+        
+       for(var i = 0 ; i < data6.length ; i++)     ordersAll[5] =    serchForOrder(data6[i].keyword,keywordsAll);
+        
+       for(var i = 0 ; i < data7.length ; i++)     ordersAll[6] =    serchForOrder(data7[i].keyword,keywordsAll);
+       
+       for(var i = 0 ; i < data8.length ; i++)     ordersAll[7] =    serchForOrder(data8[i].keyword,keywordsAll);
+        
+       for(var i = 0 ; i < data9.length ; i++)     ordersAll[8] =    serchForOrder(data9[i].keyword,keywordsAll);
+        
+       for(var i = 0 ; i < data10.length ; i++)     ordersAll[9] =    serchForOrder(data10[i].keyword,keywordsAll);
+        
+       for(var i = 0 ; i < data11.length ; i++)     ordersAll[10] =    serchForOrder(data11[i].keyword,keywordsAll);
+        
+       for(var i = 0 ; i < data12.length ; i++)     ordersAll[11] =    serchForOrder(data12[i].keyword,keywordsAll);
+        
+        console.log(ordersAll);
+  /*
+            keywordsAll =  keywordsAll.concat(keywords2) ;
+                keywordsAll =  keywordsAll.concat(keywords3) ;
+                    keywordsAll =  keywordsAll.concat(keywords4) ;
+                        keywordsAll =  keywordsAll.concat(keywords5) ;
+                            keywordsAll =  keywordsAll.concat(keywords6) ;
+                                keywordsAll =  keywordsAll.concat(keywords7) ;
+                                    keywordsAll =  keywordsAll.concat(keywords8) ;
+                                        keywordsAll =  keywordsAll.concat(keywords9) ;
+                                            keywordsAll =  keywordsAll.concat(keywords10) ;
+                                                keywordsAll =  keywordsAll.concat(keywords11) ;
+                                                    keywordsAll =  keywordsAll.concat(keywords12) ;
+ */
+                                  console.log(keywordsAll);
+  
+      var frequencies1 = []
+      for (var i = 0, len = data1.length; i < len; i++) {
+        if (listByMonth){
+        frequencies1 = frequencies1.concat(data1[i].year[year][month]);
+        }
+        else
+        frequencies1 = frequencies1.concat(d3.sum(data1[i].year[year]));
+    }
+      var frequencies2 = []
+      for (var i = 0, len = data2.length; i < len; i++) {
+        if (listByMonth){
+                  var month2 = month +1;
+        
+          
+           frequencies2 = frequencies2.concat(data2[i].year[year][month2]);
+        }
+        else
+        frequencies2 = frequencies2.concat(d3.sum(data2[i].year[year]));
+    }
+      var frequencies3 = []
+      for (var i = 0, len = data3.length; i < len; i++) {
+        if (listByMonth){
+        var month3 = month +2;
+        frequencies3 = frequencies3.concat(data3[i].year[year][month3]);
+        }
+        else
+        frequencies3 = frequencies3.concat(d3.sum(data3[i].year[year]));
+    }
+      var frequencies4 = []
+      for (var i = 0, len = data4.length; i < len; i++) {
+        if (listByMonth){
+           
+              var month4 = month + 3;
+          
+           frequencies4 = frequencies4.concat(data4[i].year[year][month4]);
+        }
+        else
+        frequencies4 = frequencies4.concat(d3.sum(data4[i].year[year]));
+    }
+      var frequencies5 = []
+      for (var i = 0, len = data5.length; i < len; i++) {
+        if (listByMonth){
+              var month5 = month + 4;
+           frequencies5 = frequencies5.concat(data5[i].year[year][month5]);
+        }
+        else
+        frequencies5 = frequencies5.concat(d3.sum(data5[i].year[year]));
+    }
+         
+      var frequencies6 = []
+      for (var i = 0, len = data6.length; i < len; i++) {
+        if (listByMonth){
+                  var month6 = month + 5;
+        
+          
+           frequencies6 = frequencies6.concat(data6[i].year[year][month6]);
+        }
+        else
+        frequencies6 = frequencies6.concat(d3.sum(data6[i].year[year]));
+    }
+      var frequencies7 = []
+      for (var i = 0, len = data7.length; i < len; i++) {
+        if (listByMonth){
+var month7=month+6;
+           frequencies7 = frequencies7.concat(data7[i].year[year][month7]);
+        }
+        else
+        frequencies7 = frequencies7.concat(d3.sum(data7[i].year[year]));
+    }
+      var frequencies8 = []
+      for (var i = 0, len = data8.length; i < len; i++) {
+        if (listByMonth){
+           
+              var month8 = month + 7;
+          
+           frequencies8 = frequencies8.concat(data8[i].year[year][month8]);
+        }
+        else
+        frequencies8 = frequencies8.concat(d3.sum(data8[i].year[year]));
+    }
+      var frequencies9 = []
+      for (var i = 0, len = data9.length; i < len; i++) {
+        if (listByMonth){
+              var month9 = month + 8;
+           frequencies9 = frequencies9.concat(data9[i].year[year][month9]);
+        }
+        else
+        frequencies9 = frequencies9.concat(d3.sum(data9[i].year[year]));
+    }
+        
+       var frequencies10 = []
+      for (var i = 0, len = data10.length; i < len; i++) {
+        if (listByMonth){
+            var month10 = month +9;
+           frequencies10 = frequencies10.concat(data10[i].year[year][month10]);
+        }
+        else
+        frequencies10 = frequencies10.concat(d3.sum(data10[i].year[year]));
+    }
+        var frequencies11 = []
+      for (var i = 0, len = data11.length; i < len; i++) {
+        if (listByMonth){
+            var month11 = month + 10;
+           frequencies11 = frequencies11.concat(data11[i].year[year][month11]);
+        }
+        else
+        frequencies11 = frequencies11.concat(d3.sum(data11[i].year[year]));
+    }
+        var frequencies12 = []
+      for (var i = 0, len = data12.length; i < len; i++) {
+        if (listByMonth){
+            var month12 = month + 11;
+           frequencies12 = frequencies12.concat(data12[i].year[year][month12]);
+        }
+        else
+        frequencies12 = frequencies12.concat(d3.sum(data12[i].year[year]));
+    }
+      var frequencies13 = []
+      for (var i = 0, len = data13.length; i < len; i++) {
+        frequencies13 = frequencies13.concat(d3.sum(data13[i].year[year]));
+    }
+
+
+
+    
+
+
+  var xscaleMaxRange;
+  var devidedByTenth = 1;
+
+  console.log(frequencies13[0] * ( 0.285  / devidedByTenth));
+
+  if (frequencies13[0] > 10000){
+
+    devidedByTenth = devidedByTenth * 1000;
+    
+  }
+ 
+    console.log(devidedByTenth);
+
+  xscaleMaxRange = frequencies13[0] * ( 0.285  / devidedByTenth);
+
+
+
+
+var xscale = d3.scale.linear()
+            .domain([10,250])
+            .range([0, xscaleMaxRange]);
+var yscale = d3.scale.linear()
+            .domain([0,10])
+            .range([0,250]);
+   var column =   d3.select('#listChat')    
+                    .append('svg')
+                      .attr('id','svg')
+                    .attr({'width':canvasWidth,'height':canavasHeight});
+        
+
+    var chart0 = column
+          
+              .append('g')
+              .attr("transform", "translate(25,0)")
+              .attr('id','bars0');
+           var transitext0 = d3.select('#bars0')
+              .selectAll('text')
+              .data(ranking)
+              .enter()
+              .append('text')
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
+              .text(function(d){ return d; }).style({'fill':'#000','font-size':'15px', 'font-weight' : 'bold'});
+
+                 /* 
+  var xLabel0 = column          
+                 .append("text")
+                 .style({'float': 'left', 'transform' : 'rotate(90deg)', 'transform-origin ': 'left top 0'})  
+                 .attr("class", "xlabel")
+                 .attr("text-anchor", "middle")
+                 .attr("transform", "translate(0,500)")  // centre below axis
+                 .text("Ranking");
+
+                 */
+  
+ console.log(frequencies1);
+      var BackGround1 =  column
+              .append('g')
+              .attr("transform", "translate(50,0)")
+              .attr('id','BackGround1')
+              .selectAll('rect')
+              .data(frequencies1)
+              .enter()
+              .append('rect')
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#ddf6ff ')
+              .attr('width',60)
+    
+     var count1 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+       
+        
+        for(var k = 0; k<keywords1.length; k++){
+        var rank1 = serchForOrder(keywords1[k],keywordsAll);
+            for(var j = 0; j <rank1.length-1; j++){
+                if(rank1[j]!=-1)
+                    count1[k] = count1[k] + 1;
+             
+            }
+           
+       } console.log(keywords1);
+                console.log(count1);
+        
+    var chart1 = column
+            
+              .append('g')
+              .attr("transform", "translate(50,0)")
+              .attr('id','bars1')
+              .selectAll('rect')
+             
+              .data(frequencies1)
+              .enter()
+            
+              .append('rect')
+              .attr('id',function(d,i) {return 'rect1_' + i})
+              .classed("rect_value", true)
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#8ee1ff')
+              .attr('width',function(d) {return 0; });
+                
+              
+          var transit1 = chart1
+                .data(frequencies1)
+                .transition()
+                .duration(1000) 
+                .attr("width", function(d) {return xscale(d ); });
+        
+        var transitext1 = d3.select('#bars1')
+              .selectAll('text')
+              .data(keywords1)
+              .enter()
+              .append('text')
+              .attr('class', 'keyword-Text')
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
+              .text(function(d){ return d; })
+        //.style({'fill':'#000','font-size':'14px'});
+        .style("fill",function(d,i){
+            return outlierWords(count1[i]);});
+    
+       
+        
+       
+        
+       /* var outlierWords = d3.select('#bars1')
+        .selectAll('text')
+        .data(keywords1)
+        .enter()
+        .append('text')
+         .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
+              .text(function(d,i){  return d; }).style({'fill':'#ff0000','font-size':'14px'});
+        */
+
+
+       /*----RIYA   */
+        d3.select('#bars1')
+              .selectAll('line')
+              .data(frequencies1)
+              .enter() 
+           .append('line')
+           .attr("transform", "translate(15, 28.5)")
+           .attr('stroke', '#8ee1ff')
+           .attr('stroke-width', '1.5')
+            .attr('x1',function(d,i){return 45;})
+            .attr('y1',function(d,i){return yscale(serchForOrder(data1[i].keyword,keywordsAll)[0]);})
+            .attr('x2',function(d,i){return ( ((serchForOrder(data1[i].keyword,keywordsAll)[1]) == -1)?45:65);})
+            .attr('y2',function(d,i){return ( ((serchForOrder(data1[i].keyword,keywordsAll)[1]) == -1)?yscale(serchForOrder(data1[i].keyword,keywordsAll)[0]): yscale(serchForOrder(data1[i].keyword,keywordsAll)[1]));});
+
+
+                transitext1.on("click",function(d,i){
+
+                    changeKeyword(data1[i].keyword);
+
+
+                  d3.selectAll(".keyword-Text")
+                   .style(
+                    "fill", "black"
+                  );
+
+                   d3.selectAll("line")
+                   .style(
+                    "visibility", "hidden"
+                  );
+
+                 // renderCommentText(data1 ,i, 0);
+            
+              });   
+  
+  
+            
+              transitext1.data(frequencies1)
+              .on('mouseover', function(d,i){
+var ranking = serchForOrder(data1[i].keyword,keywordsAll);
+                  console.log(ranking);
+                d3.select("#tooltip")
+                .style("visibility", "visible" )
+                .style("top", (d3.event.clientY)+10 + "px")
+                .style("left",(d3.event.clientX) + "px")
+                .style("opacity",1)
+                d3.select("#tooltip").text(d);
+                  d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
+                  for(var p =1;p<=13;p+=1) {
+               d3.select("#rect"+p+"_"+ ranking[p-1])
+                  .style("fill", '#ff8fa9')
+               
+                  }
+               
+               })
+                .on('mouseout', function(d,i){
+                  d3.select("#tooltip").style(
+                    "visibility", "hidden"
+                  )
+                  .style("opacity",0);
+                   d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
+                  for(var p =1;p<=13;p+=1) {
+               d3.select("#rect"+p+"_"+ ranking[p-1])
+                  .style("fill", '#8ee1ff')       
+                  }
+              });
+  var xLabel1 = d3.select('#bars1')                
+                 .append("text")
+                 .attr("class", "xlabel")
+                 .attr("text-anchor", "middle")
+                 .attr("transform", "translate(25,15)")  // centre below axis
+                 .text("Jan");
+  
+ console.log(frequencies2);
+      var BackGround2 =  column
+              .append('g')
+              .attr("transform", "translate(130,0)")
+              .attr('id','BackGround2')
+              .selectAll('rect')
+              .data(frequencies2)
+              .enter()
+              .append('rect')
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#ddf6ff ')
+              .attr('width',60)
+    
+       var count2 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+       
+        
+        for(var k = 0; k<keywords2.length; k++){
+        var rank2 = serchForOrder(keywords2[k],keywordsAll);
+            for(var j = 0; j <rank2.length-1; j++){
+                if(rank2[j]!=-1)
+                    count2[k] = count2[k] + 1;
+             
+            }
+           
+       } console.log(keywords2);
+                console.log(count2);
+
+
+
+         
+    var chart2 = column
+              .append('g')
+              .attr("transform", "translate(130,0)")
+              .attr('id','bars2')
+              .selectAll('rect')
+              .data(frequencies1)
+              .enter()
+              .append('rect')
+              .attr('id',function(d,i) {return 'rect2_' + i})
+                .classed("rect_value", true)
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#8ee1ff')
+              .attr('width',function(d) {return 0; });
+          var transit2 = chart2
+                .data(frequencies2)
+                .transition()
+                .duration(1000) 
+                .attr("width", function(d) {return xscale(d ); });
+           var transitext2 = d3.select('#bars2')
+              .selectAll('text')
+              .data(keywords2)
+              .enter()
+              .append('text')
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
+              .text(function(d){ return d; }).style("fill",function(d,i){
+
+             
+                return outlierWords(count2[i]);
+
+
+        });
+
+
+            
+
+
+           /* transitext2.on("click",function(d,i){
+                  renderCommentText(data2 ,i, 1);
+            
+              });  */ 
+       
+        d3.select('#bars2')
+              .selectAll('line')
+              .data(frequencies2)
+              .enter() 
+           .append('line')
+           .attr("transform", "translate(15, 28.5)")
+           .attr('stroke', '#8ee1ff')
+           .attr('stroke-width', '1.5')
+            .attr('x1',function(d,i){return 45;})
+            .attr('y1',function(d,i){return yscale(serchForOrder(data2[i].keyword,keywordsAll)[1]);})
+            .attr('x2',function(d,i){return ( ((serchForOrder(data2[i].keyword,keywordsAll)[2]) == -1)?45:65);})
+            .attr('y2',function(d,i){return ( ((serchForOrder(data2[i].keyword,keywordsAll)[2]) == -1)?yscale(serchForOrder(data2[i].keyword,keywordsAll)[1]): yscale(serchForOrder(data2[i].keyword,keywordsAll)[2]));});
+
+
+
+             transitext2.on("click",function(d,i){
+
+                    changeKeyword(data2[i].keyword);
+
+                  renderCommentText(data2 ,i, 0);
+            
+              });
+
+
+
+              transitext2.data(frequencies2)
+              .on('mouseover', function(d,i){
+var ranking = serchForOrder(data2[i].keyword,keywordsAll);
+                  console.log(ranking);
+                d3.select("#tooltip")
+                .style("visibility", "visible" )
+                .style("top", (d3.event.clientY)+10 + "px")
+                .style("left",(d3.event.clientX) + "px")
+                .style("opacity",1)
+                d3.select("#tooltip").text(d);
+                  d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
+                  for(var p =1;p<=13;p+=1) {
+               d3.select("#rect"+p+"_"+ ranking[p-1])
+                  .style("fill", '#ff8fa9')       
+                  }
+               
+               })
+                
+               
+                .on('mouseout', function(d,i){
+                  d3.select("#tooltip").style(
+                    "visibility", "hidden"
+                  )
+                  .style("opacity",0);
+                   d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
+                  for(var p =1;p<=13;p+=1) {
+               d3.select("#rect"+p+"_"+ ranking[p-1])
+                  .style("fill", '#8ee1ff')       
+                  }
+              });
+  var xLabel2 = d3.select('#bars2')                
+                 .append("text")
+                 .attr("class", "xlabel")
+                 .attr("text-anchor", "middle")
+                 .attr("transform", "translate(25,15)")  // centre below axis
+                 .text("Feb");
+  
+  console.log(frequencies3);
+        var BackGround3 =  column
+              .append('g')
+              .attr("transform", "translate(210,0)")
+              .attr('id','BackGround3')
+              .selectAll('rect')
+              .data(frequencies1)
+              .enter()
+              .append('rect')
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#ddf6ff ')
+              .attr('width',60)
+        
+          var count3 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+       
+        
+        for(var k = 0; k<keywords3.length; k++){
+        var rank3 = serchForOrder(keywords3[k],keywordsAll);
+            for(var j = 0; j <rank3.length-1; j++){
+                if(rank3[j]!=-1)
+                    count3[k] = count3[k] + 1;
+             
+            }
+           
+       } console.log(keywords3);
+                console.log(count3);
+        
+   var chart3 = column
+              .append('g')
+              .attr("transform", "translate(210,0)")
+              .attr('id','bars3')
+              .selectAll('rect')
+              .data(frequencies1)
+              .enter()
+              .append('rect')
+              .attr('id',function(d,i) {return 'rect3_' + i})
+                .classed("rect_value", true)
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#8ee1ff')
+              .attr('width',function(d) {return 0; });
+          var transit3 = chart3
+                .data(frequencies3)
+                .transition()
+                .duration(1000) 
+                .attr("width", function(d) {return xscale(d ); });
+           var transitext3 = d3.select('#bars3')
+              .selectAll('text')
+              .data(keywords3)
+              .enter()
+              .append('text')
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
+              .text(function(d){ return d; }).style("fill",function(d,i){
+            return outlierWords(count3[i]);});
+                 /*transitext3.on("click",function(d,i){
+                  renderCommentText(data3 ,i, 2);
+            
+              });  */
+        
+         d3.select('#bars3')
+              .selectAll('line')
+              .data(frequencies3)
+              .enter() 
+           .append('line')
+           .attr("transform", "translate(15, 28.5)")
+           .attr('stroke', '#8ee1ff')
+           .attr('stroke-width', '1.5')
+            .attr('x1',function(d,i){return 45;})
+            .attr('y1',function(d,i){return yscale(serchForOrder(data3[i].keyword,keywordsAll)[2]);})
+            .attr('x2',function(d,i){return ( ((serchForOrder(data3[i].keyword,keywordsAll)[3]) == -1)?45:65);})
+            .attr('y2',function(d,i){return ( ((serchForOrder(data3[i].keyword,keywordsAll)[3]) == -1)?yscale(serchForOrder(data3[i].keyword,keywordsAll)[2]): yscale(serchForOrder(data3[i].keyword,keywordsAll)[3]));});
+
+
+  
+                  transitext3.on("click",function(d,i){
+
+
+
+
+                    changeKeyword(data3[i].keyword);
+
+                  renderCommentText(data3 ,i, 0);
+            
+              });  
+
+
+              transitext3.data(frequencies3)
+              .on('mouseover', function(d,i){
+var ranking = serchForOrder(data3[i].keyword,keywordsAll);
+                  console.log(ranking);
+                d3.select("#tooltip")
+                .style("visibility", "visible" )
+                .style("top", (d3.event.clientY)+10 + "px")
+                .style("left",(d3.event.clientX) + "px")
+                .style("opacity",1)
+                d3.select("#tooltip").text(d);
+                  d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
+                  for(var p =1;p<=13;p+=1) {
+               d3.select("#rect"+p+"_"+ ranking[p-1])
+                  .style("fill", '#ff8fa9')       
+                  }
+               
+               })
+                
+               
+                .on('mouseout', function(d,i){
+                  d3.select("#tooltip").style(
+                    "visibility", "hidden"
+                  )
+                  .style("opacity",0);
+                   d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
+                  for(var p =1;p<=13;p+=1) {
+               d3.select("#rect"+p+"_"+ ranking[p-1])
+                  .style("fill", '#8ee1ff')       
+                  }
+              });
+  var xLabel3 = d3.select('#bars3')                
+                 .append("text")
+                 .attr("class", "xlabel")
+                 .attr("text-anchor", "middle")
+                 .attr("transform", "translate(25,15)")  // centre below axis
+                 .text("Mar");
+  
+console.log(frequencies4);
+  var BackGround4 =  column
+              .append('g')
+              .attr("transform", "translate(290,0)")
+              .attr('id','BackGround4')
+              .selectAll('rect')
+              .data(frequencies1)
+              .enter()
+              .append('rect')
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#ddf6ff ')
+              .attr('width',60)
+  
+    var count4 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+       
+        
+    
+       
+        
+        for(var k = 0; k<keywords4.length; k++){
+        var rank4 = serchForOrder(keywords4[k],keywordsAll);
+            for(var j = 0; j <rank4.length-1; j++){
+                if(rank4[j]!=-1)
+                    count4[k] = count4[k] + 1;
+             
+            }
+           
+       } console.log(keywords4);
+                console.log(count4);
+        
+   var chart4 = column
+              .append('g')
+              .attr("transform", "translate(290,0)")
+              .attr('id','bars4')
+              .selectAll('rect')
+              .data(frequencies4)
+              .enter()
+              .append('rect')
+              .attr('id',function(d,i) {return 'rect4_' + i})
+                .classed("rect_value", true)
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#8ee1ff')
+              .attr('width',function(d) {return 0; });
+    
+          var transit4 = chart4
+                .data(frequencies4)
+                .transition()
+                .duration(1000) 
+                .attr("width", function(d) {return xscale(d ); });
+           var transitext4 = d3.select('#bars4')
+              .selectAll('text')
+              .data(keywords4)
+              .enter()
+              .append('text')
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
+              .text(function(d){ return d; }).style("fill",function(d,i){
+            return outlierWords(count4[i]);});
+              /*transitext4.on("click",function(d,i){
+                  renderCommentText(data4 ,i, 3);
+            
+              });*/
+        
+       /*----RIYA   */
+        d3.select('#bars4')
+              .selectAll('line')
+              .data(frequencies4)
+              .enter() 
+           .append('line')
+           .attr("transform", "translate(10, 28.5)")
+            .attr('stroke', '#8ee1ff')
+           .attr('stroke-width', '1.5')
+            .attr('x1',function(d,i){return 50;})
+            .attr('y1',function(d,i){return yscale(serchForOrder(data4[i].keyword,keywordsAll)[3]);})
+            .attr('x2',function(d,i){return ( ((serchForOrder(data4[i].keyword,keywordsAll)[4]) == -1)?50:70);})
+            .attr('y2',function(d,i){return ( ((serchForOrder(data4[i].keyword,keywordsAll)[4]) == -1)?yscale(serchForOrder(data4[i].keyword,keywordsAll)[3]): yscale(serchForOrder(data4[i].keyword,keywordsAll)[4]));});
+
+
+ 
+                  transitext4.on("click",function(d,i){
+              
+                  changeKeyword(data4[i].keyword);
+                  renderCommentText(data4 ,i, 0);
+            
+              });   
+   
+  
+              transitext4.data(frequencies4)
+             .on('mouseover', function(d,i){
+var ranking = serchForOrder(data4[i].keyword,keywordsAll);
+                  console.log(ranking);
+                d3.select("#tooltip")
+                .style("visibility", "visible" )
+                .style("top", (d3.event.clientY)+10 + "px")
+                .style("left",(d3.event.clientX) + "px")
+                .style("opacity",1)
+                d3.select("#tooltip").text(d);
+                  d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
+                  for(var p =1;p<=13;p+=1) {
+               d3.select("#rect"+p+"_"+ ranking[p-1])
+                  .style("fill", '#ff8fa9')       
+                  }
+               
+               })
+                
+               
+                .on('mouseout', function(d,i){
+                  d3.select("#tooltip").style(
+                    "visibility", "hidden"
+                  )
+                  .style("opacity",0);
+                   d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
+                  for(var p =1;p<=13;p+=1) {
+               d3.select("#rect"+p+"_"+ ranking[p-1])
+                  .style("fill", '#8ee1ff')       
+                  }
+              });
+  var xLabel4 = d3.select('#bars4')                
+                 .append("text")
+                 .attr("class", "xlabel")
+                 .attr("text-anchor", "middle")
+                 .attr("transform", "translate(25,15)")  // centre below axis
+                 .text("Apr");
+  
+console.log(frequencies5);
+   
+  var BackGround5 =  column
+              .append('g')
+              .attr("transform", "translate(370,0)")
+              .attr('id','BackGround5')
+              .selectAll('rect')
+              .data(frequencies1)
+              .enter()
+              .append('rect')
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#ddf6ff ')
+              .attr('width',60)
+  
+   var count5 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+       
+        
+        for(var k = 0; k<keywords5.length; k++){
+        var rank5 = serchForOrder(keywords5[k],keywordsAll);
+            for(var j = 0; j <rank5.length-1; j++){
+                if(rank5[j]!=-1)
+                    count5[k] = count5[k] + 1;
+             
+            }
+           
+       } console.log(keywords5);
+                console.log(count5);
+        
+   var chart5 = column
+              .append('g')
+              .attr("transform", "translate(370,0)")
+              .attr('id','bars5')
+              .selectAll('rect')
+              .data(frequencies5)
+              .enter()
+              .append('rect')
+              .attr('id',function(d,i) {return 'rect5_' + i})
+                .classed("rect_value", true).attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#8ee1ff')
+              .attr('width',function(d) {return 0; });
+                
+              chart5.on("click",function(d){
+                alert('Interaction');
+              });   
+          var transit5 = chart5
+                .data(frequencies5)
+                .transition()
+                .duration(1000) 
+                .attr("width", function(d) {return xscale(d ); });
+           var transitext5 = d3.select('#bars5')
+              .selectAll('text')
+              .data(keywords5)
+              .enter()
+              .append('text')
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
+              .text(function(d){ return d; }).style("fill",function(d,i){
+            return outlierWords(count5[i]);});
+            /*  transitext5.on("click",function(d,i){
+                  renderCommentText(data5 ,i, 4);
+            
+              });  */
+        
+       /*----RIYA   */
+        d3.select('#bars5')
+              .selectAll('line')
+              .data(frequencies5)
+              .enter() 
+           .append('line')
+           .attr("transform", "translate(10, 28.5)")
+            .attr('stroke', '#8ee1ff')
+           .attr('stroke-width', '1.5')
+            .attr('x1',function(d,i){return 50;})
+            .attr('y1',function(d,i){return yscale(serchForOrder(data5[i].keyword,keywordsAll)[4]);})
+            .attr('x2',function(d,i){return ( ((serchForOrder(data5[i].keyword,keywordsAll)[5]) == -1)?50:80);})
+            .attr('y2',function(d,i){return ( ((serchForOrder(data5[i].keyword,keywordsAll)[5]) == -1)?yscale(serchForOrder(data5[i].keyword,keywordsAll)[4]): yscale(serchForOrder(data5[i].keyword,keywordsAll)[5]));});
+
+
+      
+
+                  transitext5.on("click",function(d,i){
+
+                  changeKeyword(data5[i].keyword);
+                  renderCommentText(data5 ,i, 0);
+            
+              });     
+  
+              transitext5.data(frequencies5)
+             .on('mouseover', function(d,i){
+var ranking = serchForOrder(data5[i].keyword,keywordsAll);
+                  console.log(ranking);
+                d3.select("#tooltip")
+                .style("visibility", "visible" )
+                .style("top", (d3.event.clientY)+10 + "px")
+                .style("left",(d3.event.clientX) + "px")
+                .style("opacity",1)
+                d3.select("#tooltip").text(d);
+                  d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
+                  for(var p =1;p<=13;p+=1) {
+               d3.select("#rect"+p+"_"+ ranking[p-1])
+                  .style("fill", '#ff8fa9')       
+                  }
+               
+               })
+                
+               
+                .on('mouseout', function(d,i){
+                  d3.select("#tooltip").style(
+                    "visibility", "hidden"
+                  )
+                  .style("opacity",0);
+                   d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
+                  for(var p =1;p<=13;p+=1) {
+               d3.select("#rect"+p+"_"+ ranking[p-1])
+                  .style("fill", '#8ee1ff')       
+                  }
+              });
+  var xLabel5 = d3.select('#bars5')                
+                 .append("text")
+                 .attr("class", "xlabel")
+                 .attr("text-anchor", "middle")
+                 .attr("transform", "translate(25,15)")  // centre below axis
+                 .text("May");
+console.log(frequencies6);
+  var BackGround6 =  column
+              .append('g')
+              .attr("transform", "translate(450,0)")
+              .attr('id','BackGround6')
+              .selectAll('rect')
+              .data(frequencies1)
+              .enter()
+              .append('rect')
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#ddf6ff ')
+              .attr('width',60)
+  
+   var count6 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+       
+        
+        for(var k = 0; k<keywords6.length; k++){
+        var rank6 = serchForOrder(keywords6[k],keywordsAll);
+            for(var j = 0; j <rank6.length-1; j++){
+                if(rank6[j]!=-1)
+                    count6[k] = count6[k] + 1;
+             
+            }
+           
+       } console.log(keywords6);
+                console.log(count6);
+        
+        
+   var chart6 = column
+              .append('g')
+              .attr("transform", "translate(450,0)")
+              .attr('id','bars6')
+              .selectAll('rect')
+              .data(frequencies6)
+              .enter()
+              .append('rect')
+              .attr('id',function(d,i) {return 'rect6_' + i})
+                .classed("rect_value", true).attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#8ee1ff')
+              .attr('width',function(d) {return 0; });
+                
+          var transit6 = chart6
+                .data(frequencies6)
+                .transition()
+                .duration(1000) 
+                .attr("width", function(d) {return xscale(d ); });
+           var transitext6 = d3.select('#bars6')
+              .selectAll('text')
+              .data(keywords6)
+              .enter()
+              .append('text')
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
+              .text(function(d){ return d; }).style("fill",function(d,i){
+           return outlierWords(count6[i]);});
+            /*  transitext6.on("click",function(d,i){
+                  renderCommentText(data6 ,i, 5);
+            
+              }); */  
+      /*----RIYA   */
+        d3.select('#bars6')
+              .selectAll('line')
+              .data(frequencies6)
+              .enter() 
+           .append('line')
+           .attr("transform", "translate(10, 28.5)")
+           .attr('stroke', '#8ee1ff')
+           .attr('stroke-width', '1.5')
+            .attr('x1',function(d,i){return 50;})
+            .attr('y1',function(d,i){return yscale(serchForOrder(data6[i].keyword,keywordsAll)[5]);})
+            .attr('x2',function(d,i){return ( ((serchForOrder(data6[i].keyword,keywordsAll)[6]) == -1)?50:70);})
+            .attr('y2',function(d,i){return ( ((serchForOrder(data6[i].keyword,keywordsAll)[6]) == -1)?yscale(serchForOrder(data6[i].keyword,keywordsAll)[5]): yscale(serchForOrder(data6[i].keyword,keywordsAll)[6]));});
+
+
+                  transitext6.on("click",function(d,i){
+                  changeKeyword(data6[i].keyword);
+                  renderCommentText(data6 ,i, 0);
+            
+              });     
+  
+              transitext6.data(frequencies6)
+            .on('mouseover', function(d,i){
+var ranking = serchForOrder(data6[i].keyword,keywordsAll);
+                  console.log(ranking);
+                d3.select("#tooltip")
+                .style("visibility", "visible" )
+                .style("top", (d3.event.clientY)+10 + "px")
+                .style("left",(d3.event.clientX) + "px")
+                .style("opacity",1)
+                d3.select("#tooltip").text(d);
+                  d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
+                  for(var p =1;p<=13;p+=1) {
+               d3.select("#rect"+p+"_"+ ranking[p-1])
+                  .style("fill", '#ff8fa9')       
+                  }
+               
+               })
+                
+               
+                .on('mouseout', function(d,i){
+                  d3.select("#tooltip").style(
+                    "visibility", "hidden"
+                  )
+                  .style("opacity",0);
+                   d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
+                  for(var p =1;p<=13;p+=1) {
+               d3.select("#rect"+p+"_"+ ranking[p-1])
+                  .style("fill", '#8ee1ff')       
+                  }
+              });
+  var xLabel6 = d3.select('#bars6')                
+                 .append("text")
+                 .attr("class", "xlabel")
+                 .attr("text-anchor", "middle")
+                 .attr("transform", "translate(25,15)")  // centre below axis
+                 .text("Jun");
+  console.log(frequencies7);
+  var BackGround7 =  column
+              .append('g')
+              .attr("transform", "translate(530,0)")
+              .attr('id','BackGround7')
+              .selectAll('rect')
+              .data(frequencies1)
+              .enter()
+              .append('rect')
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#ddf6ff ')
+              .attr('width',60)
+  
+    var count7 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+       
+        
+        for(var k = 0; k<keywords7.length; k++){
+        var rank7 = serchForOrder(keywords7[k],keywordsAll);
+            for(var j = 0; j <rank7.length-1; j++){
+                if(rank7[j]!=-1)
+                    count7[k] = count7[k] + 1;
+             
+            }
+           
+       } console.log(keywords7);
+                console.log(count7);
+        
+   var chart7 = column
+              .append('g')
+              .attr("transform", "translate(530,0)")
+              .attr('id','bars7')
+              .selectAll('rect')
+              .data(frequencies7)
+              .enter()
+              .append('rect')
+              .attr('id',function(d,i) {return 'rect7_' + i})
+                .classed("rect_value", true).attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#8ee1ff')
+              .attr('width',function(d) {return 0; });
+          var transit7 = chart7
+                .data(frequencies7)
+                .transition()
+                .duration(1000) 
+                .attr("width", function(d) {return xscale(d ); });
+           var transitext7 = d3.select('#bars7')
+              .selectAll('text')
+              .data(keywords7)
+              .enter()
+              .append('text')
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
+              .text(function(d){ return d; }).style("fill",function(d,i){
+            return outlierWords(count7[i]);});
+             /* transitext7.on("click",function(d,i){
+                  renderCommentText(data7 ,i, 6);
+            
+              }); */  
+       /*----RIYA   */
+        d3.select('#bars7')
+              .selectAll('line')
+              .data(frequencies7)
+              .enter() 
+           .append('line')
+           .attr("transform", "translate(10, 28.5)")
+           .attr('stroke', '#8ee1ff')
+           .attr('stroke-width', '1.5')
+            .attr('x1',function(d,i){return 50;})
+            .attr('y1',function(d,i){return yscale(serchForOrder(data7[i].keyword,keywordsAll)[6]);})
+            .attr('x2',function(d,i){return ( ((serchForOrder(data7[i].keyword,keywordsAll)[7]) == -1)?50:70);})
+            .attr('y2',function(d,i){return ( ((serchForOrder(data7[i].keyword,keywordsAll)[7]) == -1)?yscale(serchForOrder(data7[i].keyword,keywordsAll)[6]): yscale(serchForOrder(data7[i].keyword,keywordsAll)[7]));});
+
+
+
+ 
+                  transitext7.on("click",function(d,i){
+
+                  changeKeyword(data7[i].keyword);
+                  renderCommentText(data7 ,i, 0);
+            
+              });    
+  
+              transitext7.data(frequencies7)
+              .on('mouseover', function(d,i){
+var ranking = serchForOrder(data7[i].keyword,keywordsAll);
+                  console.log(ranking);
+                d3.select("#tooltip")
+                .style("visibility", "visible" )
+                .style("top", (d3.event.clientY)+10 + "px")
+                .style("left",(d3.event.clientX) + "px")
+                .style("opacity",1)
+                d3.select("#tooltip").text(d);
+                  d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
+                  for(var p =1;p<=13;p+=1) {
+               d3.select("#rect"+p+"_"+ ranking[p-1])
+                  .style("fill", '#ff8fa9')       
+                  }
+               
+               })
+                
+               
+                .on('mouseout', function(d,i){
+                  d3.select("#tooltip").style(
+                    "visibility", "hidden"
+                  )
+                  .style("opacity",0);
+                   d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
+                  for(var p =1;p<=13;p+=1) {
+               d3.select("#rect"+p+"_"+ ranking[p-1])
+                  .style("fill", '#8ee1ff')       
+                  }
+              });
+  var xLabel7 = d3.select('#bars7')                
+                 .append("text")
+                 .attr("class", "xlabel")
+                 .attr("text-anchor", "middle")
+                 .attr("transform", "translate(25,15)")  // centre below axis
+                 .text("Jul");
+console.log(frequencies8);
+  var BackGround8 =  column
+              .append('g')
+              .attr("transform", "translate(610,0)")
+              .attr('id','BackGround8')
+              .selectAll('rect')
+              .data(frequencies1)
+              .enter()
+              .append('rect')
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#ddf6ff ')
+              .attr('width',60)
+  
+   var count8 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+       
+        
+        for(var k = 0; k<keywords8.length; k++){
+        var rank8 = serchForOrder(keywords8[k],keywordsAll);
+            for(var j = 0; j <rank8.length-1; j++){
+                if(rank8[j]!=-1)
+                    count8[k] = count8[k] + 1;
+             
+            }
+           
+       } console.log(keywords8);
+                console.log(count8);
+        
+   var chart8 = column
+              .append('g')
+              .attr("transform", "translate(610,0)")
+              .attr('id','bars8')
+              .selectAll('rect')
+              .data(frequencies8)
+              .enter()
+              .append('rect')
+              .attr('id',function(d,i) {return 'rect8_' + i})
+                .classed("rect_value", true).attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#8ee1ff')
+              .attr('width',function(d) {return 0; });
+                 
+          var transit8 = chart8
+                .data(frequencies8)
+                .transition()
+                .duration(1000) 
+                .attr("width", function(d) {return xscale(d ); });
+           var transitext8 = d3.select('#bars8')
+              .selectAll('text')
+              .data(keywords8)
+              .enter()
+              .append('text')
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
+              .text(function(d){ return d; }).style("fill",function(d,i){
+           return outlierWords(count8[i]);});
+             /* transitext8.on("click",function(d,i){
+                  renderCommentText(data8 ,i, 7);
+            
+              }); */
+        
+       
+         /*----RIYA   */
+        d3.select('#bars8')
+              .selectAll('line')
+              .data(frequencies8)
+              .enter() 
+           .append('line')
+           .attr("transform", "translate(10, 28.5)")
+          .attr('stroke', '#8ee1ff')
+           .attr('stroke-width', '1.5')
+            .attr('x1',function(d,i){return 50;})
+            .attr('y1',function(d,i){return yscale(serchForOrder(data8[i].keyword,keywordsAll)[7]);})
+            .attr('x2',function(d,i){return ( ((serchForOrder(data8[i].keyword,keywordsAll)[8]) == -1)?50:70);})
+            .attr('y2',function(d,i){return ( ((serchForOrder(data8[i].keyword,keywordsAll)[8]) == -1)?yscale(serchForOrder(data8[i].keyword,keywordsAll)[7]): yscale(serchForOrder(data8[i].keyword,keywordsAll)[8]));});
+
+
+
+
+                  transitext8.on("click",function(d,i){
+
+                  changeKeyword(data8[i].keyword);
+                  renderCommentText(data8 ,i, 0);
+            
+              });   
+  
+              transitext8.data(frequencies8)
+            .on('mouseover', function(d,i){
+var ranking = serchForOrder(data8[i].keyword,keywordsAll);
+                  console.log(ranking);
+                d3.select("#tooltip")
+                .style("visibility", "visible" )
+                .style("top", (d3.event.clientY)+10 + "px")
+                .style("left",(d3.event.clientX) + "px")
+                .style("opacity",1)
+                d3.select("#tooltip").text(d);
+                  d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
+                  for(var p =1;p<=13;p+=1) {
+               d3.select("#rect"+p+"_"+ ranking[p-1])
+                  .style("fill", '#ff8fa9')       
+                  }
+               
+               })
+                
+               
+                .on('mouseout', function(d,i){
+                  d3.select("#tooltip").style(
+                    "visibility", "hidden"
+                  )
+                  .style("opacity",0);
+                   d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
+                  for(var p =1;p<=13;p+=1) {
+               d3.select("#rect"+p+"_"+ ranking[p-1])
+                  .style("fill", '#8ee1ff')       
+                  }
+              });
+  var xLabel8 = d3.select('#bars8')                
+                 .append("text")
+                 .attr("class", "xlabel")
+                 .attr("text-anchor", "middle")
+                 .attr("transform", "translate(25,15)")  // centre below axis
+                 .text("Aug");
+   console.log(frequencies9);
+   var BackGround9 =  column
+              .append('g')
+              .attr("transform", "translate(690,0)")
+              .attr('id','BackGround9')
+              .selectAll('rect')
+              .data(frequencies1)
+              .enter()
+              .append('rect')
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#ddf6ff ')
+              .attr('width',60)
+   
+     var count9 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+       
+        
+        for(var k = 0; k<keywords9.length; k++){
+        var rank9 = serchForOrder(keywords9[k],keywordsAll);
+            for(var j = 0; j <rank9.length-1; j++){
+                if(rank9[j]!=-1)
+                    count9[k] = count9[k] + 1;
+             
+            }
+           
+       } console.log(keywords9);
+                console.log(count9);
+        
+   var chart9 = column
+              .append('g')
+              .attr("transform", "translate(690,0)")
+              .attr('id','bars9')
+              .selectAll('rect')
+              .data(frequencies9)
+              .enter()
+              .append('rect')
+            .attr('id',function(d,i) {return 'rect9_' + i})
+                .classed("rect_value", true)  .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#8ee1ff')
+              .attr('width',function(d) {return 0; });
+          var transit9 = chart9
+                .data(frequencies9)
+                .transition()
+                .duration(1000) 
+                .attr("width", function(d) {return xscale(d ); });
+           var transitext9 = d3.select('#bars9')
+              .selectAll('text')
+              .data(keywords9)
+              .enter()
+              .append('text')
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
+              .text(function(d){ return d; }).style("fill",function(d,i){
+            return outlierWords(count9[i]);});
+             /* transitext9.on("click",function(d,i){
+                  renderCommentText(data9 ,i, 8);
+            
+              });  */ 
+         /*----RIYA   */
+    /*----RIYA   */
+        d3.select('#bars9')
+              .selectAll('line')
+              .data(frequencies9)
+              .enter() 
+           .append('line')
+           .attr("transform", "translate(10, 28.5)")
+            .attr('stroke', '#8ee1ff')
+           .attr('stroke-width', '1.5')
+            .attr('x1',function(d,i){return 50;})
+            .attr('y1',function(d,i){return yscale(serchForOrder(data9[i].keyword,keywordsAll)[8]);})
+            .attr('x2',function(d,i){return ( ((serchForOrder(data9[i].keyword,keywordsAll)[9]) == -1)?50:70);})
+            .attr('y2',function(d,i){return ( ((serchForOrder(data9[i].keyword,keywordsAll)[9]) == -1)?yscale(serchForOrder(data9[i].keyword,keywordsAll)[8]): yscale(serchForOrder(data9[i].keyword,keywordsAll)[9]));});
+
+
+
+
+
+                  transitext9.on("click",function(d,i){
+
+                  changeKeyword(data9[i].keyword);
+                  renderCommentText(data9 ,i, 0);
+            
+              }); 
+  
+              transitext9.data(frequencies9)
+             .on('mouseover', function(d,i){
+var ranking = serchForOrder(data9[i].keyword,keywordsAll);
+                  console.log(ranking);
+                d3.select("#tooltip")
+                .style("visibility", "visible" )
+                .style("top", (d3.event.clientY)+10 + "px")
+                .style("left",(d3.event.clientX) + "px")
+                .style("opacity",1)
+                d3.select("#tooltip").text(d);
+                  d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
+                  for(var p =1;p<=13;p+=1) {
+               d3.select("#rect"+p+"_"+ ranking[p-1])
+                  .style("fill", '#ff8fa9')       
+                  }
+               
+               })
+                
+               
+                .on('mouseout', function(d,i){
+                  d3.select("#tooltip").style(
+                    "visibility", "hidden"
+                  )
+                  .style("opacity",0);
+                   d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
+                  for(var p =1;p<=13;p+=1) {
+               d3.select("#rect"+p+"_"+ ranking[p-1])
+                  .style("fill", '#8ee1ff')       
+                  }
+              });
+  var xLabel9 = d3.select('#bars9')                
+                 .append("text")
+                 .attr("class", "xlabel")
+                 .attr("text-anchor", "middle")
+                 .attr("transform", "translate(25,15)")  // centre below axis
+                 .text("Sep");              
+console.log(frequencies10);
+    var BackGround10 =  column
+              .append('g')
+              .attr("transform", "translate(770,0)")
+              .attr('id','BackGround10')
+              .selectAll('rect')
+              .data(frequencies1)
+              .enter()
+              .append('rect')
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#ddf6ff ')
+              .attr('width',60)
+    
+      var count10 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+       
+        
+        for(var k = 0; k<keywords10.length; k++){
+        var rank10 = serchForOrder(keywords10[k],keywordsAll);
+            for(var j = 0; j <rank10.length-1; j++){
+                if(rank10[j]!=-1)
+                    count10[k] = count10[k] + 1;
+             
+            }
+           
+       } console.log(keywords10);
+                console.log(count10);
+        
+   var chart10 = column
+              .append('g')
+              .attr("transform", "translate(770,0)")
+              .attr('id','bars10')
+              .selectAll('rect')
+              .data(frequencies10)
+              .enter()
+              .append('rect')
+              .attr('id',function(d,i) {return 'rect10_' + i})
+                .classed("rect_value", true).attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#8ee1ff')
+              .attr('width',function(d) {return 0; });
+          var transit10 = chart10
+                .data(frequencies10)
+                .transition()
+                .duration(1000) 
+                .attr("width", function(d) {return xscale(d ); });
+           var transitext10 = d3.select('#bars10')
+              .selectAll('text')
+              .data(keywords10)
+              .enter()
+              .append('text')
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
+              .text(function(d){ return d; }).style("fill",function(d,i){
+           return outlierWords(count10[i]);});
+/*
+               transitext10.on("click",function(d,i){
+                  renderCommentText(data10 ,i, 9);
+            
+              }); */
+              /*----RIYA   */
+        d3.select('#bars10')
+              .selectAll('line')
+              .data(frequencies10)
+              .enter() 
+           .append('line')
+           .attr("transform", "translate(10, 28.5)")
+            .attr('stroke', '#8ee1ff')
+           .attr('stroke-width', '1.5')
+            .attr('x1',function(d,i){return 50;})
+            .attr('y1',function(d,i){return yscale(serchForOrder(data10[i].keyword,keywordsAll)[9]);})
+            .attr('x2',function(d,i){return ( ((serchForOrder(data10[i].keyword,keywordsAll)[10]) == -1)?50:70);})
+            .attr('y2',function(d,i){return ( ((serchForOrder(data10[i].keyword,keywordsAll)[10]) == -1)?yscale(serchForOrder(data10[i].keyword,keywordsAll)[9]): yscale(serchForOrder(data10[i].keyword,keywordsAll)[10]));});
+
+
+
+
+                  transitext10.on("click",function(d,i){
+
+                  changeKeyword(data10[i].keyword);
+                  renderCommentText(data10 ,i, 0);
+            
+              });  
+  
+              transitext10.data(frequencies10)
+              .on('mouseover', function(d,i){
+var ranking = serchForOrder(data10[i].keyword,keywordsAll);
+                  console.log(ranking);
+                d3.select("#tooltip")
+                .style("visibility", "visible" )
+                .style("top", (d3.event.clientY)+10 + "px")
+                .style("left",(d3.event.clientX) + "px")
+                .style("opacity",1)
+                d3.select("#tooltip").text(d);
+                  d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
+                  for(var p =1;p<=13;p+=1) {
+               d3.select("#rect"+p+"_"+ ranking[p-1])
+                  .style("fill", '#ff8fa9')       
+                  }
+               
+               })
+                
+               
+                .on('mouseout', function(d,i){
+                  d3.select("#tooltip").style(
+                    "visibility", "hidden"
+                  )
+                  .style("opacity",0);
+                   d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
+                  for(var p =1;p<=13;p+=1) {
+               d3.select("#rect"+p+"_"+ ranking[p-1])
+                  .style("fill", '#8ee1ff')       
+                  }
+              });
+        
+  var xLabel10 = d3.select('#bars10')                
+                 .append("text")
+                 .attr("class", "xlabel")
+                 .attr("text-anchor", "middle")
+                 .attr("transform", "translate(25,15)")  // centre below axis
+                 .text("Oct");
+   console.log(frequencies11);
+    var BackGround11 =  column
+              .append('g')
+              .attr("transform", "translate(850,0)")
+              .attr('id','BackGround11')
+              .selectAll('rect')
+              .data(frequencies1)
+              .enter()
+              .append('rect')
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#ddf6ff ')
+              .attr('width',60)
+    
+     var count11 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+       
+        
+        for(var k = 0; k<keywords11.length; k++){
+        var rank11 = serchForOrder(keywords11[k],keywordsAll);
+            for(var j = 0; j <rank11.length-1; j++){
+                if(rank11[j]!=-1)
+                    count11[k] = count11[k] + 1;
+             
+            }
+           
+       } console.log(keywords11);
+                console.log(count11);
+        
+   var chart11 = column
+              .append('g')
+              .attr("transform", "translate(850,0)")
+              .attr('id','bars11')
+              .selectAll('rect')
+              .data(frequencies11)
+              .enter()
+              .append('rect')
+              .attr('id',function(d,i) {return 'rect11_' + i})
+                .classed("rect_value", true).attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#8ee1ff')
+              .attr('width',function(d) {return 0; });
+          var transit11 = chart11
+                .data(frequencies11)
+                .transition()
+                .duration(1000) 
+                .attr("width", function(d) {return xscale(d ); });
+           var transitext11 = d3.select('#bars11')
+              .selectAll('text')
+              .data(keywords11)
+              .enter()
+              .append('text')
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
+              .text(function(d){ return d; }).style("fill",function(d,i){
+            return outlierWords(count11[i]);});
+             /* transitext11.on("click",function(d,i){
+                  renderCommentText(data11 ,i, 10);
+            
+              }); */
+   
+         /*----RIYA   */
+        d3.select('#bars11')
+              .selectAll('line')
+              .data(frequencies11)
+              .enter() 
+           .append('line')
+           .attr("transform", "translate(10, 28.5)")
+            .attr('stroke', '#8ee1ff')
+           .attr('stroke-width', '1.5')
+            .attr('x1',function(d,i){return 50;})
+            .attr('y1',function(d,i){return yscale(serchForOrder(data11[i].keyword,keywordsAll)[10]);})
+            .attr('x2',function(d,i){return ( ((serchForOrder(data11[i].keyword,keywordsAll)[11]) == -1)?50:70);})
+            .attr('y2',function(d,i){return ( ((serchForOrder(data11[i].keyword,keywordsAll)[11]) == -1)?yscale(serchForOrder(data11[i].keyword,keywordsAll)[10]): yscale(serchForOrder(data11[i].keyword,keywordsAll)[11]));});
+
+
+
+                  transitext11.on("click",function(d,i){
+
+                  changeKeyword(data11[i].keyword);
+                  renderCommentText(data11 ,i, 0);
+            
+              });   
+
+  
+              transitext11.data(frequencies11)
+             .on('mouseover', function(d,i){
+var ranking = serchForOrder(data11[i].keyword,keywordsAll);
+                  console.log(ranking);
+                d3.select("#tooltip")
+                .style("visibility", "visible" )
+                .style("top", (d3.event.clientY)+10 + "px")
+                .style("left",(d3.event.clientX) + "px")
+                .style("opacity",1)
+                d3.select("#tooltip").text(d);
+                  d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
+                  for(var p =1;p<=13;p+=1) {
+               d3.select("#rect"+p+"_"+ ranking[p-1])
+                  .style("fill", '#ff8fa9')       
+                  }
+               
+               })
+                
+               
+                .on('mouseout', function(d,i){
+                  d3.select("#tooltip").style(
+                    "visibility", "hidden"
+                  )
+                  .style("opacity",0);
+                   d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
+                  for(var p =1;p<=13;p+=1) {
+               d3.select("#rect"+p+"_"+ ranking[p-1])
+                  .style("fill", '#8ee1ff')       
+                  }
+              });
+  var xLabel11 = d3.select('#bars11')                
+                 .append("text")
+                 .attr("class", "xlabel")
+                 .attr("text-anchor", "middle")
+                 .attr("transform", "translate(25,15)")  // centre below axis
+                 .text("Nov");
+   console.log(frequencies12);
+   var BackGround12 =  column
+              .append('g')
+              .attr("transform", "translate(930,0)")
+              .attr('id','BackGround12')
+              .selectAll('rect')
+              .data(frequencies1)
+              .enter()
+              .append('rect')
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#ddf6ff ')
+              .attr('width',60)
+   
+     var count12 =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+       
+        
+        for(var k = 0; k<keywords12.length; k++){
+        var rank12 = serchForOrder(keywords12[k],keywordsAll);
+            for(var j = 0; j <rank12.length-1; j++){
+                if(rank12[j]!=-1)
+                    count12[k] = count12[k] + 1;
+             
+            }
+           
+       } console.log(keywords12);
+                console.log(count12);
+        
+   var chart12 = column
+              .append('g')
+              .attr("transform", "translate(930,0)")
+              .attr('id','bars12')
+              .selectAll('rect')
+              .data(frequencies12)
+              .enter()
+              .append('rect')
+              .attr('id',function(d,i) {return 'rect12_' + i})
+                .classed("rect_value", true).attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#8ee1ff')
+              .attr('width',function(d) {return 0; });
+  
+          var transit12 = chart12
+                .data(frequencies12)
+                .transition()
+                .duration(1000) 
+                .attr("width", function(d) {return xscale(d ); });
+           var transitext12 = d3.select('#bars12')
+              .selectAll('text')
+              .data(keywords12)
+              .enter()
+              .append('text')
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
+              .text(function(d){ return d; }).style("fill",function(d,i){
+           return outlierWords(count12[i]);})
+          
+             /* transitext12.on("click",function(d,i){
+                  renderCommentText(data12 ,i, 11);
+            
+              }); */
+        
+              
+              transitext12.on("click",function(d,i){
+
+                  changeKeyword(data12[i].keyword);
+                  renderCommentText(data12 ,i, 0);
+            
+              }); 
+              
+  
+              transitext12.data(frequencies12)
+              .on('mouseover', function(d,i){
+var ranking = serchForOrder(data12[i].keyword,keywordsAll);
+                  console.log(ranking);
+                d3.select("#tooltip")
+                .style("visibility", "visible" )
+                .style("top", (d3.event.clientY)+10 + "px")
+                .style("left",(d3.event.clientX) + "px")
+                .style("opacity",1)
+                d3.select("#tooltip").text(d);
+                  d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
+                  for(var p =1;p<=13;p+=1) {
+               d3.select("#rect"+p+"_"+ ranking[p-1])
+                  .style("fill", '#ff8fa9')       
+                  }
+               
+               })
+                
+               
+                .on('mouseout', function(d,i){
+                  d3.select("#tooltip").style(
+                    "visibility", "hidden"
+                  )
+                  .style("opacity",0);
+                   d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
+                  for(var p =1;p<=13;p+=1) {
+               d3.select("#rect"+p+"_"+ ranking[p-1])
+                  .style("fill", '#8ee1ff')       
+                  }
+              });
+  var xLabel12 = d3.select('#bars12')                
+                 .append("text")
+                 .attr("class", "xlabel")
+                 .attr("text-anchor", "middle")
+                 .attr("transform", "translate(25,15)")  // centre below axis
+                 .text("Dec");
+   console.log(frequencies13);
+  var BackGround13 =  column
+              .append('g')
+              .attr("transform", "translate(1040,0)")
+              .attr('id','BackGround13')
+              .selectAll('rect')
+              .data(frequencies1)
+              .enter()
+              .append('rect')
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#ddf6ff ')
+              .attr('width',250)
+   var chart13 = column
+              .append('g')
+              .attr("transform", "translate(1040,0)")
+              .attr('id','bars13')
+              .selectAll('rect')
+              .data(frequencies13)
+              .enter()
+              .append('rect')
+               .attr('id',function(d,i) {return 'rect13_' + i})
+                .classed("rect_value", true).attr('height',19)
+              .attr('height',19)
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+19; }})
+              .style('fill', '#8ee1ff')
+              .attr('width',function(d) {return 0; });
+ 
+          var transit13 = chart13
+                .data(frequencies13)
+                .transition()
+                .duration(1000) 
+                .attr("width", function(d) {return xscale(d * .4 ); });
+           var transitext13 = d3.select('#bars13')
+              .selectAll('text')
+              .data(keywords13)
+              .enter()
+              .append('text')
+              .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
+              .text(function(d){ return d; }).style({'fill':'#000','font-size':'14px'});
+              
+        transitext13.data(frequencies13)
+              .on('mouseover', function(d,i){
+            var ranking = serchForOrder(data13[i].keyword,keywordsAll);
+                  console.log(ranking);
+                d3.select("#tooltip")
+                .style("visibility", "visible" )
+                .style("top", (d3.event.clientY)+10 + "px")
+                .style("left",(d3.event.clientX) + "px")
+                .style("opacity",1)
+                d3.select("#tooltip").text(d);
+                d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
+                  for(var p =1;p<=13;p+=1) {
+               d3.select("#rect"+p+"_"+ ranking[p-1])
+                  .style("fill", '#ff8fa9')       
+                  }
+               })
+                
+               
+                .on('mouseout', function(d,i){
+                  d3.select("#tooltip").style(
+                    "visibility", "hidden"
+                  )
+                  .style("opacity",0);
+                   d3.selectAll("rect.rect_value").style("fill", "#8ee1ff");
+                  for(var p =1;p<=13;p+=1) {
+               d3.select("#rect"+p+"_"+ ranking[p-1])
+                  .style("fill", '#8ee1ff')       
+                  }
+              });
+  var xLabel13 = d3.select('#bars13')                
+                 .append("text")
+                 .attr("class", "xlabel")
+                 .attr("text-anchor", "middle")
+                  .style("font-weight", 'bold') 
+                 .attr("transform", "translate(25,15)")  // centre below axis
+                 .text(year);
+    }
+/*
+    d3.selectAll("thead td").data(dollars);
+     var tr = d3.select("tbody").selectAll("tr")
+      .data(categories)
+    .enter().append("tr");
+    tr.append("th")
+      .text(function(d) { return d.categories });
+ tr.selectAll("td")
+      .data(dollars)
+    .enter().append("td").append("svg")
+      .attr("width", 71)
+      .attr("height", 12)
+    .append("rect")
+      .attr("height", 12)
+      .attr("width", function(d) { return d * 71; });
+*/
+  function filteredDataByYear(data, theYear){
+    var filteredDataByYear = data.filter(function(d) {
+        return    d3.sum(d.year[theYear]) ;
+      });
+      filteredDataByYear.sort(function(a,b) { return d3.descending(d3.sum(a.year[theYear]), d3.sum(b.year[theYear]) )  });
+    return filteredDataByYear.slice(0, topNum);
+  }
+  
+  
+    function filteredDataByMonth(data, theYear, theMonth){
+    var filteredDataByMonth = data.filter(function(d) {
+        return    d.year[theYear][theMonth];
+      });
+      filteredDataByMonth.sort(function(a,b) { return d3.descending(a.year[theYear][theMonth], b.year[theYear][theMonth] )  });
+    return filteredDataByMonth.slice(0, topNum);
+  }
+ 
+ 
+   function render(data){
+   
+          var filteredData1;
+          var filteredData2;
+          var filteredData3;
+          var filteredData4;
+          var filteredData5;
+          var filteredData6;
+          var filteredData7;
+          var filteredData8;
+          var filteredData9;
+          var filteredData10;
+          var filteredData11;
+          var filteredData12;
+          var filteredData13;
+/*
+          if (listByMonth){
+*/
+              var month1 = month;
+              var month2 = month+1;
+              var month3 = month2+1;
+              var month4 = month3 + 1;
+              var month5 = month4 + 1;
+              var month6 = month5+1;
+              var month7 = month6+1;
+              var month8 = month7+1;
+              var month9 = month8 + 1;
+              var month10 = month9 + 1;
+              var month11 = month10 + 1;
+              var month12 = month11 + 1;
+               filteredData1 = filteredDataByMonth(data,year,month1);
+               filteredData2 = filteredDataByMonth(data,year,month2);
+               filteredData3 = filteredDataByMonth(data,year,month3);
+               filteredData4 = filteredDataByMonth(data,year,month4);
+               filteredData5 = filteredDataByMonth(data,year,month5);
+               filteredData6 = filteredDataByMonth(data,year,month6);
+               filteredData7 = filteredDataByMonth(data,year,month7);
+               filteredData8 = filteredDataByMonth(data,year,month8);
+               filteredData9 = filteredDataByMonth(data,year,month9);
+               filteredData10 = filteredDataByMonth(data,year,month10);
+               filteredData11 = filteredDataByMonth(data,year,month11);
+               filteredData12 = filteredDataByMonth(data,year,month12);
+               filteredData13 = filteredDataByYear(data, year);
+    
+         /* 
+          }
+          else {
+          var year1  = year - 2;
+          var year2  = year - 1;
+          var year4  = year + 1; 
+          var year5  = year + 2;
+          filteredData1 = filteredDataByYear(data,year1);
+          filteredData2 = filteredDataByYear(data,year2);
+          filteredData3 = filteredDataByYear(data,year);
+          filteredData4 = filteredDataByYear(data,year4);
+          filteredData5 = filteredDataByYear(data,year5);
+              
+          
+        
+        }*/
+           renderChart(filteredData1,filteredData2,filteredData3,filteredData4,filteredData5,filteredData6,filteredData7,filteredData8,filteredData9,filteredData10,filteredData11,filteredData12,filteredData13);
+        
+           //renderList(filteredData13);
+    }
+
+      //d3.json(docName, function(error,result){
+      d3.json("reviewKey.json", function(error,result){
+      data = result;
+      render(data);
+    })
+   
+  </script>
+     <script>
+
+
+              d3.select("#DropDownOption1").on("click",function(d,i){
+
+
+                  csvDocName = "dailydata.csv";
+
+
+
+
+                  d3.selectAll("#svg").remove();
+
+
+                  JsonDocName = "reviewKey.json";
+
+                   d3.json(JsonDocName, function(error,result){
+
+                    data = result;
+                    render(data);
+                     })
+
+
+                 // renderCommentText(data1 ,i, 0);
+            
+              });   
+
+
+                d3.select("#DropDownOption2").on("click",function(d,i){
+
+
+
+                    csvDocName = "daily.csv";
+
+                     d3.selectAll("#svg").remove();
+
+
+                  JsonDocName = "KeyWordsFrequency_Data.json";
+
+                   d3.json(JsonDocName, function(error,result){
+
+                    data = result;
+                    render(data);
+                     })
+
+
+                 // renderCommentText(data1 ,i, 0);
+            
+              });   
+
+
+    </script>
+
+</body>
+</html>
