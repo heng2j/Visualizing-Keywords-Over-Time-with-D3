@@ -6,10 +6,7 @@ Zhongheng Li           zl1761@nyu.edu
 Priyanshi Shah          ps3296@nyu.edu 
 Riya Patni                 rsp378@nyu.edu
 
-Screenshot of our Project:<br>
- <img src="https://github.com/heng2j/Visualizing-Keywords-Over-Time-with-D3/blob/master/one.png"/>
-</br>
-
+Screenshot of our Project:
 <br>
  <img src="https://github.com/heng2j/Visualizing-Keywords-Over-Time-with-D3/blob/master/two.jpg"/>
 </br>
