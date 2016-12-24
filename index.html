@@ -22,6 +22,8 @@
         margin-top: 0px;
       }
          
+
+
       .xlabel{
 
           fill: black ;
@@ -106,32 +108,85 @@
   .g-ListCell.g-quantitative{
            float:left;
       }
-      #yearSelect{
-        margin-left: 30;
-      }
+      
       #grid, #pager {
   position: fixed;
   width: 100%;
 }
+
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 28px;
+}
+
+.switch input {display:none;}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(12px);
+  -ms-transform: translateX(12px);
+  transform: translateX(12px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+
   </style>
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+  <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 
 </head>
 <body>
 
  <div id="title">
-      <h1 style="color: #F0ECEB" class="dropdown">Keywords analysis over time - Restaurants from Philadelphia 
+      <h1 style="color: #F0ECEB" class="dropdown">Keywords over time - Restaurants from Pennsylvania 
 
-    <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown" style=" background-color:#F7F3E8 ;float: right; margin-right: 10%; margin-top : 3px;">Change Data Set
-    <span class="caret"></span></button>
-   <ul class="dropdown-menu" role="menu" aria-labelledby="menu1" style ="float: right; position:inherit;">
-      <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOption1" href="#">Yelp Reviews</a></li>
-      <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOption2" href="#">Yelp Tips</a></li>
-
-    </ul>
+    
 
     </h1>
 
@@ -142,26 +197,72 @@
 
 
 
-    <button type="button" class="btn btn-info" style="padding: 2px 12px ; margin-left:-10px" data-toggle="collapse" data-target="#listChat">Keywords Annual Analysis</button>
-      <div id="listChat" class="collapse in">
 
+
+    <div class="btn-group" style="float:left; margin-left: -10px">
+    <button type="button" class="btn btn-info" style="padding: 2px 12px; background-color:#5cc3d7;  " >Tools</button>
+    <button type="button" class="btn btn-primary" style="padding: 2px 12px ;">Show Path</button>
+    <button type="button" class="btn btn-primary" style="padding: 2px 12px ;">Show Outliers</button>
+
+      <div class="btn-group">
+      <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="padding: 2px 12px ;">
+      Change Data Range <span class="caret"></span></button>
+      <ul class="dropdown-menu" role="menu">
+     <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOption1" href="#">Top 10</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOption2" href="#">Top 15</a></li>
+       <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOption2" href="#">Top 20</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOption2" href="#">Top 25</a></li>
+         <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOption2" href="#">Top 30</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOption2" href="#">Top 35</a></li>
+
+      </ul>
+    </div>
+     <div class="btn-group">
+      <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="padding: 2px 12px ;">
+      Change year <span class="caret"></span></button>
+      <ul class="dropdown-menu" role="menu">
+     <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOption1" href="#">2014</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOption2" href="#">2015</a></li>
+
+      </ul>
+    </div>
+    
+   
+
+       <div class="btn-group">
+      <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="padding: 2px 12px ;">
+      Change Data Set <span class="caret"></span></button>
+      <ul class="dropdown-menu" role="menu">
+     <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOption1" href="#">Yelp Reviews</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOption2" href="#">Yelp Tips</a></li>
+
+      </ul>
+    </div>
+  
+    
+
+  </div>
+
+
+
+    <button type="button" class="btn btn-info" style="padding: 2px 12px ; margin-top: 35px; margin-left:-685px ; margin-bottom: 30px" data-toggle="collapse" data-target="#listChat">Keywords Annual Analysis</button>
+      <div id="listChat" class="collapse in" >   
    <!--   <div id="example" class="parcoords" style="width:960px;height:350px"></div>
-   -->   </div>
+   -->  
+
+    </div>
+
+      
+ 
+      
+
+
+    </div>
+ 
 
 
 
-  <div = id="ControlPanel">
 
-       <input 
-      id="yearSelect"
-      type="range" 
-      min="2014" 
-      max="2015" 
-      value="2014" 
-      style="width:250"
-      onchange="setYear(this.value)"
-      >
- </div>
 
 
    <ul class="nav nav-pills" >
@@ -171,7 +272,8 @@
     <li><a data-toggle="tab" href="#menu3" style="padding: 2px 12px ; margin-left:10px" >Menu 3</a></li>
   </ul>
 
-  <div class="tab-content">
+
+  <div class="tab-content" >
 
       <!-- <div id="HeatMap" class="clearfix"></div> 
       -->
@@ -179,7 +281,7 @@
        <div id="HeatMap" class="tab-pane fade in active"></div>
 
 
-         <div id="Comments"  class="tab-pane fade">
+         <div id="Comments"  class="tab-pane fade" style="margin-left:25px">
         <h2> Top 5 Comments being Mentioned </h2>
         <ul class="CommentsList" id="CommentsList"></ul>
         </div>
@@ -420,7 +522,7 @@
     var CommentsList = d3.select("#CommentsList");
     var Comments = d3.select("#Comments");
     var canvasWidth = 1350;
-    var canavasHeight = 25 * topNum + 20;
+    var canavasHeight = 25 * topNum + 50;
     var canavasPadding = 100;
     var innerWidth = 100;
     var docName = "KeyWordsFrequency_Data.json";
@@ -903,7 +1005,7 @@ var yscale = d3.scale.linear()
                     "visibility", "hidden"
                   );
 
-                 // renderCommentText(data1 ,i, 0);
+                  renderCommentText(data1 ,i, 0);
             
               });   
   
