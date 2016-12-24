@@ -201,19 +201,20 @@ input:checked + .slider:before {
 
     <div class="btn-group" style="float:left; margin-left: -10px">
     <button type="button" class="btn btn-info" style="padding: 2px 12px; background-color:#5cc3d7;  " >Tools</button>
-    <button type="button" class="btn btn-primary" style="padding: 2px 12px ;">Show Path</button>
-    <button type="button" class="btn btn-primary" style="padding: 2px 12px ;">Show Outliers</button>
+    <button type="button" class="btn btn-primary" id="ShowPath" style="padding: 2px 12px ;">Show Path</button>
+    <button type="button" class="btn btn-primary" id="HidePath" style="padding: 2px 12px ;">Hide Path</button>
+    <button type="button" class="btn btn-primary" id="ShowOutliers" style="padding: 2px 12px ;">Show Outliers</button>
+    <button type="button" class="btn btn-primary" id="HideOutliers" style="padding: 2px 12px ;">Hide Outliers</button>
 
       <div class="btn-group">
       <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="padding: 2px 12px ;">
       Change Data Range <span class="caret"></span></button>
       <ul class="dropdown-menu" role="menu">
-     <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOption1" href="#">Top 10</a></li>
-      <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOption2" href="#">Top 15</a></li>
-       <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOption2" href="#">Top 20</a></li>
-        <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOption2" href="#">Top 25</a></li>
-         <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOption2" href="#">Top 30</a></li>
-          <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOption2" href="#">Top 35</a></li>
+     <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOptionTop10" href="#">Top 10</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOptionTop15" href="#">Top 15</a></li>
+       <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOptionTop20" href="#">Top 20</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOptionTop25" href="#">Top 25</a></li>
+         <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOptionTop30" href="#">Top 30</a></li>
 
       </ul>
     </div>
@@ -221,8 +222,8 @@ input:checked + .slider:before {
       <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="padding: 2px 12px ;">
       Change year <span class="caret"></span></button>
       <ul class="dropdown-menu" role="menu">
-     <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOption1" href="#">2014</a></li>
-      <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOption2" href="#">2015</a></li>
+     <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOption2014" href="#">2014</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" id="DropDownOption2015" href="#">2015</a></li>
 
       </ul>
     </div>
@@ -245,7 +246,7 @@ input:checked + .slider:before {
 
 
 
-    <button type="button" class="btn btn-info" style="padding: 2px 12px ; margin-top: 35px; margin-left:-685px ; margin-bottom: 30px" data-toggle="collapse" data-target="#listChat">Keywords Annual Analysis</button>
+    <button type="button" class="btn btn-info" style="padding: 2px 12px ; margin-top: 35px; margin-left:-880px ; margin-bottom: 30px" data-toggle="collapse" data-target="#listChat">Keywords Annual Analysis</button>
       <div id="listChat" class="collapse in" >   
    <!--   <div id="example" class="parcoords" style="width:960px;height:350px"></div>
    -->  
@@ -268,8 +269,8 @@ input:checked + .slider:before {
    <ul class="nav nav-pills" >
     <li class="active"  ><a data-toggle="tab" href="#HeatMap" style="padding: 2px 12px ; margin-left:10px" >HeatMap</a></li>
     <li><a data-toggle="tab" href="#Comments" style="padding: 2px 12px ; margin-left:10px" >Comments</a></li>
-    <li><a data-toggle="tab" href="#menu2" style="padding: 2px 12px ; margin-left:10px" >Menu 2</a></li>
-    <li><a data-toggle="tab" href="#menu3" style="padding: 2px 12px ; margin-left:10px" >Menu 3</a></li>
+    <li><a data-toggle="tab" href="#menu2" style="padding: 2px 12px ; margin-left:10px" >Key Words Correlation (Future Release...)</a></li>
+
   </ul>
 
 
@@ -323,7 +324,7 @@ input:checked + .slider:before {
         format = d3.time.format("%Y-%m-%d");
 
     var color = d3.scale.quantize()
-        .domain([1, 10])
+        .domain([1, 5])
         .range(d3.range(11).map(function(d) { return "q" + d + "-11"; }));
 
     var svg = d3.select("#HeatMap").selectAll("svg")
@@ -420,14 +421,12 @@ input:checked + .slider:before {
         })
 
 
-           console.log(data);
-          console.log(csv);
 
         var newData = [];
 
          data.forEach(function(d,i) { 
 
-            console.log(d);
+
 
         newData[d.date] =  d.frequency ;
 
@@ -437,8 +436,6 @@ input:checked + .slider:before {
          data =  newData;
   
 
-           console.log(data);
-          console.log(csv);
 
 
 
@@ -552,7 +549,8 @@ input:checked + .slider:before {
      selection.exit().remove();
       
     }
-    function renderCommentText(data, orderIndex, monthIndex){
+
+    function renderCommentText(data, orderIndex, year, monthIndex){
       var selection = CommentsList.selectAll("li")
           .remove()
           .data(data[orderIndex].mentioned[year][monthIndex] , function(d) {return d});
@@ -577,9 +575,42 @@ input:checked + .slider:before {
 
           return color;
 
-        }   
+        }  
+
+  function SetShowPath()
+          {
+
+
+
+            var visibility;
+
+
+            if(isShowLine==1){ 
+
+                isShowLine = 0;
+
+              visibility = "visible";
+
+            
+
+
+          }
+            else if (isShowLine == 0){
+
+
+              isShowLine = 1; 
+              visibility = "hidden";
+
+                
+          };
+
+
+          return visibility;
+
+        }  
+
     function serchForOrder(keyword, data ){
-      //console.log(data);
+
         var order = [];
          for (var i = 0, len = data.length; i < len; i++) {
             for (var j = 0, len2 = topNum; j < len2; j++) {
@@ -600,7 +631,7 @@ input:checked + .slider:before {
   
   }
     function renderChart(data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13){
-   console.log(data1);
+
        var ranking = []
       for (var i = 1, len = topNum+1; i < len; i++) {
     ranking = ranking.concat(i);
@@ -699,7 +730,7 @@ input:checked + .slider:before {
         
        for(var i = 0 ; i < data12.length ; i++)     ordersAll[11] =    serchForOrder(data12[i].keyword,keywordsAll);
         
-        console.log(ordersAll);
+
   /*
             keywordsAll =  keywordsAll.concat(keywords2) ;
                 keywordsAll =  keywordsAll.concat(keywords3) ;
@@ -713,7 +744,7 @@ input:checked + .slider:before {
                                                 keywordsAll =  keywordsAll.concat(keywords11) ;
                                                     keywordsAll =  keywordsAll.concat(keywords12) ;
  */
-                                  console.log(keywordsAll);
+
   
       var frequencies1 = []
       for (var i = 0, len = data1.length; i < len; i++) {
@@ -845,7 +876,6 @@ var month7=month+6;
   var xscaleMaxRange;
   var devidedByTenth = 1;
 
-  console.log(frequencies13[0] * ( 0.285  / devidedByTenth));
 
   if (frequencies13[0] > 10000){
 
@@ -853,7 +883,6 @@ var month7=month+6;
     
   }
  
-    console.log(devidedByTenth);
 
   xscaleMaxRange = frequencies13[0] * ( 0.285  / devidedByTenth);
 
@@ -895,8 +924,7 @@ var yscale = d3.scale.linear()
                  .text("Ranking");
 
                  */
-  
- console.log(frequencies1);
+
       var BackGround1 =  column
               .append('g')
               .attr("transform", "translate(50,0)")
@@ -921,8 +949,7 @@ var yscale = d3.scale.linear()
              
             }
            
-       } console.log(keywords1);
-                console.log(count1);
+       } 
         
     var chart1 = column
             
@@ -995,17 +1022,7 @@ var yscale = d3.scale.linear()
                     changeKeyword(data1[i].keyword);
 
 
-                  d3.selectAll(".keyword-Text")
-                   .style(
-                    "fill", "black"
-                  );
-
-                   d3.selectAll("line")
-                   .style(
-                    "visibility", "hidden"
-                  );
-
-                  renderCommentText(data1 ,i, 0);
+                  renderCommentText(data1 ,i, year, 0);
             
               });   
   
@@ -1014,7 +1031,6 @@ var yscale = d3.scale.linear()
               transitext1.data(frequencies1)
               .on('mouseover', function(d,i){
 var ranking = serchForOrder(data1[i].keyword,keywordsAll);
-                  console.log(ranking);
                 d3.select("#tooltip")
                 .style("visibility", "visible" )
                 .style("top", (d3.event.clientY)+10 + "px")
@@ -1102,6 +1118,7 @@ var ranking = serchForOrder(data1[i].keyword,keywordsAll);
               .data(keywords2)
               .enter()
               .append('text')
+              .attr('class', 'keyword-Text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style("fill",function(d,i){
 
@@ -1139,7 +1156,7 @@ var ranking = serchForOrder(data1[i].keyword,keywordsAll);
 
                     changeKeyword(data2[i].keyword);
 
-                  renderCommentText(data2 ,i, 0);
+                  renderCommentText(data2 ,i, year, 0);
             
               });
 
@@ -1234,6 +1251,7 @@ var ranking = serchForOrder(data2[i].keyword,keywordsAll);
               .data(keywords3)
               .enter()
               .append('text')
+              .attr('class', 'keyword-Text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style("fill",function(d,i){
             return outlierWords(count3[i]);});
@@ -1264,7 +1282,7 @@ var ranking = serchForOrder(data2[i].keyword,keywordsAll);
 
                     changeKeyword(data3[i].keyword);
 
-                  renderCommentText(data3 ,i, 0);
+                  renderCommentText(data3 ,i, year, 0);
             
               });  
 
@@ -1362,6 +1380,7 @@ console.log(frequencies4);
               .data(keywords4)
               .enter()
               .append('text')
+               .attr('class', 'keyword-Text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style("fill",function(d,i){
             return outlierWords(count4[i]);});
@@ -1389,7 +1408,7 @@ console.log(frequencies4);
                   transitext4.on("click",function(d,i){
               
                   changeKeyword(data4[i].keyword);
-                  renderCommentText(data4 ,i, 0);
+                  renderCommentText(data4 ,i, year, 0);
             
               });   
    
@@ -1487,6 +1506,7 @@ console.log(frequencies5);
               .data(keywords5)
               .enter()
               .append('text')
+                             .attr('class', 'keyword-Text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style("fill",function(d,i){
             return outlierWords(count5[i]);});
@@ -1515,7 +1535,7 @@ console.log(frequencies5);
                   transitext5.on("click",function(d,i){
 
                   changeKeyword(data5[i].keyword);
-                  renderCommentText(data5 ,i, 0);
+                  renderCommentText(data5 ,i, year, 0);
             
               });     
   
@@ -1608,6 +1628,7 @@ console.log(frequencies6);
               .data(keywords6)
               .enter()
               .append('text')
+              .attr('class', 'keyword-Text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style("fill",function(d,i){
            return outlierWords(count6[i]);});
@@ -1632,7 +1653,7 @@ console.log(frequencies6);
 
                   transitext6.on("click",function(d,i){
                   changeKeyword(data6[i].keyword);
-                  renderCommentText(data6 ,i, 0);
+                  renderCommentText(data6 ,i,year, 0);
             
               });     
   
@@ -1750,7 +1771,7 @@ var ranking = serchForOrder(data6[i].keyword,keywordsAll);
                   transitext7.on("click",function(d,i){
 
                   changeKeyword(data7[i].keyword);
-                  renderCommentText(data7 ,i, 0);
+                  renderCommentText(data7 ,i, year, 0);
             
               });    
   
@@ -1842,6 +1863,7 @@ console.log(frequencies8);
               .data(keywords8)
               .enter()
               .append('text')
+              .attr('class', 'keyword-Text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style("fill",function(d,i){
            return outlierWords(count8[i]);});
@@ -1871,7 +1893,7 @@ console.log(frequencies8);
                   transitext8.on("click",function(d,i){
 
                   changeKeyword(data8[i].keyword);
-                  renderCommentText(data8 ,i, 0);
+                  renderCommentText(data8 ,i, year, 0);
             
               });   
   
@@ -1911,7 +1933,7 @@ var ranking = serchForOrder(data8[i].keyword,keywordsAll);
                  .attr("text-anchor", "middle")
                  .attr("transform", "translate(25,15)")  // centre below axis
                  .text("Aug");
-   console.log(frequencies9);
+
    var BackGround9 =  column
               .append('g')
               .attr("transform", "translate(690,0)")
@@ -1936,8 +1958,7 @@ var ranking = serchForOrder(data8[i].keyword,keywordsAll);
              
             }
            
-       } console.log(keywords9);
-                console.log(count9);
+       } 
         
    var chart9 = column
               .append('g')
@@ -1962,6 +1983,7 @@ var ranking = serchForOrder(data8[i].keyword,keywordsAll);
               .data(keywords9)
               .enter()
               .append('text')
+              .attr('class', 'keyword-Text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style("fill",function(d,i){
             return outlierWords(count9[i]);});
@@ -1991,14 +2013,14 @@ var ranking = serchForOrder(data8[i].keyword,keywordsAll);
                   transitext9.on("click",function(d,i){
 
                   changeKeyword(data9[i].keyword);
-                  renderCommentText(data9 ,i, 0);
+                  renderCommentText(data9 ,i, year, 0);
             
               }); 
   
               transitext9.data(frequencies9)
              .on('mouseover', function(d,i){
 var ranking = serchForOrder(data9[i].keyword,keywordsAll);
-                  console.log(ranking);
+
                 d3.select("#tooltip")
                 .style("visibility", "visible" )
                 .style("top", (d3.event.clientY)+10 + "px")
@@ -2031,7 +2053,7 @@ var ranking = serchForOrder(data9[i].keyword,keywordsAll);
                  .attr("text-anchor", "middle")
                  .attr("transform", "translate(25,15)")  // centre below axis
                  .text("Sep");              
-console.log(frequencies10);
+
     var BackGround10 =  column
               .append('g')
               .attr("transform", "translate(770,0)")
@@ -2056,8 +2078,7 @@ console.log(frequencies10);
              
             }
            
-       } console.log(keywords10);
-                console.log(count10);
+       } 
         
    var chart10 = column
               .append('g')
@@ -2082,6 +2103,7 @@ console.log(frequencies10);
               .data(keywords10)
               .enter()
               .append('text')
+              .attr('class', 'keyword-Text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style("fill",function(d,i){
            return outlierWords(count10[i]);});
@@ -2110,14 +2132,14 @@ console.log(frequencies10);
                   transitext10.on("click",function(d,i){
 
                   changeKeyword(data10[i].keyword);
-                  renderCommentText(data10 ,i, 0);
+                  renderCommentText(data10 ,i, year, 0);
             
               });  
   
               transitext10.data(frequencies10)
               .on('mouseover', function(d,i){
 var ranking = serchForOrder(data10[i].keyword,keywordsAll);
-                  console.log(ranking);
+
                 d3.select("#tooltip")
                 .style("visibility", "visible" )
                 .style("top", (d3.event.clientY)+10 + "px")
@@ -2151,7 +2173,7 @@ var ranking = serchForOrder(data10[i].keyword,keywordsAll);
                  .attr("text-anchor", "middle")
                  .attr("transform", "translate(25,15)")  // centre below axis
                  .text("Oct");
-   console.log(frequencies11);
+
     var BackGround11 =  column
               .append('g')
               .attr("transform", "translate(850,0)")
@@ -2176,8 +2198,7 @@ var ranking = serchForOrder(data10[i].keyword,keywordsAll);
              
             }
            
-       } console.log(keywords11);
-                console.log(count11);
+       } 
         
    var chart11 = column
               .append('g')
@@ -2202,6 +2223,7 @@ var ranking = serchForOrder(data10[i].keyword,keywordsAll);
               .data(keywords11)
               .enter()
               .append('text')
+              .attr('class', 'keyword-Text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style("fill",function(d,i){
             return outlierWords(count11[i]);});
@@ -2229,7 +2251,7 @@ var ranking = serchForOrder(data10[i].keyword,keywordsAll);
                   transitext11.on("click",function(d,i){
 
                   changeKeyword(data11[i].keyword);
-                  renderCommentText(data11 ,i, 0);
+                  renderCommentText(data11 ,i, year, 0);
             
               });   
 
@@ -2237,7 +2259,7 @@ var ranking = serchForOrder(data10[i].keyword,keywordsAll);
               transitext11.data(frequencies11)
              .on('mouseover', function(d,i){
 var ranking = serchForOrder(data11[i].keyword,keywordsAll);
-                  console.log(ranking);
+
                 d3.select("#tooltip")
                 .style("visibility", "visible" )
                 .style("top", (d3.event.clientY)+10 + "px")
@@ -2270,7 +2292,7 @@ var ranking = serchForOrder(data11[i].keyword,keywordsAll);
                  .attr("text-anchor", "middle")
                  .attr("transform", "translate(25,15)")  // centre below axis
                  .text("Nov");
-   console.log(frequencies12);
+
    var BackGround12 =  column
               .append('g')
               .attr("transform", "translate(930,0)")
@@ -2295,8 +2317,7 @@ var ranking = serchForOrder(data11[i].keyword,keywordsAll);
              
             }
            
-       } console.log(keywords12);
-                console.log(count12);
+       } 
         
    var chart12 = column
               .append('g')
@@ -2322,6 +2343,7 @@ var ranking = serchForOrder(data11[i].keyword,keywordsAll);
               .data(keywords12)
               .enter()
               .append('text')
+              .attr('class', 'keyword-Text')
               .attr({'x':0,'y':function(d,i){ return yscale(i)+35; }})
               .text(function(d){ return d; }).style("fill",function(d,i){
            return outlierWords(count12[i]);})
@@ -2335,7 +2357,7 @@ var ranking = serchForOrder(data11[i].keyword,keywordsAll);
               transitext12.on("click",function(d,i){
 
                   changeKeyword(data12[i].keyword);
-                  renderCommentText(data12 ,i, 0);
+                  renderCommentText(data12 ,i, year, 0);
             
               }); 
               
@@ -2343,7 +2365,7 @@ var ranking = serchForOrder(data11[i].keyword,keywordsAll);
               transitext12.data(frequencies12)
               .on('mouseover', function(d,i){
 var ranking = serchForOrder(data12[i].keyword,keywordsAll);
-                  console.log(ranking);
+
                 d3.select("#tooltip")
                 .style("visibility", "visible" )
                 .style("top", (d3.event.clientY)+10 + "px")
@@ -2376,7 +2398,7 @@ var ranking = serchForOrder(data12[i].keyword,keywordsAll);
                  .attr("text-anchor", "middle")
                  .attr("transform", "translate(25,15)")  // centre below axis
                  .text("Dec");
-   console.log(frequencies13);
+
   var BackGround13 =  column
               .append('g')
               .attr("transform", "translate(1040,0)")
@@ -2420,7 +2442,7 @@ var ranking = serchForOrder(data12[i].keyword,keywordsAll);
         transitext13.data(frequencies13)
               .on('mouseover', function(d,i){
             var ranking = serchForOrder(data13[i].keyword,keywordsAll);
-                  console.log(ranking);
+
                 d3.select("#tooltip")
                 .style("visibility", "visible" )
                 .style("top", (d3.event.clientY)+10 + "px")
@@ -2480,8 +2502,20 @@ var ranking = serchForOrder(data12[i].keyword,keywordsAll);
   
   
     function filteredDataByMonth(data, theYear, theMonth){
+
+
+         
+
     var filteredDataByMonth = data.filter(function(d) {
+
+
+       
+            console.log (d.year[theYear][theMonth]);
+        console.log (theMonth);
+
+
         return    d.year[theYear][theMonth];
+
       });
       filteredDataByMonth.sort(function(a,b) { return d3.descending(a.year[theYear][theMonth], b.year[theYear][theMonth] )  });
     return filteredDataByMonth.slice(0, topNum);
@@ -2518,6 +2552,7 @@ var ranking = serchForOrder(data12[i].keyword,keywordsAll);
               var month10 = month9 + 1;
               var month11 = month10 + 1;
               var month12 = month11 + 1;
+
                filteredData1 = filteredDataByMonth(data,year,month1);
                filteredData2 = filteredDataByMonth(data,year,month2);
                filteredData3 = filteredDataByMonth(data,year,month3);
@@ -2560,7 +2595,98 @@ var ranking = serchForOrder(data12[i].keyword,keywordsAll);
     })
    
   </script>
+
+
+
      <script>
+
+      var isShowLine = 0;
+
+
+             d3.select("#DropDownOptionTop10").on("click",function(d,i){
+
+                  topNum = 10;
+
+                  d3.selectAll("#svg").remove();
+
+                  render(data);
+
+              });   
+
+
+             d3.select("#DropDownOptionTop15").on("click",function(d,i){
+
+                  topNum = 15;
+
+                  d3.selectAll("#svg").remove();
+
+                  render(data);
+
+              });  
+
+              d3.select("#DropDownOptionTop20").on("click",function(d,i){
+
+                  topNum = 20;
+
+                  d3.selectAll("#svg").remove();
+
+                  render(data);
+
+              });  
+
+              d3.select("#DropDownOptionTop25").on("click",function(d,i){
+
+                  topNum = 25;
+
+
+                
+
+                   d3.select("#svg")
+                   .attr({'width':canvasWidth,'height': 25 * topNum + 50});
+
+                  d3.selectAll("#svg").remove();
+
+                  render(data);
+
+              });  
+
+              d3.select("#DropDownOptionTop30").on("click",function(d,i){
+
+                  topNum = 30;
+
+                  d3.selectAll("#svg").remove();
+
+                  render(data);
+
+              }); 
+
+            
+
+
+             d3.select("#DropDownOption2014").on("click",function(d,i){
+
+                  year = 2014;
+
+                  d3.selectAll("#svg").remove();
+
+                  render(data);
+
+              });   
+
+             d3.select("#DropDownOption2015").on("click",function(d,i){
+
+
+                  year = 2015;
+
+                  d3.selectAll("#svg").remove();
+
+                  render(data);
+
+            
+              });   
+
+
+
 
 
               d3.select("#DropDownOption1").on("click",function(d,i){
@@ -2583,7 +2709,6 @@ var ranking = serchForOrder(data12[i].keyword,keywordsAll);
                      })
 
 
-                 // renderCommentText(data1 ,i, 0);
             
               });   
 
@@ -2592,7 +2717,9 @@ var ranking = serchForOrder(data12[i].keyword,keywordsAll);
 
 
 
-                    csvDocName = "daily.csv";
+                     csvDocName = "daily.csv";
+
+
 
                      d3.selectAll("#svg").remove();
 
@@ -2605,10 +2732,65 @@ var ranking = serchForOrder(data12[i].keyword,keywordsAll);
                     render(data);
                      })
 
-
-                 // renderCommentText(data1 ,i, 0);
             
               });   
+
+
+
+                d3.select("#ShowPath").on("click",function(d,i){
+
+
+
+
+                    d3.selectAll("line")
+                   .style(
+                    "visibility", 
+
+                    "visible"
+
+               )
+
+            
+              });  
+
+
+                  d3.select("#HidePath").on("click",function(d,i){
+
+
+
+                    d3.selectAll("line")
+                   .style(
+                    "visibility", 
+
+                    "hidden"
+
+               )
+
+            
+              }); 
+
+
+
+                    d3.select("#HideOutliers").on("click",function(d,i){
+
+    
+
+                     d3.selectAll(".keyword-Text")
+                   .style(
+                    "fill", "black"
+                  );          
+            
+              }); 
+
+                   d3.select("#ShowOutliers").on("click",function(d,i){
+
+                 d3.selectAll("#svg").remove();
+
+                  render(data);      
+            
+              }); 
+
+                    
 
 
     </script>
