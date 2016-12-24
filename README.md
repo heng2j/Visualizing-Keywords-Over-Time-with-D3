@@ -1,5 +1,5 @@
 # Visualizing-Keywords-Over-Time-with-D3
-#KEYWORDS OVERTIME:
+
 #Authors:
 Akanksha Shaktia     ass546@nyu.edu 
 Zhongheng Li           zl1761@nyu.edu
